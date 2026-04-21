@@ -1,9 +1,10 @@
-package DAO;
+package DAO.Student;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import DAO.DAO;
 import bean.Student;
 
 public class StudentDAO extends DAO {
@@ -14,7 +15,7 @@ public class StudentDAO extends DAO {
 		Connection con = getConnection();
 		
 		PreparedStatement st = con.prepareStatement(
-				"select * from Admin where admin_name=? and password=? "
+				"select * from Admin where student_name=? and no=? "
 				);
 		
 		st.setString(1,student_name);
@@ -26,7 +27,7 @@ public class StudentDAO extends DAO {
 		while (rs.next()) {
 			stu = new Student();
 		
-			stu.setNo(rs.getInt("no"));
+			stu.setNo(rs.getString("no"));
 			stu.setStudentName(rs.getString("student_name"));
 			stu.setEntYear(rs.getInt("ent_year"));
 			stu.setClassNum(rs.getInt("class_num"));

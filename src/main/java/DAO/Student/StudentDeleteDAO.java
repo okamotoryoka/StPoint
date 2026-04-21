@@ -1,7 +1,9 @@
-package DAO;
+package DAO.Student;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+
+import DAO.DAO;
 
 public class StudentDeleteDAO extends DAO {
 	private Connection connection;

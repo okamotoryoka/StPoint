@@ -1,9 +1,10 @@
-package DAO;
+package DAO.Teacher;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import DAO.DAO;
 import bean.Teacher;
 
 public class TeacherDAO extends DAO {
@@ -14,7 +15,7 @@ public class TeacherDAO extends DAO {
 		Connection con = getConnection();
 		
 		PreparedStatement st = con.prepareStatement(
-				"select * from Admin where admin_name=? and password=? "
+				"select * from Admin where teacher_name=? and password=? "
 				);
 		
 		st.setString(1,teacher_name);

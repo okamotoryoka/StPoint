@@ -14,7 +14,7 @@ public class StudentDAO extends DAO {
 		Connection con = getConnection();
 		
 		PreparedStatement st = con.prepareStatement(
-				"select * from Admin where admin_name=? and password=? "
+				"select * from Student where admin_name=? and password=? "
 				);
 		
 		st.setString(1,student_name);

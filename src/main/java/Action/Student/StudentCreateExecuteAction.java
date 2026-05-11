@@ -1,7 +1,7 @@
 package Action.Student;
 
+import Bean.Student;
 import DAO.Student.StudentDAO;
-import bean.Student;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;

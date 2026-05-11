@@ -1,7 +1,7 @@
 package Action.Admin;
 
-import DAO.AdminDAO;
-import bean.Admin;
+import Bean.Admin;
+import DAO.Admin.AdminDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;

@@ -3,8 +3,8 @@ package DAO.Student;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import Bean.Student;
 import DAO.DAO;
-import bean.Student;
 
 public class StudentDAO extends DAO {
 

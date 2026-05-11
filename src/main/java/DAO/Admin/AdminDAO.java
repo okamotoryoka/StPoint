@@ -1,10 +1,11 @@
-package DAO;
+package DAO.Admin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import bean.Admin;
+import Bean.Admin;
+import DAO.DAO;
 
 public class AdminDAO extends DAO {
 	public Admin search(String admin_name, String password) throws Exception {

@@ -1,104 +1,199 @@
-<%@ page language="java"
-contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+package score;
 
-<%@ page import="java.util.*" %>
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>得点更新</title>
-</head>
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
-<body>
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-<h2>得点更新</h2>
+@WebServlet(urlPatterns={"/score/update"})
+public class ScoreUpdateServlet extends HttpServlet {
 
-<%
-Map<String, Object> data =
-    (Map<String, Object>)
-    request.getAttribute("data");
-%>
+    public void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
 
-<form
-action="../score/update"
-method="post">
+        String studentNo =
+                request.getParameter("student_id");
 
-<input type="hidden"
-name="student_id"
-value="<%= data.get("student_id") %>">
+        String subjectCd =
+                request.getParameter("subject_cd");
+        
+        String schoolCd =
+        		request.getParameter("school_cd");
 
-<input type="hidden"
-name="subject_cd"
-value="<%= data.get("subject_cd") %>">
+        int no =
+                Integer.parseInt(
+                        request.getParameter("no"));
 
-<input type="hidden"
-name="school_cd"
-value="<%= data.get("school_cd") %>">
+        try {
 
-<input type="hidden"
-name="no"
-value="<%= data.get("no") %>">
+            InitialContext ic =
+                    new InitialContext();
 
-<table border="1">
+            DataSource ds =
+                    (DataSource) ic.lookup(
+                    		"java:/comp/env/jdbc/stpoint");
 
-<tr>
-<th>学生番号</th>
-<td>
-<%= data.get("student_id") %>
-</td>
-</tr>
+            try (Connection con =
+                    ds.getConnection()) {
 
-<tr>
-<th>科目コード</th>
-<td>
-<%= data.get("subject_cd") %>
-</td>
-</tr>
+                String sql =
+                        "SELECT * "
+                      + "FROM TEST "
+                      + "WHERE STUDENT_NO = ? "
+                      + "AND SUBJECT_CD = ? "
+                      + "AND SCHOOL_CD = ? "
+                      + "AND NO = ?";
 
-<tr>
-<th>得点</th>
-<td>
+                Map<String, Object> data =
+                        new HashMap<>();
 
-<input
-type="number"
-name="point"
-value="<%= data.get("point") %>">
+                try (
+                    PreparedStatement st =
+                            con.prepareStatement(sql)
+                ) {
 
-</td>
-</tr>
+                    st.setString(1, studentNo);
+                    st.setString(2, subjectCd);
+                    st.setString(3,  schoolCd);
+                    st.setInt(4, no);
 
-<tr>
-<th>学校コード</th>
-<td>
+                    try (
+                        ResultSet rs =
+                                st.executeQuery()
+                    ) {
 
-<%= data.get("school_cd") %>
+                    	if (rs.next()) {
 
-</td>
-</tr>
+                    	    data.put(
+                    	        "student_id",
+                    	        rs.getString("STUDENT_NO"));
 
-<tr>
-<th>クラス番号</th>
-<td>
+                    	    data.put(
+                    	        "subject_cd",
+                    	        rs.getString("SUBJECT_CD"));
 
-<input
-type="text"
-name="class_num"
-value="<%= data.get("class_num") %>">
+                    	    data.put(
+                    	        "school_cd",
+                    	        rs.getString("SCHOOL_CD"));
 
-</td>
-</tr>
+                    	    data.put(
+                    	        "no",
+                    	        rs.getInt("NO"));
 
-</table>
+                    	    data.put(
+                    	        "point",
+                    	        rs.getInt("POINT"));
 
-<br>
+                    	    data.put(
+                    	        "class_num",
+                    	        rs.getString("CLASS_NUM"));
+                    	}
+                    }
+                }
 
-<button type="submit">
-更新
-</button>
+                request.setAttribute("data", data);
 
-</form>
+                request.getRequestDispatcher(
+                        "/management/score_update.jsp")
+                        .forward(request, response);
+            }
 
-</body>
-</html>
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.sendError(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+
+        String studentNo =
+                request.getParameter("student_id");
+
+        String subjectCd =
+                request.getParameter("subject_cd");
+        
+        String schoolCd =
+                request.getParameter("school_cd");
+
+        int no =
+                Integer.parseInt(
+                        request.getParameter("no"));
+
+        int point =
+                Integer.parseInt(
+                        request.getParameter("point"));
+
+        String classNum =
+                request.getParameter("class_num");
+
+        try {
+
+            InitialContext ic =
+                    new InitialContext();
+
+            DataSource ds =
+                    (DataSource) ic.lookup(
+                            "java:/comp/env/jdbc/stpoint");
+
+            try (Connection con =
+                    ds.getConnection()) {
+
+                String sql =
+                        "UPDATE TEST "
+                      + "SET POINT = ?, "
+                      + "CLASS_NUM = ? "
+                      + "WHERE STUDENT_NO = ? "
+                      + "AND SUBJECT_CD = ? "
+                      + "AND SCHOOL_CD = ? "
+                      + "AND NO = ?";
+
+                try (
+                    PreparedStatement st =
+                            con.prepareStatement(sql)
+                ) {
+
+                    st.setInt(1, point);
+                    st.setString(2, classNum);
+                    st.setString(3, studentNo);
+                    st.setString(4, subjectCd);
+                    st.setString(5, schoolCd);
+                    st.setInt(6, no);
+
+                    st.executeUpdate();
+                }
+            }
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/score/list");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.sendError(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+}

@@ -3,57 +3,50 @@ package Bean;
 public class Student implements java.io.Serializable {
 	
 	private String no;
-	private String student_name;
-	private int ent_year;
-	private int class_num;
-	private String is_attend;
-	private String school_id;
+
+	private String name;      // student_name から name に変更
+	private int entYear;      // ent_year から entYear に変更
+	private String classNum;  // int から String に変更（設計図に合わせる）
+	private boolean isAttend; // String から boolean に変更（設計図に合わせる）
+	private School school;    // String school_id から Schoolクラス に変更
 	
+	// --- Getter（取得） ---
 	public String getNo() {
 		return no;
 	}
-	
-	public String getStudentName() {
-		return student_name;
+	public String getName() {
+		return name;
 	}
-	
 	public int getEntYear() {
-		return ent_year;
+		return entYear;
+	}
+	public String getClassNum() {
+		return classNum;
+	}
+	public boolean isIsAttend() {
+		return isAttend;
+	}
+	public School getSchool() {
+		return school;
 	}
 	
-	public int getClassNum() {
-		return class_num;
-	}
-	
-	public String getIsAttend() {
-		return is_attend;
-	}
-	
-	public String getSchoolId() {
-		return school_id;
-	}
-	
+	// --- Setter（セット） ---
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
-	public void setStudentName(String student_name) {
-		this.student_name = student_name;
+	public void setName(String name) { // これでActionのエラーが消えます
+		this.name = name;
 	}
-	
-	public void setEntYear(int ent_year) {
-		this.ent_year = ent_year;
+	public void setEntYear(int entYear) {
+		this.entYear = entYear;
 	}
-	
-	public void setClassNum(int class_num) {
-		this.class_num = class_num;
+	public void setClassNum(String classNum) {
+		this.classNum = classNum;
 	}
-	
-	public void setIsAttend(String is_attend) {
-		this.is_attend = is_attend;
+	public void setIsAttend(boolean isAttend) { // booleanを受け取るように修正
+		this.isAttend = isAttend;
 	}
-	
-	public void setSchoolId(String school_id) {
-		this.school_id = school_id; 
+	public void setSchool(School school) {
+		this.school = school; 
 	}
 }

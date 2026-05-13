@@ -9,8 +9,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@500&display=swap" rel="stylesheet">
 
-</head>
-<meta charset="UTF-8">
 <title>得点管理システム</title>
 
 <style>
@@ -32,22 +30,6 @@ body {
     overflow: hidden;
 }
 
-
-
-body::before {
-    width: 300px;
-    height: 300px;
-    top: -100px;
-    left: -80px;
-}
-
-body::after {
-    width: 250px;
-    height: 250px;
-    bottom: -80px;
-    right: -60px;
-}
-
 .login-box {
     position: relative;
     z-index: 1;
@@ -67,11 +49,10 @@ body::after {
     text-align: center;
 }
 
-
 .login-title {
     font-size: 42px;
 
-    color: ;
+    color: #000;
 
     margin-bottom: 30px;
 
@@ -107,6 +88,23 @@ input:focus {
     box-shadow: 0 0 12px rgba(255,255,255,0.8);
 }
 
+/* パスワード表示 */
+.show-password {
+    display: flex;
+    align-items: center;
+
+    margin-top: -8px;
+    margin-bottom: 18px;
+
+    font-size: 14px;
+    color: #333;
+}
+
+.show-password input {
+    width: auto;
+    margin: 0 8px 0 0;
+}
+
 /* ボタン */
 button {
     width: 100%;
@@ -131,7 +129,6 @@ button:hover {
     transform: translateY(-3px);
     background: #A69E94;
     box-shadow: 0 8px 15px rgba(176,224,230,0.5);
-}
 }
 
 /* 下の文字 */
@@ -162,8 +159,23 @@ button:hover {
         <input
             type="password"
             name="password"
+            id="password"
             placeholder="パスワード"
         >
+
+        <!-- パスワード表示 -->
+        <div class="show-password">
+
+            <input
+                type="checkbox"
+                id="showPassword"
+            >
+
+            <label for="showPassword">
+                パスワードを表示
+            </label>
+
+        </div>
 
         <button type="submit">
             ログイン
@@ -172,10 +184,27 @@ button:hover {
     </form>
 
     <p class="sub-text">
-       
     </p>
 
 </div>
+
+<!-- JavaScript -->
+<script>
+
+const password = document.getElementById("password");
+const showPassword = document.getElementById("showPassword");
+
+showPassword.addEventListener("change", () => {
+
+    if(showPassword.checked) {
+        password.type = "text";
+    } else {
+        password.type = "password";
+    }
+
+});
+
+</script>
 
 </body>
 </html>

@@ -63,7 +63,8 @@ public class ScoreInsertServlet extends HttpServlet {
                 String subjectSql =
                         "SELECT CD "
                       + "FROM SUBJECT "
-                      + "WHERE NAME = ?";
+                      + "WHERE NAME = ? "
+                	+ "AND SCHOOL_CD = ?";
 
                 try (
                     PreparedStatement st =
@@ -71,6 +72,7 @@ public class ScoreInsertServlet extends HttpServlet {
                 ) {
 
                     st.setString(1, subjectName);
+                    st.setString(2,  schoolCd);
 
                     try (
                         ResultSet rs =
@@ -86,6 +88,9 @@ public class ScoreInsertServlet extends HttpServlet {
 
                 // 科目が存在しない場合
                 if (subjectCd == null) {
+
+                    response.setContentType("text/html; charset=UTF-8");
+                    response.setCharacterEncoding("UTF-8");
 
                     response.getWriter().println(
                             "科目名が存在しません");

@@ -6,12 +6,7 @@
   <h1>生徒登録</h1>
 
   <section class="info-card">
-    <%-- 成功メッセージの表示 --%>
-    <% if ("1".equals(request.getAttribute("ok"))) { %>
-      <p class="msg msg-ok" style="color: blue; font-weight: bold; background: #e0f0ff; padding: 10px;">
-        生徒の登録が完了しました。
-      </p>
-    <% } %>
+
 
     <%-- エラーメッセージの表示 --%>
     <% String err = (String)request.getAttribute("err"); %>
@@ -44,7 +39,7 @@
   </section>
 
   <p class="actions">
-    <a class="link-next" href="admin_menu.jsp">メニューへ戻る</a>
+    <a class="link-next" href="result/admin_menu.jsp">メニューへ戻る</a>
   </p>
 </main>
 

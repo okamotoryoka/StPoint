@@ -11,7 +11,6 @@
 <!-- セッションスコープから管理者名を表示 -->
 ${sessionScope.admin_name} としてログイン中<br>
 
-<!-- 教師追加ページへリンク -->
 
 
 <a href="<%= request.getContextPath() %>/">ホーム画面 >>></a><br>

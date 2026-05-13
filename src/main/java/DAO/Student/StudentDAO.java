@@ -2,40 +2,55 @@ package DAO.Student;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import Bean.Student;
 import DAO.DAO;
 
 public class StudentDAO extends DAO {
 
-    public void insert(Student s) throws Exception {
-        Connection con = getConnection();
+    /**
+     * 学籍番号から学生を取得（重複チェック用）
+     */
+    public Student get(String no) throws Exception {
+        Student student = null;
+        String sql = "SELECT * FROM student WHERE no = ?";
         
-        // SQL文：school_cdも含めて6つのパラメータがあるか確認してください
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            st.setString(1, no);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    student = new Student();
+                    student.setNo(rs.getString("no"));
+                    student.setName(rs.getString("name"));
+                }
+            }
+        }
+        return student;
+    }
+
+    /**
+     * 学生情報の保存
+     */
+    public boolean postFilter(Student s) throws Exception {
         String sql = "INSERT INTO student (no, name, ent_year, class_num, is_attend, school_cd) VALUES (?, ?, ?, ?, ?, ?)";
-        
-        try (PreparedStatement st = con.prepareStatement(sql)) {
+        int count = 0;
+
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, s.getNo());
             st.setString(2, s.getName());
             st.setInt(3, s.getEntYear());
             st.setString(4, s.getClassNum());
             st.setBoolean(5, s.isIsAttend());
-            
-            // ★重要：もしSchoolオブジェクトが空なら一旦固定値(例:"tes")を入れる
-            // 実際の運用ではログインユーザーの学校コードをセットします
-            if (s.getSchool() != null) {
-                st.setString(6, s.getSchool().getCd());
-            } else {
-                st.setString(6, "tes"); // ここをDBに実在する学校コードに書き換えてください
-            }
+            st.setString(6, s.getSchool() != null ? s.getSchool().getCd() : "tes");
 
-            st.executeUpdate();
-            
+            count = st.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace(); // ★原因をコンソールに出力する（これが無いと理由がわかりません）
-            throw e; // Actionクラスに例外を投げて "insert" エラーを表示させる
-        } finally {
-            if (con != null) con.close();
+            e.printStackTrace();
+            throw e; 
         }
+        return count > 0;
     }
 }

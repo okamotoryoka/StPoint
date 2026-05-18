@@ -3,8 +3,8 @@ package DAO.Student;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList; // 追加：Listを使うために必要
-import java.util.List;      // 追加：Listを使うために必要
+import java.util.ArrayList;
+import java.util.List;
 
 import Bean.Student;
 import DAO.DAO;
@@ -26,6 +26,9 @@ public class StudentDAO extends DAO {
                     student = new Student();
                     student.setNo(rs.getString("no"));
                     student.setName(rs.getString("name"));
+                    student.setEntYear(rs.getInt("ent_year"));
+                    student.setClassNum(rs.getString("class_num"));
+                    student.setAttend(rs.getBoolean("is_attend"));
                 }
             }
         }
@@ -45,7 +48,9 @@ public class StudentDAO extends DAO {
             st.setString(2, s.getName());
             st.setInt(3, s.getEntYear());
             st.setString(4, s.getClassNum());
-            st.setBoolean(5, s.isIsAttend());
+            
+            // 修正：Student.javaのゲッター名変更「isAttend()」を反映
+            st.setBoolean(5, s.isAttend());
             st.setString(6, s.getSchool() != null ? s.getSchool().getCd() : "tes");
 
             count = st.executeUpdate();
@@ -57,7 +62,7 @@ public class StudentDAO extends DAO {
     }
 
     /**
-     * ★ここを追加しました：学生情報を全件取得する（一覧表示用）
+     * 学生情報を全件取得する（一覧表示用）
      */
     public List<Student> findAll() throws Exception {
         List<Student> list = new ArrayList<>();
@@ -73,7 +78,10 @@ public class StudentDAO extends DAO {
                 s.setName(rs.getString("name"));
                 s.setEntYear(rs.getInt("ent_year"));
                 s.setClassNum(rs.getString("class_num"));
-                s.setIsAttend(rs.getBoolean("is_attend"));
+                
+                // 修正：変数名を「s」と「rs」に変更し、setAttendを呼び出す
+                s.setAttend(rs.getBoolean("is_attend"));
+                
                 list.add(s);
             }
         }

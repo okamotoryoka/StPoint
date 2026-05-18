@@ -50,7 +50,7 @@
 
   <p class="actions">
     <%-- 同じresultフォルダ内にあるため直接ファイル名を指定します --%>
-    <a class="link-next" href="admin_menu.jsp">メニューへ戻る</a>
+    <a class="link-next" href="result/admin_menu.jsp">メニューへ戻る</a>
   </p>
 </main>
 

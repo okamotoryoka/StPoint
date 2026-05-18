@@ -58,7 +58,9 @@ public class StudentCreateExecuteAction extends Action {
         s.setName(name);
         s.setEntYear(entYear);
         s.setClassNum(classNum);
-        s.setIsAttend(true);
+        
+        // 修正：設計図の仕様名「setAttend」に変更
+        s.setAttend(true);
 
         try {
             boolean isSuccess = dao.postFilter(s);
@@ -68,7 +70,7 @@ public class StudentCreateExecuteAction extends Action {
             }
         } catch (Exception e) {
             request.setAttribute("err", "insert_failed");
-            return "result/student_create.jsp"; // 404エラー対策で「result/」を追加
+            return "result/student_create.jsp"; // 404エラー対策で「result/`」を追加
         }
 
         // 成功時は「学生登録完了画面」へ遷移する

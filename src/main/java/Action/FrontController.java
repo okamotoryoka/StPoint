@@ -6,6 +6,8 @@ import Action.Admin.AdminLoginAction;
 import Action.Student.StudentCreateAction; // 追加：学生登録用
 import Action.Student.StudentCreateExecuteAction;
 import Action.Student.StudentListAction;
+import Action.Student.StudentUpdatExecuteAction;
+import Action.Student.StudentUpdateAction;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -47,6 +49,14 @@ public class FrontController extends HttpServlet {
             
             else if(path.equals("/StudentList.action")) {
             	action = new StudentListAction();
+            }
+       
+            else if(path.equals("/StudentUpdate.action")) {
+            	action = new StudentUpdateAction();
+            }
+            
+            else if(path.equals("/StudentUpdatExecute.action")) {
+            	action = new StudentUpdatExecuteAction();
             }
 
             // 該当するアクションがない場合

@@ -1,8 +1,6 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Bean.Student" %>
-
 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 
@@ -13,7 +11,7 @@
   <%-- ① タイトル --%>
   <h1>学生管理</h1>
 
-  <%-- ②〜⑨ 絞り込みフォーム（CSSの .filter-box を適用） --%>
+  <%-- ②〜⑨ 絞り込みフォーム --%>
   <form action="${pageContext.request.contextPath}/StudentList.action" method="post" class="filter-box">
     
     <%-- 入学年度選択グループ --%>
@@ -62,7 +60,7 @@
   <%-- 検索結果件数表示 --%>
   <p class="result-count">検索結果：<%= count %>件</p>
 
-  <%-- ⑫〜㉒ 学生一覧テーブル（CSSの .student-table を適用） --%>
+  <%-- ⑫〜㉒ 学生一覧テーブル --%>
   <table class="student-table">
     <thead>
       <tr>
@@ -85,10 +83,11 @@
           <td><%= student.getName() %></td>
           <td><%= student.getClassNum() %></td>
           <td style="text-align: center;">
-            <% if (student.isIsAttend()) { %>○<% } else { %>×<% } %>
+            <% if (student.isAttend()) { %>○<% } else { %>×<% } %>
           </td>
-          <%-- ㉒ 変更リンク --%>
+      
           <td>
+       
             <a href="${pageContext.request.contextPath}/StudentUpdate.action?no=<%= student.getNo() %>" class="link-action">変更</a>
           </td>
         </tr>

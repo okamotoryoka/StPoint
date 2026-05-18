@@ -15,30 +15,44 @@ public class StudentCreateExecuteAction extends Action {
         String entYearStr = request.getParameter("entYear");
         String classNum = request.getParameter("classNum");
 
-        // 1. 必須チェック
+        // 入力値をリクエストに保持（エラーで戻った際、入力を復元できるようにする）
+        request.setAttribute("name", name);
+        request.setAttribute("no", no);
+        request.setAttribute("classNum", classNum);
+        if (entYearStr != null && !entYearStr.isEmpty()) {
+            request.setAttribute("entYear", entYearStr);
+        }
+
+        // 1. 【学生番号、氏名が未入力の場合】のチェック
         if (no == null || no.isEmpty() || name == null || name.isEmpty()) {
             request.setAttribute("err", "required");
-            return "result/student_create.jsp";
+            return "result/student_create.jsp"; // 404エラー対策で「result/」を追加
         }
 
-        StudentDAO dao = new StudentDAO();
-
-        // 2. ★重複チェック（クラス図の get メソッドを使用）
-        if (dao.get(no) != null) {
-            // 既に学籍番号が存在する場合
-            request.setAttribute("err", "insert"); // JSPの「学籍番号重複など」を表示させる
-            return "result/student_create.jsp";
+        // 2. 【入学年度が未入力の場合】のチェック
+        if (entYearStr == null || entYearStr.isEmpty()) {
+            request.setAttribute("err", "year_empty");
+            return "result/student_create.jsp"; // 404エラー対策で「result/」を追加
         }
 
-        // 3. 数値チェックとBean作成
+        // 数値変換チェック
         int entYear;
         try {
             entYear = Integer.parseInt(entYearStr);
         } catch (NumberFormatException e) {
-            request.setAttribute("err", "year");
-            return "result/student_create.jsp";
+            request.setAttribute("err", "year_invalid");
+            return "result/student_create.jsp"; // 404エラー対策で「result/」を追加
         }
 
+        StudentDAO dao = new StudentDAO();
+
+        // 3. 【学生番号が重複していた場合】のチェック
+        if (dao.get(no) != null) {
+            request.setAttribute("err", "duplicate"); 
+            return "result/student_create.jsp"; // 404エラー対策で「result/」を追加
+        }
+
+        // 4. Beanの作成と保存処理
         Student s = new Student();
         s.setNo(no);
         s.setName(name);
@@ -46,18 +60,18 @@ public class StudentCreateExecuteAction extends Action {
         s.setClassNum(classNum);
         s.setIsAttend(true);
 
-        // 4. 保存処理
         try {
             boolean isSuccess = dao.postFilter(s);
-            if (isSuccess) {
-                request.setAttribute("ok", "1");
-            } else {
-                request.setAttribute("err", "insert");
+            if (!isSuccess) {
+                request.setAttribute("err", "insert_failed");
+                return "result/student_create.jsp"; // 404エラー対策で「result/」を追加
             }
         } catch (Exception e) {
-            request.setAttribute("err", "insert");
+            request.setAttribute("err", "insert_failed");
+            return "result/student_create.jsp"; // 404エラー対策で「result/」を追加
         }
 
-        return "result/student-result.jsp";
+        // 成功時は「学生登録完了画面」へ遷移する
+        return "result/student_create_done.jsp"; // 404エラー対策で「result/」を追加
     }
 }

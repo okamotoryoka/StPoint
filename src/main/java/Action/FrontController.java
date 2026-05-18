@@ -5,6 +5,7 @@ import java.io.IOException;
 import Action.Admin.AdminLoginAction;
 import Action.Student.StudentCreateAction; // 追加：学生登録用
 import Action.Student.StudentCreateExecuteAction;
+import Action.Student.StudentListAction;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -43,6 +44,10 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/StudentCreateExecute.action")) {
                 action = new StudentCreateExecuteAction();
             }
+            
+            else if(path.equals("/StudentList.action")) {
+            	action = new StudentListAction();
+            }
 
             // 該当するアクションがない場合
             if (action == null) {
@@ -50,6 +55,8 @@ public class FrontController extends HttpServlet {
                 return;
             }
 
+            
+            
             // --- アクションの実行と画面遷移 ---
             //Actionに「仕事」を命じる一文
             String url = action.execute(request, response);

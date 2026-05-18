@@ -3,6 +3,8 @@ package DAO.Student;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList; // 追加：Listを使うために必要
+import java.util.List;      // 追加：Listを使うために必要
 
 import Bean.Student;
 import DAO.DAO;
@@ -52,5 +54,29 @@ public class StudentDAO extends DAO {
             throw e; 
         }
         return count > 0;
+    }
+
+    /**
+     * ★ここを追加しました：学生情報を全件取得する（一覧表示用）
+     */
+    public List<Student> findAll() throws Exception {
+        List<Student> list = new ArrayList<>();
+        String sql = "SELECT * FROM student ORDER BY no ASC";
+
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+            
+            while (rs.next()) {
+                Student s = new Student();
+                s.setNo(rs.getString("no"));
+                s.setName(rs.getString("name"));
+                s.setEntYear(rs.getInt("ent_year"));
+                s.setClassNum(rs.getString("class_num"));
+                s.setIsAttend(rs.getBoolean("is_attend"));
+                list.add(s);
+            }
+        }
+        return list;
     }
 }

@@ -3,6 +3,7 @@ package Bean;
 public class Student implements java.io.Serializable {
 	
 	private String no;
+
 	private String name;      // student_name から name に変更
 	private int entYear;      // ent_year から entYear に変更
 	private String classNum;  // int から String に変更（設計図に合わせる）

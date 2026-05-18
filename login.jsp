@@ -91,7 +91,7 @@ input:focus {
 /* パスワード表示 */
 .show-password {
     display: flex;
-　　justify-content: center;
+    justify-content: center;
     align-items: center;
 
     margin-top: -8px;

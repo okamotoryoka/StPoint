@@ -43,6 +43,10 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/StudentCreateExecute.action")) {
                 action = new StudentCreateExecuteAction();
             }
+            
+            else if (path.equals("/StudentSearch.action")) {
+                action = new StudentSearchAction();
+            }
 
             // 該当するアクションがない場合
             if (action == null) {

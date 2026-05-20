@@ -11,6 +11,16 @@
   <%-- ① タイトル --%>
   <h1>学生管理</h1>
 
+  <%
+    // 現在選択されている値と、動的選択肢リストを取得
+    String selYear = (request.getAttribute("selectedYear") != null) ? (String)request.getAttribute("selectedYear") : "";
+    String selClass = (request.getAttribute("selectedClass") != null) ? (String)request.getAttribute("selectedClass") : "";
+    boolean selAttend = (request.getAttribute("selectedAttend") != null) ? (boolean)request.getAttribute("selectedAttend") : true;
+
+    List<Integer> yearList = (List<Integer>) request.getAttribute("yearList");
+    List<String> classList = (List<String>) request.getAttribute("classList");
+  %>
+
   <%-- ②〜⑨ 絞り込みフォーム --%>
   <form action="${pageContext.request.contextPath}/StudentList.action" method="post" class="filter-box">
     
@@ -19,9 +29,16 @@
       <label for="entYear">入学年度</label>
       <select name="entYear" id="entYear">
         <option value="">--------</option>
-        <option value="2021">2021</option>
-        <option value="2022">2022</option>
-        <option value="2023">2023</option>
+        <%
+          if (yearList != null) {
+              for (int year : yearList) {
+                  String yearStr = String.valueOf(year);
+        %>
+          <option value="<%= yearStr %>" <%= yearStr.equals(selYear) ? "selected" : "" %>><%= yearStr %></option>
+        <%
+              }
+          }
+        %>
       </select>
     </div>
 
@@ -30,15 +47,21 @@
       <label for="classNum">クラス</label>
       <select name="classNum" id="classNum">
         <option value="">--------</option>
-        <option value="201">201</option>
-        <option value="202">202</option>
-        <option value="203">203</option>
+        <%
+          if (classList != null) {
+              for (String cNum : classList) {
+        %>
+          <option value="<%= cNum %>" <%= cNum.equals(selClass) ? "selected" : "" %>><%= cNum %></option>
+        <%
+              }
+          }
+        %>
       </select>
     </div>
 
     <%-- 在学中チェックボックスグループ --%>
     <div class="checkbox-group">
-      <input type="checkbox" name="isAttend" id="isAttend" value="true" checked>
+   <input type="checkbox" name="isAttend" id="isAttend" value="true" <%= selAttend ? "checked" : "" %>>
       <label for="isAttend">在学中</label>
     </div>
 
@@ -87,7 +110,6 @@
           </td>
       
           <td>
-       
             <a href="${pageContext.request.contextPath}/StudentUpdate.action?no=<%= student.getNo() %>" class="link-action">変更</a>
           </td>
         </tr>

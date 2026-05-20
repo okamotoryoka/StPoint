@@ -3,11 +3,13 @@ package Action;
 import java.io.IOException;
 
 import Action.Admin.AdminLoginAction;
-import Action.Student.StudentCreateAction; // 追加：学生登録用
+import Action.Student.StudentCreateAction;
 import Action.Student.StudentCreateExecuteAction;
 import Action.Student.StudentListAction;
+import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
+// ⚠️ もしStudentSearchActionでエラーが出る場合は、ここに適切なインポート文（例: import Action.Student.StudentSearchAction;）を追加してください
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,7 +20,6 @@ import tool.Action;
 @WebServlet("*.action")
 public class FrontController extends HttpServlet {
 
-    // GETリクエスト（画面を開くとき）でも動作するように追加
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,32 +33,28 @@ public class FrontController extends HttpServlet {
         String path = request.getServletPath();
         Action action = null;
 
-        // --- URL（パス）による処理の振り分け ---
         try {
             if (path.equals("/AdminLogin.action")) {
                 action = new AdminLoginAction();
             } 
-         
-            // 設計図にある「学生登録」を追加
             else if (path.equals("/StudentCreate.action")) {
                 action = new StudentCreateAction();
             }
-            
             else if (path.equals("/StudentCreateExecute.action")) {
                 action = new StudentCreateExecuteAction();
             }
-            
-            else if(path.equals("/StudentList.action")) {
-            	action = new StudentListAction();
+            else if (path.equals("/StudentList.action")) {
+                action = new StudentListAction();
             }
-       
-            else if(path.equals("/StudentUpdate.action")) {
-            	action = new StudentUpdateAction();
+            else if (path.equals("/StudentUpdate.action")) {
+                action = new StudentUpdateAction();
             }
-            
-            else if(path.equals("/StudentUpdatExecute.action")) {
-            	action = new StudentUpdatExecuteAction();
-            }
+            else if (path.equals("/StudentUpdatExecute.action")) {
+                action = new StudentUpdatExecuteAction();
+            } // ⭕ カッコを正しく閉じました
+            else if (path.equals("/StudentSearch.action")) {
+                action = new StudentSearchAction();
+            } // ⭕ カッコを正しく閉じました
 
             // 該当するアクションがない場合
             if (action == null) {
@@ -65,10 +62,7 @@ public class FrontController extends HttpServlet {
                 return;
             }
 
-            
-            
             // --- アクションの実行と画面遷移 ---
-            //Actionに「仕事」を命じる一文
             String url = action.execute(request, response);
             
             // 指定されたJSPファイルへ移動
@@ -76,7 +70,6 @@ public class FrontController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            // エラーが発生した場合はサーバーエラーを表示
             throw new ServletException(e);
         }
     }

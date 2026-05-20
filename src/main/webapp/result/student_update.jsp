@@ -23,16 +23,15 @@
     <%-- 変更ボタンを押したら更新処理を行うActionへ送信 --%>
     <form action="${pageContext.request.contextPath}/StudentUpdatExecute.action" method="post">
         
-        <%-- どの学生を更新するか裏で保持しておくための隠し項目 --%>
+        <%-- ⭕ 修正：テーブルの外、フォームの直後に隠し項目を移動しました --%>
+        <%-- これによりブラウザに弾き出されず、確実にJava側へ番号と年度が届くようになります --%>
         <input type="hidden" name="no" value="<%= no %>">
+        <input type="hidden" name="entYear" value="<%= entYear %>">
 
         <table class="student-table" style="margin-top: 20px;">
             <tr>
                 <th style="width: 150px; background-color: #f2f2f2; text-align: left; padding: 10px;">入学年度</th>
-                <%-- ⭕ 入力欄にせず、文字として表示するだけで書き換えを防ぎます --%>
                 <td style="padding: 10px;"><%= entYear == 0 ? "" : entYear %></td>
-                <%-- 更新用Action（Java側）に値を送るための隠し項目 --%>
-                <input type="hidden" name="entYear" value="<%= entYear %>">
             </tr>
             <tr>
                 <th style="background-color: #f2f2f2; text-align: left; padding: 10px;">学生番号</th>

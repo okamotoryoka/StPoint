@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * すべてのリクエストに対して文字エンコーディングを設定するフィルター
@@ -26,12 +27,17 @@ public class EncordingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+    	
+    	HttpServletRequest req = (HttpServletRequest) request;
+        String uri = req.getRequestURI();
         
         // 1. リクエストの文字コードを UTF-8 に設定（文字化け防止）
         request.setCharacterEncoding("UTF-8");
         
         // 2. レスポンス（画面表示）の文字コードも設定
-        response.setContentType("text/html; charset=UTF-8");
+        if (!uri.endsWith(".css") && !uri.contains("/css/")) {
+            response.setContentType("text/html; charset=UTF-8");
+        }
 
         // 3. 次の処理（FrontControllerなど）へバトンタッチする
         chain.doFilter(request, response);

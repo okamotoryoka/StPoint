@@ -1,199 +1,185 @@
-package score;
+<%@ page language="java"
+contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
+<%@ page import="java.util.*" %>
 
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>得点更新</title>
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+<style>
 
-@WebServlet(urlPatterns={"/score/update"})
-public class ScoreUpdateServlet extends HttpServlet {
-
-    public void doGet(
-            HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String studentNo =
-                request.getParameter("student_id");
-
-        String subjectCd =
-                request.getParameter("subject_cd");
-        
-        String schoolCd =
-        		request.getParameter("school_cd");
-
-        int no =
-                Integer.parseInt(
-                        request.getParameter("no"));
-
-        try {
-
-            InitialContext ic =
-                    new InitialContext();
-
-            DataSource ds =
-                    (DataSource) ic.lookup(
-                    		"java:/comp/env/jdbc/stpoint");
-
-            try (Connection con =
-                    ds.getConnection()) {
-
-                String sql =
-                        "SELECT * "
-                      + "FROM TEST "
-                      + "WHERE STUDENT_NO = ? "
-                      + "AND SUBJECT_CD = ? "
-                      + "AND SCHOOL_CD = ? "
-                      + "AND NO = ?";
-
-                Map<String, Object> data =
-                        new HashMap<>();
-
-                try (
-                    PreparedStatement st =
-                            con.prepareStatement(sql)
-                ) {
-
-                    st.setString(1, studentNo);
-                    st.setString(2, subjectCd);
-                    st.setString(3,  schoolCd);
-                    st.setInt(4, no);
-
-                    try (
-                        ResultSet rs =
-                                st.executeQuery()
-                    ) {
-
-                    	if (rs.next()) {
-
-                    	    data.put(
-                    	        "student_id",
-                    	        rs.getString("STUDENT_NO"));
-
-                    	    data.put(
-                    	        "subject_cd",
-                    	        rs.getString("SUBJECT_CD"));
-
-                    	    data.put(
-                    	        "school_cd",
-                    	        rs.getString("SCHOOL_CD"));
-
-                    	    data.put(
-                    	        "no",
-                    	        rs.getInt("NO"));
-
-                    	    data.put(
-                    	        "point",
-                    	        rs.getInt("POINT"));
-
-                    	    data.put(
-                    	        "class_num",
-                    	        rs.getString("CLASS_NUM"));
-                    	}
-                    }
-                }
-
-                request.setAttribute("data", data);
-
-                request.getRequestDispatcher(
-                        "/management/score_update.jsp")
-                        .forward(request, response);
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            response.sendError(
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        request.setCharacterEncoding("UTF-8");
-
-        String studentNo =
-                request.getParameter("student_id");
-
-        String subjectCd =
-                request.getParameter("subject_cd");
-        
-        String schoolCd =
-                request.getParameter("school_cd");
-
-        int no =
-                Integer.parseInt(
-                        request.getParameter("no"));
-
-        int point =
-                Integer.parseInt(
-                        request.getParameter("point"));
-
-        String classNum =
-                request.getParameter("class_num");
-
-        try {
-
-            InitialContext ic =
-                    new InitialContext();
-
-            DataSource ds =
-                    (DataSource) ic.lookup(
-                            "java:/comp/env/jdbc/stpoint");
-
-            try (Connection con =
-                    ds.getConnection()) {
-
-                String sql =
-                        "UPDATE TEST "
-                      + "SET POINT = ?, "
-                      + "CLASS_NUM = ? "
-                      + "WHERE STUDENT_NO = ? "
-                      + "AND SUBJECT_CD = ? "
-                      + "AND SCHOOL_CD = ? "
-                      + "AND NO = ?";
-
-                try (
-                    PreparedStatement st =
-                            con.prepareStatement(sql)
-                ) {
-
-                    st.setInt(1, point);
-                    st.setString(2, classNum);
-                    st.setString(3, studentNo);
-                    st.setString(4, subjectCd);
-                    st.setString(5, schoolCd);
-                    st.setInt(6, no);
-
-                    st.executeUpdate();
-                }
-            }
-
-            response.sendRedirect(
-                    request.getContextPath()
-                    + "/score/list");
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            response.sendError(
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
+body{
+    font-family: "Yu Gothic", sans-serif;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    margin: 0;
+    padding: 40px;
 }
+
+.container{
+    width: 500px;
+    margin: auto;
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+h2{
+    text-align: center;
+    color: #555;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th{
+    text-align: left;
+    padding: 12px;
+    color: #666;
+    width: 35%;
+}
+
+td{
+    padding: 12px;
+}
+
+input{
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+input:focus{
+    border-color: #ffb6c1;
+    outline: none;
+    box-shadow: 0 0 8px rgba(255,182,193,0.5);
+}
+
+button{
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #ffb6c1, #ff8fab);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255,143,171,0.4);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>✎得点更新</h2>
+
+<%
+Map<String, Object> data =
+    (Map<String, Object>)
+    request.getAttribute("data");
+%>
+
+<form
+action="../score/update"
+method="post">
+
+<input type="hidden"
+name="student_id"
+value="<%= data.get("student_id") %>">
+
+<input type="hidden"
+name="subject_cd"
+value="<%= data.get("subject_cd") %>">
+
+<input type="hidden"
+name="school_cd"
+value="<%= data.get("school_cd") %>">
+
+<input type="hidden"
+name="no"
+value="<%= data.get("no") %>">
+
+<table border="1">
+
+<tr>
+<th>学生番号</th>
+<td>
+<%= data.get("student_id") %>
+</td>
+</tr>
+
+<tr>
+<th>科目コード</th>
+<td>
+<%= data.get("subject_cd") %>
+</td>
+</tr>
+
+<tr>
+<th>得点</th>
+<td>
+
+<input
+type="number"
+name="point"
+value="<%= data.get("point") %>">
+
+</td>
+</tr>
+
+<tr>
+<th>学校コード</th>
+<td>
+
+<%= data.get("school_cd") %>
+
+</td>
+</tr>
+
+<tr>
+<th>クラス番号</th>
+<td>
+
+<input
+type="text"
+name="class_num"
+value="<%= data.get("class_num") %>">
+
+</td>
+</tr>
+
+</table>
+
+<br>
+
+<button type="submit">
+更新
+</button>
+
+</form>
+
+</div>
+</body>
+</html>

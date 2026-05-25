@@ -12,7 +12,7 @@ import DAO.DAO;
 public class StudentDAO extends DAO {
 
     /**
-     * 学籍番号から学生を取得（重複チェック・更新画面の初期表示用）
+     * 学籍番号から学生を取得
      */
     public Student get(String no) throws Exception {
         Student student = null;
@@ -36,19 +36,15 @@ public class StudentDAO extends DAO {
     }
     
     /**
-     * 学生の条件検索・ソート処理（クラス完全一致修正版）
+     * 学生の条件検索・ソート処理
      */
     public List<Student> search(String name, String classNum, String sort) throws Exception {
-
         List<Student> list = new ArrayList<>();
-
-        // クラスを「LIKE」から「=」による完全一致に修正。未選択（""）の時は全件通す工夫を入れています。
         String sql =
             "SELECT * FROM student " +
             "WHERE name LIKE ? " +
             "AND (? = '' OR class_num = ?) ";
 
-        // ソート条件の追加
         if ("no".equals(sort)) {
             sql += " ORDER BY no ASC";
         } else if ("class".equals(sort)) {
@@ -61,7 +57,6 @@ public class StudentDAO extends DAO {
              PreparedStatement st = con.prepareStatement(sql)) {
 
             st.setString(1, "%" + name + "%");
-            // クラス未選択（null）の場合は空文字に変換してバインド
             String cls = (classNum != null) ? classNum : "";
             st.setString(2, cls);
             st.setString(3, cls);
@@ -83,7 +78,7 @@ public class StudentDAO extends DAO {
     }
     
     /**
-     * 学生情報を全件取得する（一覧表示用・重複なし選択肢の生成用）
+     * 学生情報の全件取得する
      */
     public List<Student> findAll() throws Exception {
         List<Student> list = new ArrayList<>();
@@ -108,19 +103,18 @@ public class StudentDAO extends DAO {
     }
     
     /**
-     * 学生情報の変更（クラス変更なし・氏名と在学フラグのみを安全にUPDATE）
+     * 学生情報の変更（★クラス番号も一緒に上書き保存するように修正しました）
      */
     public boolean update(Student s) throws Exception {
-        // ⭕ 画面から送られてこないクラスと入学年度をSQLの更新対象から外しました。
-        // これにより、データが新しく増えてしまうバグを完全に防ぎ、安全に上書きします。
-        String sql = "UPDATE student SET name = ?, is_attend = ? WHERE no = ?";
+        String sql = "UPDATE student SET name = ?, class_num = ?, is_attend = ? WHERE no = ?";
 
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
 
             st.setString(1, s.getName());
-            st.setBoolean(2, s.isAttend());
-            st.setString(3, s.getNo());
+            st.setString(2, s.getClassNum()); // ここで選んだクラスを確実にセットします
+            st.setBoolean(3, s.isAttend());
+            st.setString(4, s.getNo());
 
             int count = st.executeUpdate();
             return count > 0;
@@ -128,7 +122,7 @@ public class StudentDAO extends DAO {
     }
 
     /**
-     * 学生情報の新規保存（INSERT）
+     * 学生情報の新規保存
      */
     public boolean postFilter(Student s) throws Exception {
         String sql = "INSERT INTO student (no, name, ent_year, class_num, is_attend, school_cd) VALUES (?, ?, ?, ?, ?, ?)";

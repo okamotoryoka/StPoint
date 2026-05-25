@@ -21,7 +21,8 @@ public class StudentUpdatExecuteAction extends Action {
             entYear = Integer.parseInt(entYearStr);
         }
         
-        String classNum = request.getParameter("classNum");
+        // 修正ポイント：JSPのselectタグのname属性（class_num）に合わせて、正しく値を受け取れるように変更しました
+        String classNum = request.getParameter("class_num");
         
         // JSPでチェックボックスにチェックがついている時だけ「true」にする判定
         boolean isAttend = request.getParameter("isAttend") != null;
@@ -37,7 +38,7 @@ public class StudentUpdatExecuteAction extends Action {
         // 3. データベースへの更新処理を実行
         StudentDAO sDAO = new StudentDAO();
         
-        // ⭕ 修正：新規追加(postFilter)ではなく、上書き用メソッド(update)を呼び出します
+        // 新規追加(postFilter)ではなく、上書き用メソッド(update)を呼び出します
         sDAO.update(student); 
 
         // 4. 学生更新完了画面を表示する

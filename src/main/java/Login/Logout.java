@@ -1,11 +1,11 @@
-package Action.Admin;
+package Login;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 // ログアウト処理を行うクラス
-public class AdminLogout {
+public class Logout {
 
     // executeメソッド：FrontControllerから呼ばれる
     public String execute(

@@ -1,4 +1,4 @@
-package Action.Admin;
+package Login;
 
 import Bean.Admin;
 import DAO.Admin.AdminDAO;
@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import tool.Action; // ← インポートが必要
 
 
-public class AdminLoginAction extends Action {
+public class LoginAction extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)

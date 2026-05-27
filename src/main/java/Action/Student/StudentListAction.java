@@ -61,7 +61,7 @@ public class StudentListAction extends Action {
         request.setAttribute("yearList", yearList);
         request.setAttribute("classList", classList);
 
-        // 4. ★表示データの取得（「何も表示されない」バグの修正箇所）
+        // 4.表示データの取得（「何も表示されない」バグの修正箇所）
         List<Student> students = null;
 
         if (isPost) {

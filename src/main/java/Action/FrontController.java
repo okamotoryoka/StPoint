@@ -2,13 +2,16 @@ package Action;
 
 import java.io.IOException;
 
-import Action.Admin.AdminLoginAction;
+import Action.Score.ScoreInsertServletAction;
+import Action.Score.ScoreListServletAction;
+import Action.Score.ScoreUpdateServletAction;
 import Action.Student.StudentCreateAction;
 import Action.Student.StudentCreateExecuteAction;
 import Action.Student.StudentListAction;
 import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
+import Login.LoginAction;
 // ⚠️ もしStudentSearchActionでエラーが出る場合は、ここに適切なインポート文（例: import Action.Student.StudentSearchAction;）を追加してください
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,8 +37,8 @@ public class FrontController extends HttpServlet {
         Action action = null;
 
         try {
-            if (path.equals("/AdminLogin.action")) {
-                action = new AdminLoginAction();
+            if (path.equals("/Login.action")) {
+                action = new LoginAction();
             } 
             else if (path.equals("/StudentCreate.action")) {
                 action = new StudentCreateAction();
@@ -56,6 +59,18 @@ public class FrontController extends HttpServlet {
                 action = new StudentSearchAction();
             } // ⭕ カッコを正しく閉じました
 
+            else if (path.equals("/ScoreListServlet.action")) {
+            	action = new ScoreListServletAction();
+            }
+            
+            else if (path.equals("/ScoreUpdateServlet.action")) {
+            	action = new ScoreUpdateServletAction();
+            }
+            
+            else if (path.equals("/ScoreInsertServlet.action")) {
+            	action = new ScoreInsertServletAction();
+            }
+            
             // 該当するアクションがない場合
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);

@@ -57,7 +57,7 @@
             <tr>
                 <th style="background-color: #f2f2f2; text-align: left; padding: 10px;">クラス</th>
                 <td style="padding: 10px;">
-                    <select name="class_num" style="padding: 5px; width: 212px;">
+                    <select name="classNum" style="padding: 5px; width: 212px;">
                         <% 
                             if (displayClassList != null) {
                                 for (String c : displayClassList) {

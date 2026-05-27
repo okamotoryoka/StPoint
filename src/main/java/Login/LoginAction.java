@@ -1,4 +1,4 @@
-package Action.Admin;
+package Login;
 
 import Bean.Admin;
 import DAO.Admin.AdminDAO;
@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import tool.Action; // ← インポートが必要
 
 
-public class AdminLoginAction extends Action {
+public class LoginAction extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -30,7 +30,7 @@ public class AdminLoginAction extends Action {
             session.setAttribute("admin", admin);
             session.setAttribute("admin_name", admin_name);
 
-            return "result/admin_menu.jsp"; // 成功時の遷移先
+            return "menu.jsp"; // 成功時の遷移先
         }
 
         return "login/login-error.jsp"; // 失敗時の遷移先

@@ -17,7 +17,7 @@
 
 <!-- Sessionに保存されているので hidden は不要 -->
 
-<form action="login/adminlogin-in.jsp" method="get">
+<form action="login/login.jsp" method="get">
     <input type="submit" value="管理者">
 </form>
 

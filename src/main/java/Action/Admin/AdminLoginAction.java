@@ -30,7 +30,7 @@ public class AdminLoginAction extends Action {
             session.setAttribute("admin", admin);
             session.setAttribute("admin_name", admin_name);
 
-            return "result/admin_menu.jsp"; // 成功時の遷移先
+            return "menu.jsp"; // 成功時の遷移先
         }
 
         return "login/login-error.jsp"; // 失敗時の遷移先

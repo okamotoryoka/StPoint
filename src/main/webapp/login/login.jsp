@@ -25,7 +25,7 @@
 
     <!-- ⭕ 送信先を管理者用の「../AdminLogin.action」に設定 -->
     <form action="../Login.action" method="post">
-
+    
         <!-- ⭕ パラメーター名は AdminLoginAction と合わせて「admin_name」 -->
         <input
             type="text"

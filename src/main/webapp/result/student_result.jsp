@@ -4,7 +4,7 @@
 
 
 <!DOCTYPE html>
-<html>
+<>
 <head>
 <meta charset="UTF-8">
 <title>学生情報登録</title>

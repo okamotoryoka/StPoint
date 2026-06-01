@@ -20,7 +20,6 @@
 <form action="login/login.jsp" method="get">
     <input type="submit" value="管理者">
 </form>
-
 </form>
 
 </body>

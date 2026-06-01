@@ -3,9 +3,10 @@ package Login;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import tool.Action;
 
 // ログアウト処理を行うクラス
-public class Logout {
+public class LogoutAction extends Action {
 
     // executeメソッド：FrontControllerから呼ばれる
     public String execute(
@@ -23,7 +24,7 @@ public class Logout {
             session.removeAttribute("password");
 
             // ログアウト成功ページへ
-            return "logout-out.jsp";
+            return "login/logout-out.jsp";
         }
 
         // すでにログアウトしている場合

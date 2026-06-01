@@ -12,6 +12,7 @@ import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
 import Login.LoginAction;
+import Login.LogoutAction;
 // ⚠️ もしStudentSearchActionでエラーが出る場合は、ここに適切なインポート文（例: import Action.Student.StudentSearchAction;）を追加してください
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -40,6 +41,10 @@ public class FrontController extends HttpServlet {
             if (path.equals("/Login.action")) {
                 action = new LoginAction();
             } 
+            
+            else if(path.equals("/Logout.action")) {
+            	action = new LogoutAction();
+            }
             else if (path.equals("/StudentCreate.action")) {
                 action = new StudentCreateAction();
             }

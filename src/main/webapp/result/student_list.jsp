@@ -9,43 +9,8 @@
 <%-- 画面全体を左メニューと右メインコンテンツに分割するコンテナ --%>
 <div class="system-layout" style="display: flex; min-height: 80vh;">
 
-  <%-- =========================================================
-       左側サイドメニューエリア（追加箇所）
-       ========================================================= --%>
-  <div class="sidebar-menu" style="width: 200px; padding: 20px; background-color: #f5f5f5; border-right: 1px solid #ddd;">
-    
-    <%-- メニューへのリンク --%>
-    <div style="margin-bottom: 15px;">
-      <a href="${pageContext.request.contextPath}/result/admin_menu.jsp" style="font-weight: bold; text-decoration: none; color: #333;">メニュー</a>
-    </div>
+<jsp:include page="../footer.jsp" />
 
-    <%-- 学生管理（現在のアクティブ画面） --%>
-    <div style="margin-bottom: 15px;">
-      <a href="${pageContext.request.contextPath}/StudentList.action" style="font-weight: bold; text-decoration: none; color: #0066cc;">学生管理</a>
-    </div>
-
-    <%-- 成績管理エリア（子メニュー付き） --%>
-    <div style="margin-bottom: 15px;">
-      <span style="font-weight: bold; color: #333;">成績管理</span>
-      <ul style="list-style: none; padding-left: 15px; margin-top: 5px;">
-        <%-- 成績登録へのアクションURLを接続 --%>
-        <li style="margin-bottom: 5px;">
-          <a href="${pageContext.request.contextPath}/ScoreRegister.action" style="text-decoration: none; color: #666;">成績登録</a>
-        </li>
-        <%-- 成績参照へのアクションURLを接続 --%>
-        <li style="margin-bottom: 5px;">
-          <a href="${pageContext.request.contextPath}/ScoreSearch.action" style="text-decoration: none; color: #666;">成績参照</a>
-        </li>
-      </ul>
-    </div>
-
-    <%-- 科目管理エリア --%>
-    <div style="margin-bottom: 15px;">
-      <%-- 科目管理へのアクションURLを接続 --%>
-      <a href="${pageContext.request.contextPath}/ScoreListServlet.action" style="font-weight: bold; text-decoration: none; color: #333;">科目管理</a>
-    </div>
-
-  </div>
 
 
   <%-- =========================================================
@@ -179,4 +144,3 @@
   </div>
 </div>
 
-<%@ include file="../footer.html" %>

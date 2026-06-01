@@ -23,7 +23,7 @@ href="${pageContext.request.contextPath}/css/style3.css">
 
     <div class="user-info">
         ${sessionScope.admin_name}様　
-        <a href="login/logout.jsp">ログアウト</a>
+        <a href="${pageContext.request.contextPath}/Logout.action">ログアウト</a>
     </div>
 
 </header>
@@ -41,7 +41,7 @@ href="${pageContext.request.contextPath}/css/style3.css">
             <li><a href="${pageContext.request.contextPath}/StudentList.action">学生管理</a></li>
 
             <li><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績管理</a></li>
-            <li><a href="${pageContext.request.contextPath}/management/score_insert.jsp">成績登録</a></li>
+            <li><a href="${pageContext.request.contextPath}/ScoreInsertServlet.action">成績登録</a></li>
             <li><a href="#">成績参照</a></li>
 
             <li><a href="#">科目管理</a></li>

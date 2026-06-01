@@ -23,7 +23,7 @@ href="${pageContext.request.contextPath}/css/style3.css">
 
     <div class="user-info">
         ${sessionScope.admin_name}様　
-        <a href="#">ログアウト</a>
+        <a href="login/logout.jsp">ログアウト</a>
     </div>
 
 </header>
@@ -36,12 +36,12 @@ href="${pageContext.request.contextPath}/css/style3.css">
     <aside class="sidebar">
 
         <ul>
-            <li><a href="#">メニュー</a></li>
+            <li class="menu-title">メニュー</li>
 
-            <li class="menu-title">学生管理</li>
+            <li><a href="${pageContext.request.contextPath}/StudentList.action">学生管理</a></li>
 
-            <li class="menu-title">成績管理</li>
-            <li><a href="#">成績登録</a></li>
+            <li><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績管理</a></li>
+            <li><a href="${pageContext.request.contextPath}/management/score_insert.jsp">成績登録</a></li>
             <li><a href="#">成績参照</a></li>
 
             <li><a href="#">科目管理</a></li>
@@ -65,8 +65,8 @@ href="${pageContext.request.contextPath}/css/style3.css">
             <!-- 成績管理 -->
             <div class="card score">
 
-                <div><a href="#">成績管理</a></div>
-                <div><a href="#">成績登録</a></div>
+                <div><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績管理</a></div>
+                <div><a href="${pageContext.request.contextPath}/management/score_insert.jsp">成績登録</a></div>
                 <div><a href="#">成績参照</a></div>
 
             </div>

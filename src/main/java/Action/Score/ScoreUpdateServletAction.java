@@ -15,8 +15,9 @@ import tool.Action;
 
 public class ScoreUpdateServletAction extends Action {
 
+    // 戻り値の型を String から void に変更します
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String studentNo = request.getParameter("student_id");
         String subjectCd = request.getParameter("subject_cd");
         String schoolCd = request.getParameter("school_cd");
@@ -42,7 +43,9 @@ public class ScoreUpdateServletAction extends Action {
                         st.executeUpdate();
                     }
                 }
-                return "ScoreListServlet.action";
+                // 【修正】更新成功時はリダイレクトを呼び出し、処理を終了します
+                response.sendRedirect("ScoreListServlet.action");
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
                 throw e;
@@ -76,7 +79,8 @@ public class ScoreUpdateServletAction extends Action {
                 }
 
                 request.setAttribute("data", data);
-                return "management/score_update.jsp";
+                // 【修正】画面表示時は直接JSPへフォワードします
+                request.getRequestDispatcher("/management/score_update.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();

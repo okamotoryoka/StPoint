@@ -14,8 +14,9 @@ import tool.Action;
 
 public class StudentListAction extends Action {
 
+    // 戻り値の型を String から void に変更します
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         
         // 1. JSPの絞り込みフォームから送られてきた値を取得する
         String entYearStr = request.getParameter("entYear");
@@ -30,7 +31,6 @@ public class StudentListAction extends Action {
             // 絞り込み時は、チェックボックスにチェックが入っている場合だけONにする
             currentAttendChecked = (isAttendStr != null);
         } else {
-            // ⭕ 完了画面などから戻ってきたとき（GET）は、初期状態としてON（在学中のみ表示）にする
             currentAttendChecked = true;
         }
 
@@ -61,15 +61,13 @@ public class StudentListAction extends Action {
         request.setAttribute("yearList", yearList);
         request.setAttribute("classList", classList);
 
-        // 4.表示データの取得（「何も表示されない」バグの修正箇所）
+        // 4.表示データの取得
         List<Student> students = null;
 
         if (isPost) {
-            // 絞り込みボタンが押された（POST）の時は、選択されたクラスで検索する
             String classQuery = (classNum != null) ? classNum : "";
             students = dao.search("", classQuery, "no");
         } else {
-            // ⭕ 完了画面から戻ってきたとき（GET）は、初期表示として「全員」をデータベースから連れてくる
             students = dao.findAll();
         }
 
@@ -83,7 +81,6 @@ public class StudentListAction extends Action {
             students.removeIf(s -> s.getEntYear() != entYear);
         }
         
-        // 「在学中」チェックボックスがONのときは、退学者（false）を一覧から除外する
         if (currentAttendChecked) {
             students.removeIf(s -> !s.isAttend());
         }
@@ -91,6 +88,7 @@ public class StudentListAction extends Action {
         // 6. 最終的な結果リストをJSPに渡す
         request.setAttribute("students", students);
 
-        return "result/student_list.jsp";
+        // その場で直接JSPへフォワードし、画面を表示します
+        request.getRequestDispatcher("/result/student_list.jsp").forward(request, response);
     }
 }

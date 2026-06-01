@@ -2,40 +2,41 @@ package Bean;
 
 public class Teacher implements java.io.Serializable {
 	
-	private String teacher_id;
+	private String id;
 	private String password;
-	private String teacher_name;
-	private String school_cd;
+	private String name;
+	private School school; // school_cd から School型の school に変更
 	
-	public String getTeacherId() {
-		return teacher_id;
+	public String getId() {
+		return id;
 	}
 	
-	public String getTeacherPass() {
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getPassword() {
 		return password;
 	}
 	
-	public String getTeacherName() {
-		return teacher_name;
-	}
-	
-	public String getSchoolCd() {
-		return school_cd;
-	}
-	
-	public void setTeacherId(String teacher_id) {
-		this.teacher_id = teacher_id;
-	}
-	
-	public void setTeacherPass(String password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	
-	public void setTeacherName(String teacher_name) {
-		this.teacher_name = teacher_name;
+	public String getName() {
+		return name;
 	}
 	
-	public void setSchoolCd(String school_cd) {
-		this.school_cd = school_cd;
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	// Actionクラスから呼び出される必要なメソッドです
+	public School getSchool() {
+		return school;
+	}
+	
+	public void setSchool(School school) {
+		this.school = school;
 	}
 }

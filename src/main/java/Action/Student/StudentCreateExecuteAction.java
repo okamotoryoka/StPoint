@@ -1,6 +1,6 @@
 package Action.Student;
 
-import Bean.School; // エラー対策：Schoolクラスを使用するためにインポートを追加
+import Bean.School;
 import Bean.Student;
 import DAO.Student.StudentDAO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import tool.Action;
 
 public class StudentCreateExecuteAction extends Action {
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // パラメータの取得
         String name = request.getParameter("name");
         String no = request.getParameter("no");
@@ -27,13 +27,15 @@ public class StudentCreateExecuteAction extends Action {
         // 1. 【学生番号、氏名が未入力の場合】のチェック
         if (no == null || no.isEmpty() || name == null || name.isEmpty()) {
             request.setAttribute("err", "required");
-            return "result/student_create.jsp";
+            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
+            return;
         }
 
         // 2. 【入学年度が未入力の場合】のチェック
         if (entYearStr == null || entYearStr.isEmpty()) {
             request.setAttribute("err", "year_empty");
-            return "result/student_create.jsp";
+            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
+            return;
         }
 
         // 数値変換チェック
@@ -42,7 +44,8 @@ public class StudentCreateExecuteAction extends Action {
             entYear = Integer.parseInt(entYearStr);
         } catch (NumberFormatException e) {
             request.setAttribute("err", "year_invalid");
-            return "result/student_create.jsp";
+            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
+            return;
         }
 
         StudentDAO dao = new StudentDAO();
@@ -50,7 +53,8 @@ public class StudentCreateExecuteAction extends Action {
         // 3. 【学生番号が重複していた場合】のチェック
         if (dao.get(no) != null) {
             request.setAttribute("err", "duplicate"); 
-            return "result/student_create.jsp";
+            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
+            return;
         }
 
         // 4. Beanの作成と保存処理
@@ -61,25 +65,24 @@ public class StudentCreateExecuteAction extends Action {
         s.setClassNum(classNum);
         s.setAttend(true);
 
-        // エラー対策（方法A）：DAO側でNullPointerExceptionが起きるのを防ぐため、
-        // クラス図の通りにSchoolオブジェクトを生成してセットします。
         School school = new School();
-        school.setCd("tes"); // DAOのデフォルト値に合わせて "tes" を設定
+        school.setCd("tes"); 
         s.setSchool(school);
 
         try {
-            // DAO側の仕様に合わせて「postFilter」のままで実行します
             boolean isSuccess = dao.postFilter(s);
             if (!isSuccess) {
                 request.setAttribute("err", "insert_failed");
-                return "result/student_create.jsp";
+                request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
+                return;
             }
         } catch (Exception e) {
             request.setAttribute("err", "insert_failed");
-            return "result/student_create.jsp";
+            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
+            return;
         }
 
-        // 成功時は「学生登録完了画面」へ遷移する
-        return "result/student_create_done.jsp";
+        // 成功時はブラウザへ完了画面へのリダイレクトを指示します
+        response.sendRedirect("result/student_create_done.jsp");
     }
 }

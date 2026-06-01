@@ -11,8 +11,9 @@ import tool.Action;
 
 public class StudentUpdateAction extends Action {
 
+    // 戻り値の型を String から void に変更します
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
         
         // 1. 画面から学生番号を取得
         String no = req.getParameter("no");
@@ -31,7 +32,7 @@ public class StudentUpdateAction extends Action {
         req.setAttribute("class_list", classList);
         req.setAttribute("student", student);
 
-        // 6. 遷移先のJSP名を文字列（String）で返す
-        return "result/student_update.jsp"; 
+        // 【修正】その場で直接JSPへフォワードし、画面を表示します
+        req.getRequestDispatcher("/result/student_update.jsp").forward(req, res); 
     }
 }

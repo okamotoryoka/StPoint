@@ -13,7 +13,7 @@ import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
 import Login.LoginAction;
 import Login.LogoutAction;
-// ⚠️ もしStudentSearchActionでエラーが出る場合は、ここに適切なインポート文（例: import Action.Student.StudentSearchAction;）を追加してください
+import Subject.SubjectListAction;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -59,10 +59,10 @@ public class FrontController extends HttpServlet {
             }
             else if (path.equals("/StudentUpdatExecute.action")) {
                 action = new StudentUpdatExecuteAction();
-            } // ⭕ カッコを正しく閉じました
+            } 
             else if (path.equals("/StudentSearch.action")) {
                 action = new StudentSearchAction();
-            } // ⭕ カッコを正しく閉じました
+            } 
 
             else if (path.equals("/ScoreListServlet.action")) {
             	action = new ScoreListServletAction();
@@ -75,18 +75,19 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/ScoreInsertServlet.action")) {
             	action = new ScoreInsertServletAction();
             }
+            // 【修正】/ を追加してURL判定の不具合を防ぎます
+            else if (path.equals("/SubjectList.action")) {
+            	action = new SubjectListAction();
+            }
             
-            // 該当するアクションがない場合
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);
                 return;
             }
 
-            // --- アクションの実行と画面遷移 ---
-            String url = action.execute(request, response);
-            
-            // 指定されたJSPファイルへ移動
-            request.getRequestDispatcher(url).forward(request, response);
+            // --- 【修正】アクションの実行のみをおこないます ---
+            // 各Actionクラスがメソッドの内部で自ら forward または sendRedirect を実行します。
+            action.execute(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

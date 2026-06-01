@@ -9,7 +9,7 @@
 <%-- 画面全体を左メニューと右メインコンテンツに分割するコンテナ --%>
 <div class="system-layout" style="display: flex; min-height: 80vh;">
 
-<jsp:include page="../footer.jsp" />
+<jsp:include page="../tag.jsp"/>
 
 
 

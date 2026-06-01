@@ -5,29 +5,27 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
-// ログアウト処理を行うクラス
 public class LogoutAction extends Action {
 
-    // executeメソッド：FrontControllerから呼ばれる
-    public String execute(
+    // 戻り値の型を String から void に変更します
+    @Override
+    public void execute(
         HttpServletRequest request, HttpServletResponse response
     ) throws Exception {
 
-        // セッションを取得
         HttpSession session = request.getSession();
 
-        // ログインしているか確認（customerがあるか）
         if (session.getAttribute("admin_name") != null) {
 
-            // セッションからログイン情報を削除（ログアウト）
             session.removeAttribute("admin_name");
             session.removeAttribute("password");
 
-            // ログアウト成功ページへ
-            return "login/logout-out.jsp";
+            // その場で直接ログアウト成功ページへフォワードします
+            request.getRequestDispatcher("login/logout-out.jsp").forward(request, response);
+            return;
         }
 
-        // すでにログアウトしている場合
-        return "logout-error.jsp";
+        // すでにログアウトしている場合も直接エラーページへフォワードします
+        request.getRequestDispatcher("logout-error.jsp").forward(request, response);
     }
 }

@@ -16,8 +16,9 @@ import tool.Action;
 
 public class ScoreListServletAction extends Action {
 
+    // 戻り値の型を String から void に変更します
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
@@ -35,7 +36,7 @@ public class ScoreListServletAction extends Action {
                     "t.CLASS_NUM AS class_num " +
                     "FROM TEST t " +
                     "LEFT JOIN STUDENT st " +
-                    "ON t.STUDENT_NO = st.NO " + // 
+                    "ON t.STUDENT_NO = st.NO " + 
                     "AND t.SCHOOL_CD = st.SCHOOL_CD " +
                     "LEFT JOIN SUBJECT sub " +
                     "ON t.SUBJECT_CD = sub.CD " +
@@ -61,7 +62,9 @@ public class ScoreListServletAction extends Action {
                 }
 
                 request.setAttribute("list", list);
-                return "/management/score_list.jsp";
+                
+                // 【修正】画面表示時は直接JSPへフォワードします
+                request.getRequestDispatcher("/management/score_list.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();

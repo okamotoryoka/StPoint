@@ -13,7 +13,7 @@
   <jsp:include page="../tag.jsp" />
 
   <%-- =========================================================
-       右側メインコンテンツエリア
+       Right Main Content Area
        ========================================================= --%>
   <div class="content-body" style="flex: 1; padding: 20px;">
 
@@ -157,16 +157,9 @@
           %>
         </tbody>
       </table>
-
-      <%-- 設計図に記載されている「登録して終了」ボタン --%>
-      <% if (count > 0) { %>
-        <p style="text-align: right; margin-top: 20px;">
-          <input type="submit" value="登録して終了" class="btn-submit" style="background-color: #28a745;">
-        </p>
-      <% } %>
     </form>
 
-    <%-- メニュー戻るボタン --%>
+    <%-- メメニュー戻るボタン --%>
     <p style="margin-top: 20px;">
       <a href="${pageContext.request.contextPath}/result/admin_menu.jsp" class="link-action">メニューへ戻る</a>
     </p>

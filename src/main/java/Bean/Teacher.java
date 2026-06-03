@@ -39,4 +39,44 @@ public class Teacher implements java.io.Serializable {
 	public void setSchool(School school) {
 		this.school = school;
 	}
+
+	// 新しく降ってきたTeacherDAOのエラーを消すために追加（ハイブリッド化）
+
+	public void setSchoolCd(String schoolCd) {
+		if (this.school == null) {
+			this.school = new School();
+		}
+		this.school.setCd(schoolCd); 
+	}
+
+	public String getSchoolCd() {
+		if (this.school != null) {
+			return this.school.getCd(); 
+		}
+		return null;
+	}
+
+	public void setTeacherId(String teacherId) {
+		this.id = teacherId;
+	}
+
+	public String getTeacherId() {
+		return this.id;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.name = teacherName;
+	}
+
+	public String getTeacherName() {
+		return this.name;
+	}
+
+	public void setTeacherPass(String teacherPass) {
+		this.password = teacherPass;
+	}
+
+	public String getTeacherPass() {
+		return this.password;
+	}
 }

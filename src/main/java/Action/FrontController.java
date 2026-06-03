@@ -2,6 +2,8 @@ package Action;
 
 import java.io.IOException;
 
+import Action.Login.LoginAction;
+import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
 import Action.Score.ScoreListServletAction;
 import Action.Score.ScoreUpdateServletAction;
@@ -11,9 +13,8 @@ import Action.Student.StudentListAction;
 import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
-import Login.LoginAction;
-import Login.LogoutAction;
-import Subject.SubjectListAction;
+import Action.Subject.SubjectListAction;
+import Action.Test.TestRegistAction;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -78,6 +79,10 @@ public class FrontController extends HttpServlet {
             // 【修正】/ を追加してURL判定の不具合を防ぎます
             else if (path.equals("/SubjectList.action")) {
             	action = new SubjectListAction();
+            }
+            
+            else if (path.equals("/TestRegist.action")) {
+            	action = new TestRegistAction();
             }
             
             if (action == null) {

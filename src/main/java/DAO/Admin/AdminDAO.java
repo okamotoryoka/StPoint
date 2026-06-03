@@ -11,16 +11,15 @@ public class AdminDAO extends DAO {
 	public Admin search(String admin_name, String password) throws Exception {
 		
 		Admin admin = null;
-		
 		Connection con = getConnection();
 		
 		PreparedStatement st = con.prepareStatement(
 				"select * from Admin where admin_name=? and password=? "
 				);
 		
-		st.setString(1,admin_name);
-		
-		st.setString(2,password);
+		// 入力された値の前後の空白スペースを削って安全にセットします
+		st.setString(1, admin_name != null ? admin_name.trim() : "");
+		st.setString(2, password != null ? password.trim() : "");
 		
 		ResultSet rs = st.executeQuery(); 
 		
@@ -30,9 +29,9 @@ public class AdminDAO extends DAO {
 			admin.setAdminId(rs.getString("admin_id"));
 			admin.setAdminName(rs.getString("admin_name"));
 			admin.setAdminPass(rs.getString("password"));
-
 		}
 		
+		rs.close();
 		st.close();
 		con.close();
 		

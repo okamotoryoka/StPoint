@@ -1,4 +1,4 @@
-package Subject;
+package Action.Subject;
 
 public class SubjectRegistExecuteAction {
 

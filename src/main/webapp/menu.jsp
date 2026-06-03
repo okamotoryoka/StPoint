@@ -17,7 +17,7 @@
         得点管理システム
     </div>
     <div class="user-info">
-        ${sessionScope.admin_name}様　
+        ${sessionScope.admin_name}様
         <a href="Logout.action">ログアウト</a>
     </div>
 </header>
@@ -33,8 +33,8 @@
             <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/StudentList.action" style="border: none; outline: none; display: inline-block;">学生管理</a></li>
             <li class="menu-title" style="margin-bottom: 8px; color: #333; font-weight: bold;">成績管理</li>
             <li style="padding-left: 20px; margin-bottom: 8px;"><a href="${pageContext.request.contextPath}/ScoreInsertServlet.action" style="border: none; outline: none; display: inline-block;">成績登録</a></li>
-            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreSearch.action" style="border: none; outline: none; display: inline-block;">成績参照</a></li>
-            <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/TestRegist.action" style="border: none; outline: none; display: inline-block;">科目管理</a></li>
+            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action" style="border: none; outline: none; display: inline-block;">成績参照</a></li>
+            <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/SubjectList.action" style="border: none; outline: none; display: inline-block;">科目管理</a></li>
         </ul>
     </aside>
 

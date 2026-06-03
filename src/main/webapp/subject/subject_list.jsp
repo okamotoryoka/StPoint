@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="Bean.Subject" %>
 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 
@@ -16,7 +17,7 @@
        ========================================================= --%>
   <div class="content-body" style="flex: 1; padding: 20px;">
 
-    <h1>成績管理</h1>
+    <h1>科目一覧</h1>
 
     <%
       // 1. 現在選択されている値と、動的選択肢リストを取得
@@ -27,7 +28,10 @@
 
       List<Integer> yearList = (List<Integer>) request.getAttribute("yearList");
       List<String> classList = (List<String>) request.getAttribute("classList");
-      List<Map<String, String>> subjectList = (List<Map<String, String>>) request.getAttribute("subjectList"); // 科目コードと科目名のリスト
+      
+      // 設計図およびJava側の仕様に合わせて List<Subject> 型として受け取るように変更
+      List<Subject> subjectList = (List<Subject>) request.getAttribute("subjectList");
+      
       List<Integer> countList = (List<Integer>) request.getAttribute("countList"); // 回数リスト（1回、2回など）
 
       // 設計図に記載されている「いずれかが未入力の場合」の警告メッセージ
@@ -64,18 +68,19 @@
         </select>
       </div>
 
-      <%-- 科目選択（設計図通りに新規追加） --%>
+      <%-- 科目選択 --%>
       <div class="filter-group">
         <label for="subjectCd">科目</label>
         <select name="subjectCd" id="subjectCd">
           <option value="">--------</option>
-          <% if (subjectList != null) { for (Map<String, String> sub : subjectList) { %>
-            <option value="<%= sub.get("cd") %>" <%= sub.get("cd").equals(selSubject) ? "selected" : "" %>><%= sub.get("name") %></option>
+          <%-- 設計図のクラス定義に基づき、Subjectオブジェクトからゲッターを呼び出すループ処理へ変更 --%>
+          <% if (subjectList != null) { for (Subject sub : subjectList) { %>
+            <option value="<%= sub.getCd() %>" <%= sub.getCd().equals(selSubject) ? "selected" : "" %>><%= sub.getName() %></option>
           <% } } %>
         </select>
       </div>
 
-      <%-- 回数選択（設計図通りに新規追加） --%>
+      <%-- 回数選択 --%>
       <div class="filter-group">
         <label for="no">回数</label>
         <select name="no" id="no">
@@ -97,13 +102,10 @@
 
     <p class="result-count">検索結果：<%= count %>件</p>
 
-    <%-- 
-      【最重要】点数を一括送信して保存するために、
-      テーブル全体を TestRegistExecute.action 向けのフォームで包みます
-    --%>
+    <%-- 点数を一括送信して保存するためのフォーム --%>
     <form action="${pageContext.request.contextPath}/TestRegistExecute.action" method="post">
       
-      <%-- 登録時に誰がどの条件でテストを受けたか引き継ぐための隠しパラメータ --%>
+      <%-- 登録時に必要な条件を引き継ぐための隠しパラメータ --%>
       <input type="hidden" name="entYear" value="<%= selYear %>">
       <input type="hidden" name="classNum" value="<%= selClass %>">
       <input type="hidden" name="subjectCd" value="<%= selSubject %>">
@@ -126,7 +128,6 @@
                     String studentId = (String) student.get("student_id");
                     String studentName = (String) student.get("student_name");
                     String classNum = (String) student.get("class_num");
-                    // 設計図の通り、DBに点数があれば初期値としてセットする
                     String point = (student.get("point") != null) ? String.valueOf(student.get("point")) : "";
           %>
             <tr>
@@ -137,7 +138,6 @@
               <td><%= studentName %></td>
               <td><%= classNum %></td>
               <td>
-                <%-- 点数を入力するためのテキストボックス --%>
                 <input type="text" name="point_<%= index %>" value="<%= point %>" style="width: 60px; text-align: right;">
               </td>
             </tr>

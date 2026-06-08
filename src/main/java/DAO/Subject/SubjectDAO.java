@@ -72,17 +72,27 @@ public class SubjectDAO extends DAO {
     public boolean save(Subject subject) throws Exception {
         int count = 0;
         
-        // データベース接続（stpoint）を取得
+        // 1. データベース接続（stpoint）を取得
         InitialContext ic = new InitialContext();
         DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
         
-        // 指定された科目コード（CD）と学校コード（SCHOOL_CD）を条件に、科目を更新するSQL
-        String sql = "UPDATE SUBJECT SET NAME = ? WHERE UPPER(TRIM(CD)) = UPPER(TRIM(?)) AND UPPER(TRIM(SCHOOL_CD)) = UPPER(TRIM(?))";
+        // 2. すでに同じデータ（科目コードと学校コード）が存在するかチェック
+        Subject existSubject = get(subject.getCd(), subject.getSchool());
+        
+        String sql = "";
+        if (existSubject != null) {
+            // 【データが存在する場合】UPDATE（更新）を行う
+            sql = "UPDATE SUBJECT SET NAME = ? WHERE UPPER(TRIM(CD)) = UPPER(TRIM(?)) AND UPPER(TRIM(SCHOOL_CD)) = UPPER(TRIM(?))";
+        } else {
+            // 【データが存在しない場合】INSERT（新規追加）を行う
+            sql = "INSERT INTO SUBJECT (NAME, CD, SCHOOL_CD) VALUES (?, ?, ?)";
+        }
         
         try (Connection con = ds.getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
             
-            // SQLの「?」に値をセット
+            // 💡 ポイント：UPDATE文もINSERT文も「?」の順番を統一しています
+            // 1番目: NAME, 2番目: CD, 3番目: SCHOOL_CD
             st.setString(1, subject.getName());
             st.setString(2, subject.getCd());
             st.setString(3, subject.getSchool().getCd());
@@ -91,9 +101,9 @@ public class SubjectDAO extends DAO {
             count = st.executeUpdate();
         }
         
-        // 1行以上更新できたら true、更新失敗（対象なし等）なら false を返す
         return count > 0;
     }
+    
 
   
 }

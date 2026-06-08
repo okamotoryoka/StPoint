@@ -2,6 +2,8 @@ package Action;
 
 import java.io.IOException;
 
+import Action.Login.LoginAction;
+import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
 import Action.Score.ScoreListServletAction;
 import Action.Score.ScoreUpdateServletAction;
@@ -11,9 +13,14 @@ import Action.Student.StudentListAction;
 import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
-import Login.LoginAction;
-import Login.LogoutAction;
-// ⚠️ もしStudentSearchActionでエラーが出る場合は、ここに適切なインポート文（例: import Action.Student.StudentSearchAction;）を追加してください
+import Action.Subject.SubjectCreateAction;
+import Action.Subject.SubjectCreateExecuteAction;
+import Action.Subject.SubjectDeleteAction;
+import Action.Subject.SubjectDeleteExecuteAction;
+import Action.Subject.SubjectListAction;
+import Action.Subject.SubjectUpdateAction;
+import Action.Subject.SubjectUpdateExecuteAction;
+import Action.Test.TestRegistAction;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -59,10 +66,10 @@ public class FrontController extends HttpServlet {
             }
             else if (path.equals("/StudentUpdatExecute.action")) {
                 action = new StudentUpdatExecuteAction();
-            } // ⭕ カッコを正しく閉じました
+            } 
             else if (path.equals("/StudentSearch.action")) {
                 action = new StudentSearchAction();
-            } // ⭕ カッコを正しく閉じました
+            } 
 
             else if (path.equals("/ScoreListServlet.action")) {
             	action = new ScoreListServletAction();
@@ -75,18 +82,55 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/ScoreInsertServlet.action")) {
             	action = new ScoreInsertServletAction();
             }
+            // 【修正】/ を追加してURL判定の不具合を防ぎます
+            else if (path.equals("/SubjectList.action")) {
+            	action = new SubjectListAction();
+            }
             
-            // 該当するアクションがない場合
+            else if (path.equals("/SubjectUpdateExecute.action")) {
+            	action = new SubjectUpdateExecuteAction();
+            }
+            
+            else if (path.equals("/SubjectUpdate.action")) {
+            	action = new SubjectUpdateAction();
+            }
+            
+            else if (path.equals("/TestRegist.action")) {
+            	action = new TestRegistAction();
+            }
+            
+            else if (path.equals("/SubjectCreate.action")) {
+                action = new SubjectCreateAction();
+            }
+            else if (path.equals("/SubjectCreateExecute.action")) {
+                action = new SubjectCreateExecuteAction();
+            }
+            
+         // --- 科目更新画面の表示用 ---
+            else if (path.equals("/SubjectUpdate.action")) {
+                action = new SubjectUpdateAction();
+            }
+            // --- 科目更新の実行用 ---
+            else if (path.equals("/SubjectUpdateExecute.action")) {
+                action = new SubjectUpdateExecuteAction();
+            }
+            
+            else if (path.equals("/SubjectDelete.action")) {
+                action = new SubjectDeleteAction();
+            } 
+            else if (path.equals("/SubjectDeleteExecute.action")) {
+                action = new SubjectDeleteExecuteAction();
+            }
+
+            
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);
                 return;
             }
 
-            // --- アクションの実行と画面遷移 ---
-            String url = action.execute(request, response);
-            
-            // 指定されたJSPファイルへ移動
-            request.getRequestDispatcher(url).forward(request, response);
+            // --- 【修正】アクションの実行のみをおこないます ---
+            // 各Actionクラスがメソッドの内部で自ら forward または sendRedirect を実行します。
+            action.execute(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

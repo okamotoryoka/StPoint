@@ -10,8 +10,9 @@ import tool.Action;
 
 public class StudentSearchAction extends Action {
 
+	// 戻り値の型を String から void に変更します
 	@Override
-	public String execute(
+	public void execute(
 	        HttpServletRequest request,
 	        HttpServletResponse response
 	) throws Exception {
@@ -35,6 +36,7 @@ public class StudentSearchAction extends Action {
 
 	    request.setAttribute("students", list);
 
-	    return "/student/search.jsp";
+	    // 【修正】その場で直接JSPへフォワードし、画面を表示します
+	    request.getRequestDispatcher("/student/search.jsp").forward(request, response);
 	}
 }

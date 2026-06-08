@@ -127,7 +127,7 @@ body {
 
     <!-- 左メニュー：文字サイズを大きくし、窮屈感を解消しました -->
     <div class="left-menu-area">
-        <jsp:include page="/footer.jsp" />
+        <jsp:include page="/tag.jsp" />
     </div>
 
     <!-- 右側メインコンテンツエリア -->

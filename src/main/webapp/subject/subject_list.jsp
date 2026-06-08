@@ -37,38 +37,14 @@
         List<Subject> subjects = (List<Subject>) request.getAttribute("subjects");
       %>
 
-
-    <%-- ③〜⑨ 科目一覧テーブル --%>
-    <table class="student-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-      <thead>
-        <tr style="border-bottom: 2px solid #ccc; text-align: left;">
-          <th style="padding: 10px; width: 20%;"><%-- ④ --%>科目コード</th>
-          <th style="padding: 10px; width: 50%;"><%-- ⑤ --%>科目名</th>
-          <th style="padding: 10px; width: 15%;"></th><%-- ⑧ 変更用空白列 --%>
-          <th style="padding: 10px; width: 15%;"></th><%-- ⑨ 削除用空白列 --%>
-        </tr>
-      </thead>
-      <tbody>
-        <%
-          if (subjects != null && !subjects.isEmpty()) {
-              for (Subject sub : subjects) {
-        %>
-          <tr style="border-bottom: 1px solid #eee;">
-            <%-- ⑥ 科目コード --%>
-            <td style="padding: 12px 10px;"><%= sub.getCd() %></td>
-            
-            <%-- ⑦ 科目名 --%>
-            <td style="padding: 12px 10px;"><%= sub.getName() %></td>
-            
-            <%-- ⑧ 変更リンク（主キーとなる科目コードをパラメータに付与） --%>
-            <td style="padding: 12px 10px; text-align: center;">
-              <a href="SubjectUpdate.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #337ab7;">変更</a>
-            </td>
-            
-            <%-- ⑨ 削除リンク（主キーとなる科目コードをパラメータに付与） --%>
-            <td style="padding: 12px 10px; text-align: center;">
-              <a href="SubjectDelete.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #d9534f;">削除</a>
-            </td>
+      <%-- ③〜⑨ 科目一覧テーブル --%>
+      <table class="student-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+          <tr style="border-bottom: 2px solid #ccc; text-align: left;">
+            <th style="padding: 10px; width: 20%;">科目コード</th>
+            <th style="padding: 10px; width: 50%;">科目名</th>
+            <th style="padding: 10px; width: 15%;"></th>
+            <th style="padding: 10px; width: 15%;"></th>
           </tr>
         </thead>
         <tbody>
@@ -106,7 +82,7 @@
         </tbody>
       </table>
 
-      <%-- メニュー戻るボタン --%>
+      <%-- メメニュー戻るボタン --%>
       <p style="margin-top: 30px;">
         <a href="${pageContext.request.contextPath}/menu.jsp" class="link-action">メニューへ戻る</a>
       </p>

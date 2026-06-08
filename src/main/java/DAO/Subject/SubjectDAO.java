@@ -11,15 +11,13 @@ import javax.sql.DataSource;
 
 import Bean.School;
 import Bean.Subject;
-import DAO.DAO; // 設計図通り、親クラスのDAOを継承したままにします
+import DAO.DAO;
 
 public class SubjectDAO extends DAO {
 
-    // クラス図に定義されている通りのメソッド名と引数
     public List<Subject> filter(School school) throws Exception {
         List<Subject> list = new ArrayList<>();
         
-        // 成績のコードと同じ、本物のデータベース接続（stpoint）を取得します
         InitialContext ic = new InitialContext();
         DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
         
@@ -42,6 +40,4 @@ public class SubjectDAO extends DAO {
         }
         return list;
     }
-
-    
 }

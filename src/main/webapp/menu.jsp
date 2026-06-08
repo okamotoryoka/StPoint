@@ -22,7 +22,7 @@ href="${pageContext.request.contextPath}/css/style3.css">
     </div>
 
     <div class="user-info">
-        ${sessionScope.admin_name}様
+        ${sessionScope.teacher_name}様
         <a href="Logout.action">ログアウト</a>
 
     </div>

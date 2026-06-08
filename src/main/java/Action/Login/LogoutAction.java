@@ -7,7 +7,6 @@ import tool.Action;
 
 public class LogoutAction extends Action {
 
-    // 戻り値の型を String から void に変更します
     @Override
     public void execute(
         HttpServletRequest request, HttpServletResponse response
@@ -15,17 +14,22 @@ public class LogoutAction extends Action {
 
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("admin_name") != null) {
+        // ★ 教員（teacher）としてログインしているかチェックします
+        if (session.getAttribute("teacher") != null) {
 
-            session.removeAttribute("admin_name");
-            session.removeAttribute("password");
+            // ★ セッションに保存した教員に関連するデータをすべて破棄します
+            // もしくは session.invalidate(); でセッションごと丸ごと消去しても大丈夫です
+            session.removeAttribute("user");
+            session.removeAttribute("teacher");
+            session.removeAttribute("school");
+            session.removeAttribute("teacher_name");
 
-            // その場で直接ログアウト成功ページへフォワードします
+            // ログアウト成功ページへフォワード
             request.getRequestDispatcher("login/logout-out.jsp").forward(request, response);
             return;
         }
 
-        // すでにログアウトしている場合も直接エラーページへフォワードします
+        // すでにログアウトしている（セッションがない）場合
         request.getRequestDispatcher("logout-error.jsp").forward(request, response);
     }
 }

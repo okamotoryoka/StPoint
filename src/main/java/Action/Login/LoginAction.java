@@ -1,8 +1,7 @@
 package Action.Login;
 
-import Bean.Admin;
 import Bean.Teacher;
-import DAO.Admin.AdminDAO; // インポート文を戻しました
+import DAO.Teacher.TeacherDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +18,7 @@ public class LoginAction extends Action {
 
         HttpSession session = request.getSession();
 
+        // 未入力チェック
         if (username == null || username.isBlank() || pass == null || pass.isBlank()) {
             request.getRequestDispatcher("/login/login-error.jsp").forward(request, response);
             return;
@@ -27,27 +27,29 @@ public class LoginAction extends Action {
         username = username.trim();
         pass = pass.trim();
 
-        // 呼び出し部分からパッケージ名を排除し、単純なクラス名での生成に変更しました
-        AdminDAO dao = new AdminDAO();
-        Admin admin = dao.search(username, pass);
+        // 教員テーブルから検索
+        TeacherDAO dao = new TeacherDAO();
+        Teacher teacher = dao.search(username, pass);
 
         // ログイン成功時の処理
-        if (admin != null) {
-            Teacher user = new Teacher();
-            user.setId(admin.getId());         
-            user.setName(admin.getName());     
-            user.setSchool(admin.getSchool()); 
-
-            session.setAttribute("user", user); 
+        if (teacher != null) {
             
-            session.setAttribute("admin", admin);
-            session.setAttribute("admin_name", username);
-            session.setAttribute("user_type", "admin");
+            // 既存画面（menu.jsp等）が参照する「"user"」と、科目機能が参照する「"teacher"」に同じ教員オブジェクトを格納
+            session.setAttribute("user", teacher); 
+            session.setAttribute("teacher", teacher); 
             
+            // 科目一覧・更新画面が要求する「"school"」オブジェクトを格納
+            session.setAttribute("school", teacher.getSchool()); 
+            
+            // 不要なadmin情報を削除し、教員名のみをセッションに格納
+            session.setAttribute("teacher_name", teacher.getTeacherName());
+            
+            // 前と全く同じリダイレクト処理
             response.sendRedirect("menu.jsp");
             return;
         }
 
+        // ログイン失敗時
         request.getRequestDispatcher("/login/login-error.jsp").forward(request, response);
         return;
     } 

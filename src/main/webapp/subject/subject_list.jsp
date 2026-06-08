@@ -16,8 +16,16 @@
        ========================================================= --%>
   <div class="content-body" style="flex: 1; padding: 20px;">
 
-    <%-- ① タイトル領域 --%>
-    <h1 style="background-color: #f5f5f5; padding: 10px; font-size: 20px;">科目管理</h1>
+    <%-- ① タイトル領域（構文エラーを修正しました） --%>
+    <div>
+      <h1 style="background-color: #f5f5f5; padding: 10px; font-size: 20px;">科目管理</h1>
+    </div>
+
+    <%-- ユーザー情報（右寄せのスタイルを追加しました） --%>
+    <div class="user-info" style="text-align: right; margin-bottom: 10px;">
+        ${sessionScope.admin_name}様
+        <a href="Logout.action">ログアウト</a>
+    </div>
 
     <%-- ② 新規登録リンク（右上に配置するためのスタイル） --%>
     <div style="text-align: right; margin-bottom: 10px;">

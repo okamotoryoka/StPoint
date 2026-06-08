@@ -31,7 +31,7 @@
             <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績参照</a></li>
 
             <!-- 科目管理 -->
-            <li class="menu-title" style="margin-bottom: 16px;"><a href=""${pageContext.request.contextPath}/ScoreListServlet.action">科目管理</a></li>
+            <li class="menu-title" style="margin-bottom: 16px;"><a href=""${pageContext.request.contextPath}/SubjectList.action">科目管理</a></li>
         </ul>
 
     </aside>

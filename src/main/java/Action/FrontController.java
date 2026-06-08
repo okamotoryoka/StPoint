@@ -14,6 +14,8 @@ import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
 import Action.Subject.SubjectListAction;
+import Action.Subject.SubjectUpdateAction;
+import Action.Subject.SubjectUpdateExecuteAction;
 import Action.Test.TestRegistAction;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -79,6 +81,14 @@ public class FrontController extends HttpServlet {
             // 【修正】/ を追加してURL判定の不具合を防ぎます
             else if (path.equals("/SubjectList.action")) {
             	action = new SubjectListAction();
+            }
+            
+            else if (path.equals("/SubjectUpdateExecute.action")) {
+            	action = new SubjectUpdateExecuteAction();
+            }
+            
+            else if (path.equals("/SubjectUpdate.action")) {
+            	action = new SubjectUpdateAction();
             }
             
             else if (path.equals("/TestRegist.action")) {

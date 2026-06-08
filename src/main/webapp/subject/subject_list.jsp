@@ -16,15 +16,14 @@
        ========================================================= --%>
   <div class="content-body" style="flex: 1; padding: 20px;">
 
-    <%-- ① タイトル領域（構文エラーを修正しました） --%>
-    <div>
-      <h1 style="background-color: #f5f5f5; padding: 10px; font-size: 20px;">科目管理</h1>
-    </div>
-
-    <%-- ユーザー情報（右寄せのスタイルを追加しました） --%>
-    <div class="user-info" style="text-align: right; margin-bottom: 10px;">
-        ${sessionScope.admin_name}様
-        <a href="Logout.action">ログアウト</a>
+    <%-- ① タイトル領域とユーザー情報を鼠色の枠の中に統合 --%>
+    <div style="background-color: #f5f5f5; padding: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <h1 style="margin: 0; font-size: 20px; background: none; padding: 0;">科目管理</h1>
+      
+      <div class="user-info" style="font-size: 14px;">
+          ${sessionScope.teacher_name}様
+          <a href="Logout.action" style="margin-left: 5px;">ログアウト</a>
+      </div>
     </div>
 
     <%-- ② 新規登録リンク（右上に配置するためのスタイル） --%>

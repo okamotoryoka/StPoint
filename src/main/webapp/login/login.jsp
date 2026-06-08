@@ -29,7 +29,7 @@
         <input
             type="text"
             name="username"
-            placeholder="ユーザー名 または 教員ID"
+            placeholder="教員ID"
             required
         >
 

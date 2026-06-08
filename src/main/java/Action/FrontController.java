@@ -13,7 +13,11 @@ import Action.Student.StudentListAction;
 import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
+import Action.Subject.SubjectCreateAction;
+import Action.Subject.SubjectCreateExecuteAction;
 import Action.Subject.SubjectListAction;
+import Action.Subject.SubjectUpdateAction;
+import Action.Subject.SubjectUpdateExecuteAction;
 import Action.Test.TestRegistAction;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -84,6 +88,23 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/TestRegist.action")) {
             	action = new TestRegistAction();
             }
+            
+            else if (path.equals("/SubjectCreate.action")) {
+                action = new SubjectCreateAction();
+            }
+            else if (path.equals("/SubjectCreateExecute.action")) {
+                action = new SubjectCreateExecuteAction();
+            }
+            
+         // --- 科目更新画面の表示用 ---
+            else if (path.equals("/SubjectUpdate.action")) {
+                action = new SubjectUpdateAction();
+            }
+            // --- 科目更新の実行用 ---
+            else if (path.equals("/SubjectUpdateExecute.action")) {
+                action = new SubjectUpdateExecuteAction();
+            }
+
             
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);

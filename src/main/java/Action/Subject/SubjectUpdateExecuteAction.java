@@ -31,7 +31,8 @@ public class SubjectUpdateExecuteAction extends Action {
         } else {
             // 失敗時のエラー処理
             request.setAttribute("error", "更新に失敗しました。");
-            request.getRequestDispatcher("subject_update.jsp").forward(request, response);
+            request.getRequestDispatcher("/subject/subject_update.jsp").forward(request, response);
+
         }
     }
 }

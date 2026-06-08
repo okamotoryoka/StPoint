@@ -23,13 +23,13 @@
 
     <%-- ユーザー情報（右寄せのスタイルを追加しました） --%>
     <div class="user-info" style="text-align: right; margin-bottom: 10px;">
-        ${sessionScope.admin_name}様
+        ${sessionScope.teacher_name}様
         <a href="Logout.action">ログアウト</a>
     </div>
 
     <%-- ② 新規登録リンク（右上に配置するためのスタイル） --%>
     <div style="text-align: right; margin-bottom: 10px;">
-      <a href="${pageContext.request.contextPath}/Subject/SubjectCreate.action" class="link-action" style="font-size: 14px; text-decoration: none;">新規登録</a>
+      <a href="SubjectCreate.action" class="link-action" style="font-size: 14px; text-decoration: none;">新規登録</a>
     </div>
 
     <%
@@ -61,7 +61,7 @@
             
             <%-- ⑧ 変更リンク（主キーとなる科目コードをパラメータに付与） --%>
             <td style="padding: 12px 10px; text-align: center;">
-              <a href="${pageContext.request.contextPath}/Subject/SubjectUpdate.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #337ab7;">変更</a>
+              <a href="SubjectUpdate.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #337ab7;">変更</a>
             </td>
             
             <%-- ⑨ 削除リンク（主キーとなる科目コードをパラメータに付与） --%>
@@ -84,7 +84,7 @@
 
     <%-- メメニュー戻るボタン --%>
     <p style="margin-top: 30px;">
-      <a href="${pageContext.request.contextPath}/result/admin_menu.jsp" class="link-action">メニューへ戻る</a>
+      <a href="${pageContext.request.contextPath}/menu.jsp" class="link-action">メニューへ戻る</a>
     </p>
 
   </div>

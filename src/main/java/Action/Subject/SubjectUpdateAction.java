@@ -20,6 +20,7 @@ public class SubjectUpdateAction extends Action {
 
         // リクエスト属性にセットしてJSPへ渡す
         request.setAttribute("subject", subject);
-        request.getRequestDispatcher("subject_update.jsp").forward(request, response);
+        request.getRequestDispatcher("/subject/subject_update.jsp").forward(request, response);
+
     }
 }

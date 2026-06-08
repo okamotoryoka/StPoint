@@ -65,7 +65,7 @@
             
             <%-- ⑨ 削除リンク（主キーとなる科目コードをパラメータに付与） --%>
             <td style="padding: 12px 10px; text-align: center;">
-              <a href="${pageContext.request.contextPath}/Subject/SubjectDelete.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #337ab7;">削除</a>
+              <a href="SubjectDelete.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #d9534f;">削除</a>
             </td>
           </tr>
         <%

@@ -29,15 +29,15 @@ public class SubjectCreateExecuteAction extends Action {
         // 事前に重複チェックを行う（エラー対策）
         if (sDao.get(cd, school) != null) {
             request.setAttribute("error", "入力された科目コードは既に登録されています。");
-            request.getRequestDispatcher("subject_create.jsp").forward(request, response);
+            request.getRequestDispatcher("/subject/subject_create.jsp").forward(request, response);
             return;
         }
 
         boolean isSuccess = sDao.save(subject);
 
         if (isSuccess) {
-            // 登録成功時は科目一覧画面へリダイレクト
-            response.sendRedirect("SubjectList.action"); 
+            // 💡 登録成功時は、作成した新規登録完了JSPへフォワードする
+            request.getRequestDispatcher("/subject/subject_create_done.jsp").forward(request, response);
         } else {
             // 登録失敗時
             request.setAttribute("error", "登録に失敗しました。");

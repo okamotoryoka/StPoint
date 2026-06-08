@@ -26,8 +26,8 @@ public class SubjectUpdateExecuteAction extends Action {
         boolean isSuccess = sDao.save(subject);
 
         if (isSuccess) {
-            // 更新成功時の遷移（完了画面や一覧画面へリダイレクトなど）
-            response.sendRedirect("SubjectList.action"); 
+            // 💡 更新成功時は、作成した更新完了JSPへフォワードする
+            request.getRequestDispatcher("/subject/subject_update_done.jsp").forward(request, response);
         } else {
             // 失敗時のエラー処理
             request.setAttribute("error", "更新に失敗しました。");

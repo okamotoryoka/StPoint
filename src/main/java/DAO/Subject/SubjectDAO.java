@@ -104,6 +104,31 @@ public class SubjectDAO extends DAO {
         return count > 0;
     }
     
+    public boolean delete(Subject subject) throws Exception {
+        int count = 0;
+        
+        // データベース接続（stpoint）を取得
+        InitialContext ic = new InitialContext();
+        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+        
+        // 科目コードと学校コードが一致する行を削除するSQL
+        String sql = "DELETE FROM SUBJECT WHERE UPPER(TRIM(CD)) = UPPER(TRIM(?)) AND UPPER(TRIM(SCHOOL_CD)) = UPPER(TRIM(?))";
+        
+        try (Connection con = ds.getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+            
+            // SQLの「?」に値をセット
+            st.setString(1, subject.getCd());
+            st.setString(2, subject.getSchool().getCd());
+            
+            // クエリを実行（削除された行数が返る）
+            count = st.executeUpdate();
+        }
+        
+        // 1行以上削除できたら true、失敗（対象なし等）なら false を返す
+        return count > 0;
+    }
+    
 
   
 }

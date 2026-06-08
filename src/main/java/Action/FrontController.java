@@ -15,6 +15,8 @@ import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
 import Action.Subject.SubjectCreateAction;
 import Action.Subject.SubjectCreateExecuteAction;
+import Action.Subject.SubjectDeleteAction;
+import Action.Subject.SubjectDeleteExecuteAction;
 import Action.Subject.SubjectListAction;
 import Action.Subject.SubjectUpdateAction;
 import Action.Subject.SubjectUpdateExecuteAction;
@@ -111,6 +113,13 @@ public class FrontController extends HttpServlet {
             // --- 科目更新の実行用 ---
             else if (path.equals("/SubjectUpdateExecute.action")) {
                 action = new SubjectUpdateExecuteAction();
+            }
+            
+            else if (path.equals("/SubjectDelete.action")) {
+                action = new SubjectDeleteAction();
+            } 
+            else if (path.equals("/SubjectDeleteExecute.action")) {
+                action = new SubjectDeleteExecuteAction();
             }
 
             

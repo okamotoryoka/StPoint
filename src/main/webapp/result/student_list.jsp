@@ -24,7 +24,7 @@
         // 現在選択されている値と、動的選択肢リストを取得
         String selYear = (request.getAttribute("selectedYear") != null) ? (String)request.getAttribute("selectedYear") : "";
         String selClass = (request.getAttribute("selectedClass") != null) ? (String)request.getAttribute("selectedClass") : "";
-        boolean selAttend = (request.getAttribute("selectedAttend") != null) ? (boolean)request.getAttribute("selectedAttend") : true;
+        boolean selAttend = (request.getAttribute("selectedAttend") != null) ? (boolean)request.getAttribute("selectedAttend") : false;
 
         List<Integer> yearList = (List<Integer>) request.getAttribute("yearList");
         List<String> classList = (List<String>) request.getAttribute("classList");

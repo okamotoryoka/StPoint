@@ -31,7 +31,7 @@ public class StudentListAction extends Action {
             // 絞り込み時は、チェックボックスにチェックが入っている場合だけONにする
             currentAttendChecked = (isAttendStr != null);
         } else {
-            currentAttendChecked = true;
+            currentAttendChecked = false;
         }
 
         // 2. 画面の選択状態をキープするためにリクエスト属性に送り返す

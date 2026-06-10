@@ -82,7 +82,7 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/ScoreInsertServlet.action")) {
             	action = new ScoreInsertServletAction();
             }
-            // 【修正】/ を追加してURL判定の不具合を防ぎます
+            
             else if (path.equals("/SubjectList.action")) {
             	action = new SubjectListAction();
             }
@@ -94,10 +94,7 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/SubjectUpdate.action")) {
             	action = new SubjectUpdateAction();
             }
-            
-            else if (path.equals("/TestRegist.action")) {
-            	action = new TestRegistAction();
-            }
+           
             
             else if (path.equals("/SubjectCreate.action")) {
                 action = new SubjectCreateAction();
@@ -106,14 +103,6 @@ public class FrontController extends HttpServlet {
                 action = new SubjectCreateExecuteAction();
             }
             
-         // --- 科目更新画面の表示用 ---
-            else if (path.equals("/SubjectUpdate.action")) {
-                action = new SubjectUpdateAction();
-            }
-            // --- 科目更新の実行用 ---
-            else if (path.equals("/SubjectUpdateExecute.action")) {
-                action = new SubjectUpdateExecuteAction();
-            }
             
             else if (path.equals("/SubjectDelete.action")) {
                 action = new SubjectDeleteAction();
@@ -122,14 +111,15 @@ public class FrontController extends HttpServlet {
                 action = new SubjectDeleteExecuteAction();
             }
 
+            else if (path.equals("/TestRegist.action")) {
+            	action = new TestRegistAction();
+            }
             
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);
                 return;
             }
 
-            // --- 【修正】アクションの実行のみをおこないます ---
-            // 各Actionクラスがメソッドの内部で自ら forward または sendRedirect を実行します。
             action.execute(request, response);
 
         } catch (Exception e) {

@@ -1,54 +1,58 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>科目情報削除</title>
+    <style>
+        /* 画像の①：見出しの帯 */
+        .page-header {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-left: 5px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        /* 画像の③：赤い削除ボタン */
+        .btn-delete {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        /* 画像の④：戻るリンク */
+        .link-back {
+            color: #3182ce;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+<body>
 
 <%@ include file="../header.html" %>
 
-<%-- 画面全体を左メニューと右メインコンテンツに分割するコンテナ --%>
-<div class="system-layout" style="display: flex; min-height: 80vh;">
+<div class="system-layout" style="display: flex;">
+    <jsp:include page="../tag.jsp" />
 
-  <jsp:include page="../tag.jsp" />
+    <main style="flex: 1; padding: 20px;">
+        <div class="page-header">
+            <h2 style="margin: 0;">科目情報削除</h2>
+        </div>
 
-  <%-- =========================================================
-       Right Main Content Area
-       ========================================================= --%>
-  <div class="content-body" style="flex: 1; padding: 20px;">
+        <p>「${subject.name}(${subject.cd})」を削除してもよろしいですか？</p>
 
-    <%-- タイトル領域とユーザー情報 --%>
-    <div style="background-color: #f5f5f5; padding: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-      <h1 style="margin: 0; font-size: 20px; background: none; padding: 0;">科目管理</h1>
-      
-      <div class="user-info" style="font-size: 14px;">
-          ${sessionScope.teacher_name}様
-          <a href="Logout.action" style="margin-left: 5px;">ログアウト</a>
-      </div>
-    </div>
-
-    <%-- 削除確認のコンテンツエリア --%>
-    <h2 style="font-size: 18px; margin-bottom: 10px;">科目削除確認</h2>
-    
-    <p style="color: #d9534f; font-weight: bold; margin-bottom: 15px;">以下の科目を削除します。よろしいですか？</p>
-
-    <%-- 削除対象のデータ表示（提示いただいた更新画面と同じEL式を使用） --%>
-    <table class="student-table" style="width: 50%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px;">
-      <tr style="border-bottom: 1px solid #eee;">
-        <th style="padding: 10px; background-color: #f9f9f9; width: 30%; text-align: left;">科目コード</th>
-        <td style="padding: 10px;">${subject.cd}</td>
-      </tr>
-      <tr style="border-bottom: 1px solid #eee;">
-        <th style="padding: 10px; background-color: #f9f9f9; text-align: left;">科目名</th>
-        <td style="padding: 10px;">${subject.name}</td>
-      </tr>
-    </table>
-
-    <!-- 削除を実行するActionへポストするフォーム -->
-    <form action="SubjectDeleteExecute.action" method="post" style="margin-top: 20px;">
-        <!-- 削除対象の主キー（cd）を隠しパラメータとして送信 -->
-        <input type="hidden" name="cd" value="${subject.cd}">
-        
-        <input type="submit" value="削除を確定する" class="link-action" style="background-color: #d9534f; color: white; border: none; padding: 8px 15px; cursor: pointer; font-size: 14px; border-radius: 4px; margin-right: 10px;">
-        <a href="SubjectList.action" style="text-decoration: none; color: #337ab7; font-size: 14px;">キャンセルして一覧に戻る</a>
-    </form>
-
-  </div>
+        <form action="SubjectDeleteExecute.action" method="post">
+            <input type="hidden" name="cd" value="${subject.cd}">
+            <button type="submit" class="btn-delete">削除</button>
+            
+            <a href="SubjectList.action" class="link-back">戻る</a>
+        </form>
+    </main>
 </div>
+
+<%@ include file="../footer.jsp" %>
+</body>
+</html>

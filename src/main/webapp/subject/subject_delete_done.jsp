@@ -1,35 +1,61 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>削除完了</title>
+    <style>
+        /* 見出しのグレー帯（共通） */
+        .page-header {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-left: 5px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        /* 完了メッセージの緑色の帯 */
+      
+        .done-message {
+            background-color: #a3c9a8; /* 背景色（緑） */
+            color: black;              /* ここを black に変更 */
+            padding: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+        }
+        /* リンクのスタイル */
+        .link-back {
+            color: #3182ce;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .link-back:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
 
 <%@ include file="../header.html" %>
 
-<%-- 画面全体を左メニューと右メインコンテンツに分割するコンテナ --%>
-<div class="system-layout" style="display: flex; min-height: 80vh;">
+<div class="system-layout" style="display: flex;">
+    <jsp:include page="../tag.jsp" />
 
-  <jsp:include page="../tag.jsp" />
+    <main style="flex: 1; padding: 20px;">
+        
+        <div class="page-header">
+            <h2 style="margin: 0;">科目情報削除</h2>
+        </div>
 
-  <%-- =========================================================
-       Right Main Content Area
-       ========================================================= --%>
-  <div class="content-body" style="flex: 1; padding: 20px;">
+        <div class="done-message">
+            削除が完了しました
+        </div>
+        
+        <a href="SubjectList.action" class="link-back">科目一覧</a>
 
-    <%-- タイトル領域とユーザー情報（更新画面などと統一） --%>
-    <div style="background-color: #f5f5f5; padding: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-      <h1 style="margin: 0; font-size: 20px; background: none; padding: 0;">科目管理</h1>
-      
-      <div class="user-info" style="font-size: 14px;">
-          ${sessionScope.teacher_name}様
-          <a href="Logout.action" style="margin-left: 5px;">ログアウト</a>
-      </div>
-    </div>
-
-    <%-- 💡 ご提示いただいた完了メッセージ部分 --%>
-    <h2>科目情報の削除</h2>
-    <p style="color: green; font-weight: bold; margin-bottom: 20px;">科目の削除が完了しました。</p>
-    
-    <br>
-    <a href="SubjectList.action" style="text-decoration: none; color: #337ab7;">科目一覧へ戻る</a>
-
-  </div>
+    </main>
 </div>
+
+<%@ include file="../footer.jsp" %>
+</body>
+</html>

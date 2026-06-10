@@ -1,61 +1,43 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>学生情報登録完了</title>
-
-<link rel="stylesheet"
-href="${pageContext.request.contextPath}/css/style2.css">
-
+    <meta charset="UTF-8">
+    <title>学生情報登録完了</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style2.css">
+    <style>
+        /* 左右レイアウト用CSS（style2.cssになければここに追加してください） */
+        .layout-wrapper { display: flex; width: 100%; min-height: 100vh; }
+        .side-menu { width: 200px; background-color: #f8f9fa; border-right: 1px solid #e2e8f0; }
+        .main-content { flex: 1; padding: 40px; }
+    </style>
 </head>
-
 <body>
 
-<!-- 全体 -->
 <div class="container">
-
-    <!-- 左右レイアウト -->
     <div class="layout-wrapper">
-
-        <!-- 左メニュー -->
+        
         <div class="side-menu">
-            <ul>
-                <li><a href="#">メニュー</a></li>
-                <li><a href="#">学生管理</a></li>
-                <li><a href="#">成績管理</a></li>
-                <li class="sub-menu"><a href="#">成績登録</a></li>
-                <li class="sub-menu"><a href="#">成績参照</a></li>
-                <li><a href="#">科目管理</a></li>
-            </ul>
+            <jsp:include page="../tag.jsp" />
         </div>
 
-        <!-- 右コンテンツ -->
         <div class="main-content">
-
-            <!-- タイトル -->
             <div class="title-box">
                 学生情報登録
             </div>
 
-            <!-- 完了メッセージ -->
             <div class="success-box">
                 登録が完了しました
             </div>
 
-            <!-- 戻るリンク -->
             <div class="link-box">
                 <a href="${pageContext.request.contextPath}/result/student_list.jsp">
                     学生一覧
                 </a>
             </div>
-
         </div>
 
     </div>
-
 </div>
 
 </body>

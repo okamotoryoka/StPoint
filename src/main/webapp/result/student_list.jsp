@@ -127,7 +127,7 @@
             } else {
           %>
             <tr>
-              <td colspan="6" style="text-align: center; color: #999;">学生が登録されていません。</td>
+              <td> 学生情報が存在しませんでした</td>
             </tr>
           <%
             }

@@ -6,6 +6,7 @@ import Action.Login.LoginAction;
 import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
 import Action.Score.ScoreListServletAction;
+import Action.Score.ScoreSearchAction;
 import Action.Score.ScoreUpdateServletAction;
 import Action.Student.StudentCreateAction;
 import Action.Student.StudentCreateExecuteAction;
@@ -110,10 +111,16 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/SubjectDeleteExecute.action")) {
                 action = new SubjectDeleteExecuteAction();
             }
+            
+            else if (path.equals("/ScoreSearchAction.action")) {
+            action = new ScoreSearchAction();
+        }
 
             else if (path.equals("/TestRegist.action")) {
             	action = new TestRegistAction();
             }
+            
+            
             
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);

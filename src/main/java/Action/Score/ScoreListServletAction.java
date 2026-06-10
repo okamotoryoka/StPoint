@@ -1,8 +1,6 @@
 package Action.Score;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import Bean.Score;
 import DAO.Score.ScoreDAO;
@@ -17,15 +15,15 @@ public class ScoreListServletAction extends Action {
         try {
             ScoreDAO dao = new ScoreDAO();
             
-            // セレクトボックス用の科目リストだけは最初に取得して渡す
-            List<Map<String, String>> subjectList = dao.getSubjectList();
-            request.setAttribute("subjectList", subjectList);
+            // ★修正：年度、クラス、科目のすべてのリストを取得してセットする
+            request.setAttribute("entYearList", dao.getEntYearList());
+            request.setAttribute("classList", dao.getClassList());
+            request.setAttribute("subjectList", dao.getSubjectList());
 
-            // 🌟重要：初期表示はデータを一切取得せず、空のリストを渡す
-            List<Score> list = new ArrayList<>();
-            request.setAttribute("list", list);
+            // 検索結果は空にしておく
+            request.setAttribute("list", new ArrayList<Score>());
             
-            // 🌟重要：初回アクセスフラグを true にしてテーブルを隠す
+            // 初回アクセスフラグを true にする
             request.setAttribute("isFirstAccess", true);
             
             request.getRequestDispatcher("/management/score_list.jsp").forward(request, response);

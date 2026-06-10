@@ -41,7 +41,7 @@
                 <label>入学年度</label>
                 <select name="entYear">
                     <option value="">--------</option>
-                    <%-- ここにJavaロジック --%>
+            
                 </select>
             </div>
             <div class="filter-group">

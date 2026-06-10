@@ -4,168 +4,182 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>得点管理システム</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style4.css">
+<title>得点一覧</title>
+<style>
+body {
+    background-color: #f7f3e9;
+    font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+    margin: 0;
+}
+/* 画面全体を左と右に正しく切り分ける外枠（上下の余白を統一） */
+.main-layout {
+    display: flex;
+    min-height: 80vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 40px; 
+    gap: 30px;     
+}
+
+/* 左側のメニューエリア（右側のボックスと高さやデザインを統一） */
+.left-menu-area {
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    background: #fff;
+    border-radius: 20px;
+    border: 4px solid #d8c7a1;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+/* footer.jsp内にある余計な枠や影、はみ出す横幅を強制リセット */
+.left-menu-area *,
+.left-menu-area div,
+.left-menu-area aside {
+    width: 100% !important;
+    max-width: 220px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    box-sizing: border-box !important;
+}
+
+/* 
+  【最重要】リセットされて小さくなってしまったメニュー内の文字のバランスを
+  右側のテーブル（18px）に等しく合わせるためのスタイル指定
+*/
+.left-menu-area ul {
+    list-style: none !important;
+    padding: 30px 15px 30px 25px !important; /* メニュー内の内側余白をゆったり配置 */
+}
+.left-menu-area li {
+    font-size: 18px !important;       /* 文字の大きさを右側のテーブルと同じ18pxに拡大 */
+    line-height: 2.2 !important;      /* 行間をさらにゆったり広げて窮屈さを解消 */
+    margin-bottom: 8px !important;    /* 項目ごとの隙間を確保 */
+}
+/* 大項目の「成績管理」などの見出しを目立たせる設定 */
+.left-menu-area li.menu-title,
+.left-menu-area li:has(+ li[style*="padding-left"]) {
+    font-weight: bold !important;
+    color: #6b4f2d !important;        /* テーブルのテーマカラーに合わせた茶色に変更 */
+    margin-top: 10px !important;
+}
+
+/* 右側のコンテンツエリア：偏りをなくし、左メニューと高さを揃えます */
+.content-body {
+    flex: 1;
+    padding: 0; 
+    box-sizing: border-box;
+    display: flex;
+}
+.right-container {
+    width: 100%;
+    max-width: 1000px; 
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 4px solid #d8c7a1;
+    box-sizing: border-box;
+}
+.title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #6b4f2d;
+}
+.add-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #6b4f2d;
+    text-decoration: none;
+    border-bottom: 2px solid #6b4f2d;
+}
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.score-table th, .score-table td {
+    border: 3px solid #d8c7a1;
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 18px;
+    white-space: nowrap;
+}
+.score-table th {
+    background-color: #f0e6d2;
+    font-weight: bold;
+    color: #6b4f2d;
+}
+.score-table tr:nth-child(even) {
+    background-color: #faf7f0;
+}
+</style>
 </head>
 <body>
 
-<%
-// 1. サーブレットから送られてきた選択状態（検索条件）を取得
-String entYear = (String) request.getAttribute("entYear");
-String classNum = (String) request.getAttribute("classNum");
-String subjectCd = (String) request.getAttribute("subjectCd");
-String noStr = (String) request.getAttribute("no");
-
-// 2. 初回アクセスかどうかのフラグを受け取る
-Boolean isFirstAccess = (Boolean) request.getAttribute("isFirstAccess");
-
-// null の場合は空文字に変換して比較しやすくする
-if (entYear == null) entYear = "";
-if (classNum == null) classNum = "";
-if (subjectCd == null) subjectCd = "";
-if (noStr == null) noStr = "";
-%>
-
-<!-- 上部：水色のシステムヘッダー -->
-<header class="system-header">
-    <div class="header-title">得点管理システム</div>
-    <div class="header-user">
-        <span>大原 太郎 様</span>
-        <a href="#" class="logout-btn">ログアウト</a>
-    </div>
-</header>
-
 <div class="main-layout">
 
-    <!-- 左側：メニューエリア -->
+    <!-- 左メニュー：文字サイズを大きくし、窮屈感を解消しました -->
     <div class="left-menu-area">
         <jsp:include page="/tag.jsp" />
     </div>
 
-    <!-- 右側：メインコンテンツエリア -->
+    <!-- 右側メインコンテンツエリア -->
     <div class="content-body">
         <div class="right-container">
-            
-            <div class="search-title">成績管理</div>
+            <div class="title">得点一覧</div>
 
-            <!-- 検索フォームエリア（送信先は検索専用Action） -->
-            <form action="${pageContext.request.contextPath}/ScoreSearchAction.action" method="post" class="search-form">
-                
-                <!-- 入学年度 -->
-                <div class="form-group">
-                    <label class="form-label">入学年度</label>
-                    <select name="entYear" class="form-select">
-                        <option value="" <%= entYear.equals("") ? "selected" : "" %>>--------</option>
-                        <option value="2024" <%= entYear.equals("2024") ? "selected" : "" %>>2024</option>
-                        <option value="2025" <%= entYear.equals("2025") ? "selected" : "" %>>2025</option>
-                        <option value="2026" <%= entYear.equals("2026") ? "selected" : "" %>>2026</option>
-                    </select>
-                </div>
+            <a class="add-link" href="${pageContext.request.contextPath}/management/score_insert.jsp">
+                ＋ 新規登録
+            </a>
 
-                <!-- クラス -->
-                <div class="form-group">
-                    <label class="form-label">クラス</label>
-                    <select name="classNum" class="form-select">
-                        <option value="" <%= classNum.equals("") ? "selected" : "" %>>--------</option>
-                        <option value="101" <%= classNum.equals("101") ? "selected" : "" %>>101</option>
-                        <option value="102" <%= classNum.equals("102") ? "selected" : "" %>>102</option>
-                    </select>
-                </div>
+            <table class="score-table">
+                <tr>
+                    <th>学生番号</th>
+                    <th>氏名</th>
+                    <th>科目</th>
+                    <th>回数</th>
+                    <th>得点</th>
+                    <th>クラス</th>
+                    <th>更新</th>
+                    <th>削除</th>
+                </tr>
+                <%
+                ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("list");
+                if(list != null) {
+                    for(Map<String, Object> data : list){
+                %>
+                <tr>
+                    <td><%= data.get("student_id") %></td>
+                    <td><%= data.get("student_name") %></td>
+                    <td><%= data.get("subject_name") %></td>
+                    <td><%= data.get("no") %></td>
+                    <td><%= data.get("point") %></td>
+                    <td><%= data.get("class_num") %></td>
 
-                <!-- 科目（データベースから動的に取得したリストを展開） -->
-                <div class="form-group form-group-wide">
-                    <label class="form-label">科目</label>
-                    <select name="subjectCd" class="form-select">
-                        <option value="" <%= subjectCd.equals("") ? "selected" : "" %>>--------</option>
-                        <%
-                        // Actionから科目リストを取得して展開
-                        List<Map<String, String>> subjectList = (List<Map<String, String>>) request.getAttribute("subjectList");
-                        if (subjectList != null) {
-                            for (Map<String, String> sub : subjectList) {
-                        %>
-                            <option value="<%= sub.get("cd") %>" <%= subjectCd.equals(sub.get("cd")) ? "selected" : "" %>>
-                                <%= sub.get("name") %>
-                            </option>
-                        <%
-                            }
-                        }
-                        %>
-                    </select>
-                </div>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/ScoreUpdateServlet.action?student_id=<%= data.get("student_id") %>&subject_cd=<%= data.get("subject_cd") %>&school_cd=<%= data.get("school_cd") %>&no=<%= data.get("no") %>">
+                            更新
+                        </a>
+                    </td>
 
-                <!-- 回数 -->
-                <div class="form-group">
-                    <label class="form-label">回数</label>
-                    <select name="no" class="form-select">
-                        <option value="" <%= noStr.equals("") ? "selected" : "" %>>--------</option>
-                        <option value="1" <%= noStr.equals("1") ? "selected" : "" %>>1</option>
-                        <option value="2" <%= noStr.equals("2") ? "selected" : "" %>>2</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="search-btn">検索</button>
-
-            </form>
-
-            <!-- 検索結果の表示エリア（一括編集・登録フォーム） -->
-            <%
-            ArrayList<Bean.Score> list = (ArrayList<Bean.Score>) request.getAttribute("list");
-
-            // 初回アクセス（検索前）ではなく、かつリストにデータが入っている場合のみ表示
-            if (isFirstAccess == null || !isFirstAccess) {
-                if (list != null && !list.isEmpty()) {
-                    
-                    // 1行目のデータから科目名と回数を取得してヘッダーに表示
-                    Bean.Score firstData = list.get(0);
-                    String currentSubject = firstData.getSubjectName();
-                    int currentNo = firstData.getNo();
-            %>
-                <!-- 科目情報の表示ヘッダー -->
-                <div class="subject-info-header">
-                    科目：<%= currentSubject %> （<%= currentNo %>回）
-                </div>
-
-                <!-- データベースに一括登録・更新するためのフォーム -->
-                <form action="${pageContext.request.contextPath}/ScoreRegistAction.action" method="post">
-                    
-                    <table class="score-edit-table">
-                        <tr>
-                            <th>入学年度</th>
-                            <th>クラス</th>
-                            <th>学生番号</th>
-                            <th>氏名</th>
-                            <th style="width: 250px;">点数</th>
-                        </tr>
-                        <% for(Bean.Score data : list) { %>
-                        <tr>
-                            <!-- 入学年度（検索条件が空ならデータから取得、あれば選択値を表示） -->
-                            <td><%= entYear.equals("") ? data.getClassNum() : entYear %></td> 
-                            <td><%= data.getClassNum() %></td>
-                            <td><%= data.getStudentId() %></td>
-                            <td style="text-align: left; padding-left: 20px;"><%= data.getStudentName() %></td>
-                            <td>
-                                <!-- 点数入力欄（複数の学生の点数を一括識別するため、nameに学生番号を付与） -->
-                                <input type="number" name="point_<%= data.getStudentId() %>" value="<%= data.getPoint() %>" min="0" max="100" class="point-input">
-                                
-                                <!-- サーブレット側で更新処理をするための隠しパラメータ（キー情報） -->
-                                <input type="hidden" name="studentIds" value="<%= data.getStudentId() %>">
-                                <input type="hidden" name="subjectCd" value="<%= data.getSubjectCd() %>">
-                                <input type="hidden" name="no" value="<%= data.getNo() %>">
-                            </td>
-                        </tr>
-                        <% } %>
-                    </table>
-
-                    <!-- 登録して終了ボタン -->
-                    <div class="btn-area">
-                        <button type="submit" class="regist-end-btn">登録して終了</button>
-                    </div>
-
-                </form>
-            <% 
-                }
-            } 
-            %>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/management/score_delete.jsp?student_id=<%= data.get("student_id") %>&subject_cd=<%= data.get("subject_cd") %>&school_cd=<%= data.get("school_cd") %>&no=<%= data.get("no") %>">
+                            削除
+                        </a>
+                    </td>
+                </tr>
+                <% 
+                    } 
+                } 
+                %>
+            </table>
             
         </div>
     </div>

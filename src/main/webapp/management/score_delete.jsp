@@ -5,4 +5,4 @@
 
 <a href="<%= request.getContextPath() %>/form.jsp">ログイン画面に戻る</a>
 
-<%@ include file="../footer.html" %>>
+<%@ include file="../footer.jsp" %>>

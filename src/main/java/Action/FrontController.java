@@ -134,7 +134,7 @@ public class FrontController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServletException(e);
+            request.getRequestDispatcher("/login/db-error.jsp").forward(request, response);
         }
     }
 }

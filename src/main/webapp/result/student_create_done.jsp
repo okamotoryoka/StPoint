@@ -30,10 +30,13 @@
                 登録が完了しました
             </div>
 
-            <div class="link-box">
-                <a href="${pageContext.request.contextPath}/result/student_list.jsp">
-                    学生一覧
-                </a>
+
+
+
+        <div class="link-box" style="display: flex; gap: 20px; margin-top: 20px;">
+           <a href="${pageContext.request.contextPath}/StudentCreate.action">戻る</a>
+           <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧</a>
+         
             </div>
         </div>
 

@@ -3,56 +3,105 @@
 <%@ include file="../header.html" %>
 
 <style>
-    /* 左右レイアウトの枠組み */
+    /* 1. 基本リセット：隙間を強制的にゼロにする */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { margin: 0; padding: 0; font-family: sans-serif; }
+
+    /* 2. 全体レイアウト：メニューとメインを並べる */
     .layout-wrapper { display: flex; width: 100%; min-height: 100vh; }
     
-    /* 左側メニューの幅指定 */
-    .side-menu { width: 200px; background-color: #f8f9fa; border-right: 1px solid #e2e8f0; padding: 20px 0; }
+    /* 3. サイドメニュー */
+    .side-menu { 
+        width: 200px; 
+        flex-shrink: 0; 
+        background-color: #f8f9fa; 
+        border-right: 1px solid #e2e8f0; 
+        padding: 20px; 
+    }
     
-    /* 右側メインエリア */
-    .main-content { flex: 1; padding: 24px; }
-    .page-panel { max-width: 800px; margin: 0 auto; }
+    /* 4. メインエリア */
+    .main-content { flex: 1; padding: 40px; }
     
-    h1 { font-size: 20px; color: #333; margin-bottom: 20px; }
-    .info-card { background: #fff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 4px; }
+    /* 5. フォームパネル：左寄せにする */
+    .page-panel { max-width: 800px; margin: 0; }
     
-    .msg-error { background-color: #fff6f6; border: 1px solid #f9d3d3; color: #cd3d3d; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; }
-    .stacked-form { display: flex; flex-direction: column; gap: 16px; }
-    .stacked-form label { font-size: 13px; font-weight: bold; color: #4a5568; }
-    .stacked-form input { width: 100%; height: 38px; padding: 0 10px; border: 1px solid #cbd5e0; border-radius: 4px; margin-top: 4px; }
-    .form-actions input[type="submit"] { background-color: #4a5568; color: white; padding: 10px 24px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    /* 6. タイトル帯 */
+    .page-title { 
+        background-color: #e9ecef; 
+        padding: 15px; 
+        font-weight: bold; 
+        font-size: 18px; 
+        margin-bottom: 25px; 
+    }
+
+    /* 7. フォーム部品 */
+    .stacked-form { display: flex; flex-direction: column; gap: 20px; }
+    .stacked-form label { display: flex; flex-direction: column; font-weight: bold; color: #333; gap: 8px; }
+    .stacked-form input, .stacked-form select { 
+        width: 100%; height: 40px; padding: 0 10px; border: 1px solid #ced4da; border-radius: 4px; background-color: #fff; 
+    }
+
+    /* 8. ボタン */
+  .form-actions {
+    margin-top: 20px;
+    text-align: left; /* 左寄せにする場合 */
+}
+
+.form-actions input[type="submit"] {
+    width: auto;             /* 幅を自動（文字サイズ合わせ）にする */
+    min-width: 120px;        /* ただし小さすぎないよう最低限の幅を確保 */
+    padding: 10px 20px;      /* 左右に余白をとってボタンらしくする */
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+    /* 9. 戻るリンク */
     .actions { margin-top: 20px; }
-    .link-next { color: #3182ce; text-decoration: none; font-size: 14px; }
+    .link-next { color: #3182ce; text-decoration: none; }
 </style>
 
 <div class="layout-wrapper">
     <div class="side-menu">
-        <jsp:include page="../tag.jsp" />
+        <jsp:include page="/tag.jsp" />
     </div>
 
     <main class="main-content">
         <div class="page-panel">
-            <h1>学生情報登録</h1>
-            <section class="info-card">
-                <%-- エラー表示 --%>
-                <% String err = (String)request.getAttribute("err"); %>
-                <% if (err != null) { %>
-                  <div class="msg-error">
-                    <% if ("required".equals(err)) { %>名前・学籍番号は必須入力です。<% }
-                       else if ("duplicate".equals(err)) { %>学生番号が重複しています。<% }
-                       else { %>エラーが発生しました。<% } %>
-                  </div>
-                <% } %>
+            <div class="page-title">学生情報登録</div>
+            
+            <form class="stacked-form" action="${pageContext.request.contextPath}/StudentCreateExecute.action" method="post">
+                <label>入学年度
+                    <select name="entYear">
+                        <option value="">--------</option>
+                    </select>
+                </label>
 
-                <form class="stacked-form" action="<%= request.getContextPath() %>/StudentCreateExecute.action" method="post">
-                    <label>名前<input type="text" name="name" value="<%= request.getAttribute("name") != null ? request.getAttribute("name") : "" %>"></label>
-                    <label>学籍番号<input type="text" name="no" value="<%= request.getAttribute("no") != null ? request.getAttribute("no") : "" %>"></label>
-                    <label>入学年度<input type="number" name="entYear" value="<%= request.getAttribute("entYear") != null ? request.getAttribute("entYear") : "" %>"></label>
-                    <label>クラス<input type="text" name="classNum" value="<%= request.getAttribute("classNum") != null ? request.getAttribute("classNum") : "" %>"></label>
-                    <div class="form-actions"><input type="submit" value="登録"></div>
-                </form>
-            </section>
-            <p class="actions"><a class="link-next" href="<%= request.getContextPath() %>/StudentList.action?isAttend=false">戻る</a></p>
+                <label>学生番号
+                    <input type="text" name="no" placeholder="学生番号を入力してください">
+                </label>
+
+                <label>氏名
+                    <input type="text" name="name" placeholder="氏名を入力してください">
+                </label>
+
+                <label>クラス
+                    <select name="classNum">
+                        <option value="101">101</option>
+                    </select>
+                </label>
+
+                <div class="form-actions">
+                    <input type="submit" value="登録して終了">
+                </div>
+            </form>
+
+            <p class="actions">
+                <a class="link-next" href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
+            </p>
         </div>
     </main>
 </div>

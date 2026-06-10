@@ -47,7 +47,7 @@ href="${pageContext.request.contextPath}/css/style2.css">
 
             <!-- 戻るリンク -->
             <div class="link-box">
-                <a href="${pageContext.request.contextPath}/result/student_list.jsp">
+                      <a href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
                     学生一覧
                 </a>
             </div>

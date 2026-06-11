@@ -6,8 +6,6 @@ import Action.Login.LoginAction;
 import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
 import Action.Score.ScoreListServletAction;
-import Action.Score.ScoreSearchAction;
-import Action.Score.ScoreSubjectAction; // ★インポートを追加しました
 import Action.Score.ScoreUpdateServletAction;
 import Action.Student.StudentCreateAction;
 import Action.Student.StudentCreateExecuteAction;
@@ -112,21 +110,10 @@ public class FrontController extends HttpServlet {
             else if (path.equals("/SubjectDeleteExecute.action")) {
                 action = new SubjectDeleteExecuteAction();
             }
-            
-            else if (path.equals("/ScoreSearchAction.action")) {
-                action = new ScoreSearchAction();
-            }
-
-            // ★ここに ScoreSubjectAction.action 用の分岐を追加しました
-            else if (path.equals("/ScoreSubjectAction.action")) {
-                action = new ScoreSubjectAction();
-            }
 
             else if (path.equals("/TestRegist.action")) {
             	action = new TestRegistAction();
             }
-            
-            
             
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);

@@ -1,5 +1,8 @@
 package Action.Student;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import Bean.School;
 import Bean.Student;
 import DAO.Student.StudentDAO;
@@ -10,79 +13,60 @@ import tool.Action;
 public class StudentCreateExecuteAction extends Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // パラメータの取得
+        // 1. パラメータの取得
         String name = request.getParameter("name");
         String no = request.getParameter("no");
         String entYearStr = request.getParameter("entYear");
         String classNum = request.getParameter("classNum");
 
-        // 入力値をリクエストに保持（エラーで戻った際、入力を復元できるようにする）
-        request.setAttribute("name", name);
-        request.setAttribute("no", no);
-        request.setAttribute("classNum", classNum);
-        if (entYearStr != null && !entYearStr.isEmpty()) {
-            request.setAttribute("entYear", entYearStr);
-        }
-
-        // 1. 【学生番号、氏名が未入力の場合】のチェック
-        if (no == null || no.isEmpty() || name == null || name.isEmpty()) {
-            request.setAttribute("err", "required");
-            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
-            return;
-        }
-
-        // 2. 【入学年度が未入力の場合】のチェック
-        if (entYearStr == null || entYearStr.isEmpty()) {
-            request.setAttribute("err", "year_empty");
-            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
-            return;
-        }
-
-        // 数値変換チェック
-        int entYear;
-        try {
-            entYear = Integer.parseInt(entYearStr);
-        } catch (NumberFormatException e) {
-            request.setAttribute("err", "year_invalid");
-            request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
-            return;
-        }
-
+        Map<String, String> errors = new HashMap<>();
         StudentDAO dao = new StudentDAO();
 
-        // 3. 【学生番号が重複していた場合】のチェック
-        if (dao.get(no) != null) {
-            request.setAttribute("err", "duplicate"); 
+        // ★追加：エラー発生時に戻る画面でも必要なリストを再取得してセットする
+        request.setAttribute("entYears", dao.getEntYears());
+        request.setAttribute("classNums", dao.getClassNums());
+
+        // 2. バリデーションチェック
+        if (entYearStr == null || entYearStr.isEmpty()) {
+            errors.put("entYear", "入学年度を選択してください");
+        }
+        if (no == null || no.isEmpty()) {
+            errors.put("no", "学生番号を入力してください");
+        } else if (dao.get(no) != null) {
+            errors.put("no", "学生番号が重複しています");
+        }
+        if (name == null || name.isEmpty()) {
+            errors.put("name", "氏名を入力してください");
+        }
+
+        // 3. エラーがある場合、情報をセットして元の画面（student_create.jsp）に戻る
+        if (!errors.isEmpty()) {
+            request.setAttribute("errors", errors);
+            request.setAttribute("name", name);
+            request.setAttribute("no", no);
+            request.setAttribute("entYear", entYearStr);
+            request.setAttribute("classNum", classNum);
             request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
             return;
         }
 
-        // 4. Beanの作成と保存処理
+        // 4. 正常時：データベース保存処理
         Student s = new Student();
         s.setNo(no);
         s.setName(name);
-        s.setEntYear(entYear);
+        s.setEntYear(Integer.parseInt(entYearStr));
         s.setClassNum(classNum);
         s.setAttend(true);
-
         School school = new School();
-        school.setCd("tes"); 
+        school.setCd("tes");
         s.setSchool(school);
 
-        try {
-            boolean isSuccess = dao.postFilter(s);
-            if (!isSuccess) {
-                request.setAttribute("err", "insert_failed");
-                request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
-                return;
-            }
-        } catch (Exception e) {
-            request.setAttribute("err", "insert_failed");
+        if (dao.postFilter(s)) {
+            response.sendRedirect("result/student_create_done.jsp");
+        } else {
+            errors.put("insert", "登録に失敗しました");
+            request.setAttribute("errors", errors);
             request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
-            return;
         }
-
-        // 成功時はブラウザへ完了画面へのリダイレクトを指示します
-        response.sendRedirect("result/student_create_done.jsp");
     }
 }

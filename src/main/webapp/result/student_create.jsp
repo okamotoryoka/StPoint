@@ -1,60 +1,63 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<% request.setAttribute("pageTitle", "生徒登録"); %>
+<%@ page import="java.util.Map" %>
+<%-- ★重要：JSTLの宣言を追加 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../header.html" %>
+<%
+    Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");
+    String name = request.getAttribute("name") != null ? (String) request.getAttribute("name") : "";
+    String no = request.getAttribute("no") != null ? (String) request.getAttribute("no") : "";
+    String entYear = request.getAttribute("entYear") != null ? (String) request.getAttribute("entYear") : "";
+    String classNum = request.getAttribute("classNum") != null ? (String) request.getAttribute("classNum") : "";
+%>
 
 <style>
-    /* 左右レイアウトの枠組み */
-    .layout-wrapper { display: flex; width: 100%; min-height: 100vh; }
-    
-    /* 左側メニューの幅指定 */
-    .side-menu { width: 200px; background-color: #f8f9fa; border-right: 1px solid #e2e8f0; padding: 20px 0; }
-    
-    /* 右側メインエリア */
-    .main-content { flex: 1; padding: 24px; }
-    .page-panel { max-width: 800px; margin: 0 auto; }
-    
-    h1 { font-size: 20px; color: #333; margin-bottom: 20px; }
-    .info-card { background: #fff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 4px; }
-    
-    .msg-error { background-color: #fff6f6; border: 1px solid #f9d3d3; color: #cd3d3d; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; }
-    .stacked-form { display: flex; flex-direction: column; gap: 16px; }
-    .stacked-form label { font-size: 13px; font-weight: bold; color: #4a5568; }
-    .stacked-form input { width: 100%; height: 38px; padding: 0 10px; border: 1px solid #cbd5e0; border-radius: 4px; margin-top: 4px; }
-    .form-actions input[type="submit"] { background-color: #4a5568; color: white; padding: 10px 24px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    .actions { margin-top: 20px; }
-    .link-next { color: #3182ce; text-decoration: none; font-size: 14px; }
+    /* （CSSはそのまま） */
+    .page-panel { max-width: 800px; margin: 20px; font-family: sans-serif; }
+    .page-title { background-color: #e9ecef; padding: 15px; font-weight: bold; font-size: 18px; margin-bottom: 25px; }
+    .stacked-form { display: flex; flex-direction: column; gap: 20px; }
+    .stacked-form label { display: block; font-weight: bold; margin-bottom: 5px; }
+    .stacked-form input, .stacked-form select { width: 100%; height: 40px; padding: 0 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+    .error-msg { color: #f59f00; font-weight: bold; font-size: 14px; margin-top: 5px; display: block; }
 </style>
 
-<div class="layout-wrapper">
-    <div class="side-menu">
-        <jsp:include page="../tag.jsp" />
-    </div>
+<div class="page-panel">
+    <div class="page-title">学生情報登録</div>
+    <form class="stacked-form" action="${pageContext.request.contextPath}/StudentCreateExecute.action" method="post">
+        
+        <label>入学年度
+            <select name="entYear">
+                <option value="">--------</option>
+                <%-- ★データベースから取得したリストを展開 --%>
+                <c:forEach var="year" items="${entYears}">
+                    <option value="${year}" ${String.valueOf(year) == entYear ? 'selected' : ''}>${year}</option>
+                </c:forEach>
+            </select>
+            <% if(errors != null && errors.get("entYear") != null) { %><span class="error-msg"><%= errors.get("entYear") %></span><% } %>
+        </label>
 
-    <main class="main-content">
-        <div class="page-panel">
-            <h1>学生情報登録</h1>
-            <section class="info-card">
-                <%-- エラー表示 --%>
-                <% String err = (String)request.getAttribute("err"); %>
-                <% if (err != null) { %>
-                  <div class="msg-error">
-                    <% if ("required".equals(err)) { %>名前・学籍番号は必須入力です。<% }
-                       else if ("duplicate".equals(err)) { %>学生番号が重複しています。<% }
-                       else { %>エラーが発生しました。<% } %>
-                  </div>
-                <% } %>
+        <label>学生番号
+            <input type="text" name="no" value="<%= no %>" placeholder="学生番号を入力してください">
+            <% if(errors != null && errors.get("no") != null) { %><span class="error-msg"><%= errors.get("no") %></span><% } %>
+        </label>
 
-                <form class="stacked-form" action="<%= request.getContextPath() %>/StudentCreateExecute.action" method="post">
-                    <label>名前<input type="text" name="name" value="<%= request.getAttribute("name") != null ? request.getAttribute("name") : "" %>"></label>
-                    <label>学籍番号<input type="text" name="no" value="<%= request.getAttribute("no") != null ? request.getAttribute("no") : "" %>"></label>
-                    <label>入学年度<input type="number" name="entYear" value="<%= request.getAttribute("entYear") != null ? request.getAttribute("entYear") : "" %>"></label>
-                    <label>クラス<input type="text" name="classNum" value="<%= request.getAttribute("classNum") != null ? request.getAttribute("classNum") : "" %>"></label>
-                    <div class="form-actions"><input type="submit" value="登録"></div>
-                </form>
-            </section>
-            <p class="actions"><a class="link-next" href="<%= request.getContextPath() %>/StudentList.action?isAttend=false">戻る</a></p>
-        </div>
-    </main>
+        <label>氏名
+            <input type="text" name="name" value="<%= name %>" placeholder="氏名を入力してください">
+            <% if(errors != null && errors.get("name") != null) { %><span class="error-msg"><%= errors.get("name") %></span><% } %>
+        </label>
+
+        <label>クラス
+            <select name="classNum">
+                <option value="">--------</option>
+                <%-- ★データベースから取得したリストを展開 --%>
+                <c:forEach var="cNum" items="${classNums}">
+                    <option value="${cNum}" ${cNum == classNum ? 'selected' : ''}>${cNum}</option>
+                </c:forEach>
+            </select>
+            <% if(errors != null && errors.get("classNum") != null) { %><span class="error-msg"><%= errors.get("classNum") %></span><% } %>
+        </label>
+
+        <input type="submit" value="登録して終了" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    </form>
+    <a href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
 </div>
-
-<%@ include file="../footer.jsp" %>

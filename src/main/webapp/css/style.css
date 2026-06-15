@@ -1,148 +1,256 @@
 @charset "UTF-8";
 
+/* ==========================================================================
+   全体レイアウト・共通設定
+   ========================================================================== */
 body {
-  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", sans-serif;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    color: #333;
+    background-color: #fff;
 }
 
-/* ① 画面タイトル */
-h1 {
-  font-size: 24px;
-  margin: 0 0 10px 0;
-  padding: 15px 20px;
-  background-color: #f1f3f5; /* 見本画像通りの薄いグレーの背景 */
+/* 上部：水色のシステムヘッダー */
+.system-header {
+    background: linear-gradient(to bottom, #e6f2ff, #cce6ff);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #b3d7ff;
 }
 
-/* ⑧ 新規登録リンクの配置調整 */
-.top-actions {
-  text-align: right;
-  margin-bottom: 5px;
+.header-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1a334d;
 }
 
-.link-create {
-  color: #0056b3;
-  text-decoration: none;
-  font-size: 14px;
+.header-user {
+    font-size: 14px;
 }
 
-.link-create:hover {
-  text-decoration: underline;
+.header-user span {
+    margin-right: 15px;
 }
 
-.main-container {
-  display: flex;
-  min-height: 100vh;
+.logout-btn {
+    color: #0066cc;
+    text-decoration: underline;
 }
 
+/* メイン全体のレイアウト (メニューとコンテンツの2カラム) */
+.main-layout {
+    display: flex;
+    min-height: calc(100vh - 70px);
+}
+
+/* 左側：メニューエリア */
+.left-menu-area {
+    width: 220px;
+    padding: 20px;
+    border-right: 1px solid #e0e0e0;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+/* 右側：メインコンテンツエリア */
 .content-body {
-  flex: 1;
-  padding: 20px;
-  background-color: #ffffff;
+    flex: 1;
+    padding: 20px 40px;
+    box-sizing: border-box;
 }
 
-/* ②〜⑦, ⑨ フィルターボックス全体の枠線と配置 */
-.filter-box {
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  padding: 25px 20px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: flex-end; /* ラベルとセレクトボックスの下ラインを揃える */
-  gap: 30px;
+.right-container {
+    width: 100%;
 }
 
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* ==========================================================================
+   検索フォームエリア（中間幅・ボタン中央配置版）
+   ========================================================================== */
+
+/* 成績管理 タイトル */
+.search-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
 }
 
-/* ②③ 項目ラベル */
-.filter-group label {
-  font-size: 13px;
-  color: #495057;
+/* 検索フォーム全体の囲み（横幅を中間サイズに制限） */
+.search-form {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background-color: #fff;
+    padding: 15px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 950px;
 }
 
-/* ④⑤ セレクトボックス */
-.filter-box select {
-  padding: 8px 12px;
-  font-size: 15px;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  min-width: 220px;
-  background-color: #fff;
+/* 各フォームの縦並び枠 */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-/* ⑥⑦ 在学中チェックボックスの配置 */
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 10px; /* ボタンと縦位置を合わせる調整 */
+/* 各フォームの項目名（ラベル） */
+.form-label {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
 }
 
-.checkbox-group label {
-  font-size: 13px;
-  color: #495057;
-  cursor: pointer;
+/* セレクトボックスの共通デザイン */
+.form-select {
+    height: 35px;
+    padding: 0 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-sizing: border-box;
 }
 
-/* ⑨ 絞込みボタン */
-.btn-submit {
-  background-color: #6c757d; /* 見本画像に近い濃いめのグレー */
-  color: #fff;
-  border: none;
-  padding: 8px 24px;
-  font-size: 14px;
-  border-radius: 15px; /* 丸みのある楕円形 */
-  cursor: pointer;
-  margin-left: auto; /* ボタンを一番右端に寄せる */
-  transition: background-color 0.2s;
+/* 入学年度、クラス、回数の幅 */
+.form-group:not(.form-group-wide):not(.form-group-btn) .form-select {
+    width: 110px;
 }
 
-.btn-submit:hover {
-  background-color: #495057;
+/* 科目の幅 */
+.form-group-wide .form-select {
+    width: 220px;
 }
 
-/* 検索結果表示 */
-.result-count {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 15px;
+/* 検索ボタンの配置用枠（残りの右側余白のちょうど真ん中に配置する） */
+.form-group-btn {
+    margin-left: 0;
+    flex-grow: 1;
+    display: grid;
+    place-items: end center;
 }
 
-/* ⑫〜㉒ テーブル全体 */
-.student-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+/* 検索ボタンのデザイン */
+.search-btn {
+    height: 35px;
+    width: 80px;
+    max-width: 80px;
+    background-color: #555555;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
-/* ⑫〜⑯ ヘッダー行 */
-.student-table th {
-  color: #333;
-  font-weight: bold;
-  padding: 12px 10px;
-  border-bottom: 2px solid #dee2e6;
-  text-align: left;
+.search-btn:hover {
+    background-color: #333333;
 }
 
-/* ⑰〜㉒ データ行 */
-.student-table td {
-  padding: 12px 10px;
-  border-bottom: 1px solid #dee2e6;
-  font-size: 14px;
+/* ==========================================================================
+   検索後の成績登録テーブル・ボタン（見本画像完全再現版）
+   ========================================================================== */
+
+/* 科目情報の表示ヘッダー */
+.subject-info-header {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
 }
 
-/* ㉒ 変更リンク */
-.link-action {
-  color: #0056b3;
-  text-decoration: none;
+/* テーブル全体の囲み（検索フォームの横幅と一致） */
+.score-edit-table {
+    width: 100%;
+    max-width: 950px;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 15px;
 }
 
-.link-action:hover {
-  text-decoration: underline;
+/* テーブルの見出し（上線と下線のみのシンプルなデザイン） */
+.score-edit-table th {
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 2px solid #333;
+    background: none;
+}
+
+/* データ行の設定 */
+.score-edit-table td {
+    padding: 14px 10px;
+    text-align: left;
+    color: #555;
+    border-bottom: 1px solid #efefef;
+}
+
+/* 氏名列の左側の余白 */
+.score-edit-table td.student-name-td {
+    text-align: left;
+    padding-left: 10px;
+}
+
+/* 点数入力欄のデザイン（シンプルな200px幅の枠線） */
+.score-edit-table td input[type="number"] {
+    width: 200px;
+    height: 32px;
+    padding: 0 10px;
+    font-size: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #333;
+}
+
+/* 「登録して終了」ボタンのエリア（左寄せ） */
+.btn-area {
+    text-align: left;
+    margin-top: 25px;
+}
+
+/* 「登録して終了」ボタンのデザイン（シックなグレー） */
+.regist-end-btn {
+    height: 38px;
+    padding: 0 20px;
+    background-color: #5c6b73;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.regist-end-btn:hover {
+    background-color: #4a555a;
+}
+
+
+/* ==========================================================================
+   リンク配置調整（完了画面用）
+   ========================================================================== */
+.back-link {
+    display: flex;       /* 横並びにする */
+    gap: 30px;           /* リンク間の隙間を30pxに固定 */
+    margin-top: 25px;    /* 上の要素（成功メッセージ）との間隔 */
+    align-items: center; /* 縦方向のセンター揃え */
+}
+
+.back-link a {
+    color: #0066cc;      /* ヘッダーのリンク色と統一 */
+    text-decoration: underline;
+    font-size: 14px;
 }

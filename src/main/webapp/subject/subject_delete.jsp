@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <title>科目情報削除</title>
     <style>
-        /* 画像の①：見出しの帯 */
+        /* 見出しの帯 */
         .page-header {
             background-color: #f1f3f5;
             padding: 15px;
             border-left: 5px solid #dee2e6;
             margin-bottom: 20px;
         }
-        /* 画像の③：赤い削除ボタン */
+        /*赤い削除ボタン */
         .btn-delete {
             background-color: #d32f2f;
             color: white;
@@ -22,7 +22,7 @@
             font-weight: bold;
             border-radius: 4px;
         }
-        /* 画像の④：戻るリンク */
+        /* 戻るリンク */
         .link-back {
             color: #3182ce;
             text-decoration: none;

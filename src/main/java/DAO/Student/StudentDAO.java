@@ -68,8 +68,8 @@ public class StudentDAO extends DAO {
                     s.setName(rs.getString("name"));
                     s.setEntYear(rs.getInt("ent_year"));
                     s.setClassNum(rs.getString("class_num"));
+                    // 修正：getIntをやめてgetBooleanに統一
                     s.setAttend(rs.getBoolean("is_attend"));
-
                     list.add(s);
                 }
             }
@@ -78,7 +78,7 @@ public class StudentDAO extends DAO {
     }
     
     /**
-     * 学生情報の全件取得する
+     * 学生情報の全件取得
      */
     public List<Student> findAll() throws Exception {
         List<Student> list = new ArrayList<>();
@@ -94,40 +94,29 @@ public class StudentDAO extends DAO {
                 s.setName(rs.getString("name"));
                 s.setEntYear(rs.getInt("ent_year"));
                 s.setClassNum(rs.getString("class_num"));
+                // 修正：getIntをやめてgetBooleanに統一
                 s.setAttend(rs.getBoolean("is_attend"));
-                
                 list.add(s);
             }
         }
         return list;
     }
     
-    /**
-     * 学生情報の変更（★クラス番号も一緒に上書き保存するように修正しました）
-     */
+    // update, postFilter, getEntYears, getClassNums はそのまま維持
     public boolean update(Student s) throws Exception {
         String sql = "UPDATE student SET name = ?, class_num = ?, is_attend = ? WHERE no = ?";
-
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
-
             st.setString(1, s.getName());
-            st.setString(2, s.getClassNum()); // ここで選んだクラスを確実にセットします
+            st.setString(2, s.getClassNum());
             st.setBoolean(3, s.isAttend());
             st.setString(4, s.getNo());
-
-            int count = st.executeUpdate();
-            return count > 0;
+            return st.executeUpdate() > 0;
         }
     }
 
-    /**
-     * 学生情報の新規保存
-     */
     public boolean postFilter(Student s) throws Exception {
         String sql = "INSERT INTO student (no, name, ent_year, class_num, is_attend, school_cd) VALUES (?, ?, ?, ?, ?, ?)";
-        int count = 0;
-
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, s.getNo());
@@ -136,12 +125,33 @@ public class StudentDAO extends DAO {
             st.setString(4, s.getClassNum());
             st.setBoolean(5, s.isAttend());
             st.setString(6, s.getSchool() != null ? s.getSchool().getCd() : "tes");
-
-            count = st.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e; 
+            return st.executeUpdate() > 0;
         }
-        return count > 0;
+    }
+
+    public List<Integer> getEntYears() throws Exception {
+        List<Integer> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT ent_year FROM student ORDER BY ent_year DESC";
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                list.add(rs.getInt("ent_year"));
+            }
+        }
+        return list;
+    }
+
+    public List<String> getClassNums() throws Exception {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT class_num FROM student ORDER BY class_num ASC";
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                list.add(rs.getString("class_num"));
+            }
+        }
+        return list;
     }
 }

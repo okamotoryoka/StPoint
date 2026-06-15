@@ -1,43 +1,48 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>学生情報登録完了</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style2.css">
-    <style>
-        /* 左右レイアウト用CSS（style2.cssになければここに追加してください） */
-        .layout-wrapper { display: flex; width: 100%; min-height: 100vh; }
-        .side-menu { width: 200px; background-color: #f8f9fa; border-right: 1px solid #e2e8f0; }
-        .main-content { flex: 1; padding: 40px; }
-    </style>
+<meta charset="UTF-8">
+<title>学生情報登録</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+<style>
+    /* ヘッダーやレイアウト用CSSは style.css に集約し、ここでは微調整のみを行う */
+    .success-message {
+        background-color: #c8e6c9;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #a5d6a7;
+        margin: 20px 0;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <div class="layout-wrapper">
-        
-        <div class="side-menu">
-            <jsp:include page="../tag.jsp" />
+<header class="system-header">
+    <div class="header-title">得点管理システム</div>
+</header>
+
+<div class="main-layout">
+    <nav class="left-menu-area">
+        <jsp:include page="/tag.jsp" />
+    </nav>
+
+    <main class="content-body">
+        <div class="right-container">
+            <div class="search-title">学生情報登録</div>
+
+            <div class="success-message">
+               登録が完了しました
+            </div>
+
+            <div class="back-link">
+    <a href="javascript:history.back()">戻る</a>
+    <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧に戻る</a>
+</div>
+
         </div>
-
-        <div class="main-content">
-            <div class="title-box">
-                学生情報登録
-            </div>
-
-            <div class="success-box">
-                登録が完了しました
-            </div>
-
-            <div class="link-box">
-                <a href="${pageContext.request.contextPath}/result/student_list.jsp">
-                    学生一覧
-                </a>
-            </div>
-        </div>
-
-    </div>
+    </main>
 </div>
 
 </body>

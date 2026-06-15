@@ -27,8 +27,8 @@
             <li class="menu-title" style="margin-bottom: 8px; color: #333; font-weight: bold;">成績管理</li>
             
             <!-- 左メニューの成績リンク群（内側にきれいに20px字下げ） -->
-            <li style="padding-left: 20px; margin-bottom: 8px;"><a href="${pageContext.request.contextPath}/ScoreInsertServlet.action">成績登録</a></li>
-            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績参照</a></li>
+            <li style="padding-left: 20px; margin-bottom: 8px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a></li>
+            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreSubject.action">成績参照</a></li>
 
             <!-- 科目管理（二重になっていたダブルクォーテーションを修正しました） -->
             <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/SubjectList.action">科目管理</a></li>

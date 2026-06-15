@@ -22,9 +22,16 @@ public class ScoreSearchAction extends Action {
 
             ScoreDAO dao = new ScoreDAO();
             
-            // 2. セレクトボックスを維持するために科目リストを再取得
+            // 2. セレクトボックスを維持するために各種リストを再取得
             List<Map<String, String>> subjectList = dao.getSubjectList();
             request.setAttribute("subjectList", subjectList);
+
+            List<String> entYearList = dao.getEntYearList();
+            request.setAttribute("entYearList", entYearList);
+
+            // 💡【ここを追加】データベースからクラス番号の一覧を取得してJSPに送る
+            List<String> classNumList = dao.getClassNumList();
+            request.setAttribute("classList", classNumList); // JSP側では "classList" として受け取ります
 
             // 3. 条件を渡してデータベースから絞り込んだ結果を取得
             List<Score> list = dao.search(entYear, classNum, subjectCd, noStr);

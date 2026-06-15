@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>得点管理システム</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style4.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 
@@ -15,6 +15,11 @@ String entYear = (String) request.getAttribute("entYear");
 String classNum = (String) request.getAttribute("classNum");
 String subjectCd = (String) request.getAttribute("subjectCd");
 String noStr = (String) request.getAttribute("no");
+
+List<String> entYearList = (List<String>) request.getAttribute("entYearList");
+
+//💡【ここを追加】Actionから送られてきたクラスリストを受け取る
+List<String> classList = (List<String>) request.getAttribute("classList");
 
 // 2. 初回アクセスかどうかのフラグを受け取る
 Boolean isFirstAccess = (Boolean) request.getAttribute("isFirstAccess");
@@ -51,26 +56,45 @@ if (noStr == null) noStr = "";
             <!-- 検索フォームエリア（送信先は検索専用Action） -->
             <form action="${pageContext.request.contextPath}/ScoreSearchAction.action" method="post" class="search-form">
                 
-                <!-- 入学年度 -->
-                <div class="form-group">
-                    <label class="form-label">入学年度</label>
-                    <select name="entYear" class="form-select">
-                        <option value="" <%= entYear.equals("") ? "selected" : "" %>>--------</option>
-                        <option value="2024" <%= entYear.equals("2024") ? "selected" : "" %>>2024</option>
-                        <option value="2025" <%= entYear.equals("2025") ? "selected" : "" %>>2025</option>
-                        <option value="2026" <%= entYear.equals("2026") ? "selected" : "" %>>2026</option>
-                    </select>
-                </div>
+                <!-- 入学年度（データベースから動的に取得したリストを展開） -->
+<div class="form-group">
+    <label class="form-label">入学年度</label>
+    <select name="entYear" class="form-select">
+        <option value="" <%= entYear.equals("") ? "selected" : "" %>>--------</option>
+        <%
+        // 動的なループ処理でoptionを自動生成
+        if (entYearList != null) {
+            for (String year : entYearList) {
+        %>
+            <option value="<%= year %>" <%= entYear.equals(year) ? "selected" : "" %>>
+                <%= year %>
+            </option>
+        <%
+            }
+        }
+        %>
+    </select>
+</div>
 
-                <!-- クラス -->
-                <div class="form-group">
-                    <label class="form-label">クラス</label>
-                    <select name="classNum" class="form-select">
-                        <option value="" <%= classNum.equals("") ? "selected" : "" %>>--------</option>
-                        <option value="101" <%= classNum.equals("101") ? "selected" : "" %>>101</option>
-                        <option value="102" <%= classNum.equals("102") ? "selected" : "" %>>102</option>
-                    </select>
-                </div>
+                <!-- クラス（データベースから動的に取得したリストを展開） -->
+<div class="form-group">
+    <label class="form-label">クラス</label>
+    <select name="classNum" class="form-select">
+        <option value="" <%= classNum.equals("") ? "selected" : "" %>>--------</option>
+        <%
+        // 動的なループ処理でoptionを自動生成
+        if (classList != null) {
+            for (String cNum : classList) {
+        %>
+            <option value="<%= cNum %>" <%= classNum.equals(cNum) ? "selected" : "" %>>
+                <%= cNum %>
+            </option>
+        <%
+            }
+        }
+        %>
+    </select>
+</div>
 
                 <!-- 科目（データベースから動的に取得したリストを展開） -->
                 <div class="form-group form-group-wide">
@@ -103,7 +127,11 @@ if (noStr == null) noStr = "";
                     </select>
                 </div>
 
-                <button type="submit" class="search-btn">検索</button>
+                <!-- 検索ボタン（余白の中間に配置するための高さを揃えた枠） -->
+                <div class="form-group form-group-btn">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="search-btn">検索</button>
+                </div>
 
             </form>
 
@@ -126,7 +154,9 @@ if (noStr == null) noStr = "";
                 </div>
 
                 <!-- データベースに一括登録・更新するためのフォーム -->
-                <form action="${pageContext.request.contextPath}/ScoreRegistAction.action" method="post">
+                <!-- 💡 他のActionと揃えてすっきりしたパスに戻します -->
+<form action="${pageContext.request.contextPath}/ScoreRegistAction.action" method="post">
+                
                     
                     <table class="score-edit-table">
                         <tr>
@@ -134,18 +164,18 @@ if (noStr == null) noStr = "";
                             <th>クラス</th>
                             <th>学生番号</th>
                             <th>氏名</th>
-                            <th style="width: 250px;">点数</th>
+                            <th>点数</th>
                         </tr>
                         <% for(Bean.Score data : list) { %>
                         <tr>
-                            <!-- 入学年度（検索条件が空ならデータから取得、あれば選択値を表示） -->
-                            <td><%= entYear.equals("") ? data.getClassNum() : entYear %></td> 
+                            <!-- 入学年度（サーブレットから受け取った選択値を安全に表示） -->
+                            <td><%= entYear.equals("") ? data.getEntYear() : entYear %></td>
                             <td><%= data.getClassNum() %></td>
                             <td><%= data.getStudentId() %></td>
-                            <td style="text-align: left; padding-left: 20px;"><%= data.getStudentName() %></td>
+                            <td class="student-name-td"><%= data.getStudentName() %></td>
                             <td>
-                                <!-- 点数入力欄（複数の学生の点数を一括識別するため、nameに学生番号を付与） -->
-                                <input type="number" name="point_<%= data.getStudentId() %>" value="<%= data.getPoint() %>" min="0" max="100" class="point-input">
+                                <!-- 点数入力欄 -->
+                                <input type="number" name="point_<%= data.getStudentId() %>" value="<%= data.getPoint() %>" min="0" max="100">
                                 
                                 <!-- サーブレット側で更新処理をするための隠しパラメータ（キー情報） -->
                                 <input type="hidden" name="studentIds" value="<%= data.getStudentId() %>">

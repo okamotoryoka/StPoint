@@ -6,6 +6,7 @@ import Action.Login.LoginAction;
 import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
 import Action.Score.ScoreListServletAction;
+import Action.Score.ScoreRegistAction;
 import Action.Score.ScoreSearchAction;
 import Action.Score.ScoreSubjectAction; // ★インポートを追加しました
 import Action.Score.ScoreUpdateServletAction;
@@ -124,6 +125,10 @@ public class FrontController extends HttpServlet {
 
             else if (path.equals("/TestRegist.action")) {
             	action = new TestRegistAction();
+            }
+            
+            else if (path.equals("/ScoreRegistAction.action")) {
+                action = new ScoreRegistAction();
             }
             
             

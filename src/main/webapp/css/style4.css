@@ -1,68 +1,161 @@
 @charset "UTF-8";
 
+/* ==========================================================================
+   1. ベーススタイル・全体レイアウト（縦線を下まで伸ばすための全面修正）
+   ========================================================================== */
 body {
     background-color: #ffffff;
     font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", sans-serif;
     margin: 0;
     color: #333333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* ヘッダーとメインエリアを縦に並べる */
 }
 
 /* 水色のシステムヘッダー */
 .system-header {
-    background-color: #e6f2ff; /* 薄い水色の背景 */
+    background-color: #e6f2ff; 
     padding: 15px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #d0e2f5;
 }
+
 .header-title {
     font-size: 26px;
     font-weight: bold;
     color: #1a1a1a;
 }
+
 .header-user {
     font-size: 13px;
     color: #4a4a4a;
 }
+
 .logout-btn {
     color: #0066cc;
     text-decoration: underline;
     margin-left: 10px;
 }
 
-/* メインレイアウト（左右の配置） */
+/* メインレイアウト（🌟高さを画面最下部まで強制的に引き伸ばす） */
 .main-layout {
     display: flex;
+    flex: 1;                   /* 🌟画面の残りの高さをすべてこのエリアに割り当てる */
     width: 100%;
+    max-width: 1250px;         
     box-sizing: border-box;
-    padding: 20px 40px; 
-    gap: 40px;     
+    padding: 0 40px 20px 40px; 
+    gap: 0;                    
+    align-items: stretch;      /* 🌟左右の要素（サイドメニューとメイン）の高さを均等に伸ばす */
 }
 
-/* 左側メニュー（枠線なし、リンクが縦に並ぶシンプルなスタイル） */
+
+/* ==========================================================================
+   2. 左側サイドメニューエリア（🌟幅を広げ、縦線を最下部まで伸ばす）
+   ========================================================================== */
 .left-menu-area {
-    width: 180px;
-    min-width: 180px;
+    width: 220px;              /* 🌟サイドバーの横幅を180pxから220pxに広げてゆったりさせる */
+    min-width: 220px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-right: 30px;       
+    /* 🌟右側の縦線を優先度最大で引き、高さを親要素と同期させる */
+    border-right: 1px solid #dcdcdc !important; 
+    height: auto;              
 }
-/* tag.jsp内のスタイルに影響されないよう、念のため文字リンクを青色に調整 */
+
+/* メニュー内の大見出し（学生管理、成績管理など）の余白調整 */
+.left-menu-area p, 
+.left-menu-area strong,
+.left-menu-area div,
+.left-menu-area .menu-title {
+    border-top: none !important;       
+    margin-top: 25px !important;       
+    margin-bottom: 10px !important;    
+    display: block;
+    font-weight: bold;
+    color: #333333;
+}
+
+/* 一番最初の見出し（メニュー）だけは上の余白をなしにする */
+.left-menu-area > :first-child,
+.left-menu-area p:first-of-type,
+.left-menu-area strong:first-of-type {
+    margin-top: 0 !important;
+}
+
+/* メニュー内のリンク（文字）のスタイル */
 .left-menu-area a {
+    display: block;                
     color: #0066cc !important;
     text-decoration: underline !important;
     font-size: 14px;
+    margin-top: 5px !important;
+    margin-bottom: 12px !important; 
+    padding-left: 5px;
+    border: none !important;       
 }
 
-/* 右側コンテンツエリア */
+.left-menu-area a:hover {
+    color: #004499 !important;     
+}
+
+/* 不要な水平線タグ（hr）を完全に消去 */
+.left-menu-area hr {
+    display: none !important;
+    border: none !important;
+}
+
+
+/* 一番最初の見出し（メニュー）だけは上の余白をなしにする */
+.left-menu-area > :first-child,
+.left-menu-area p:first-of-type,
+.left-menu-area strong:first-of-type {
+    margin-top: 0 !important;
+}
+
+/* メニュー内のリンク（文字）のスタイル */
+.left-menu-area a {
+    display: block;                
+    color: #0066cc !important;
+    text-decoration: underline !important;
+    font-size: 14px;
+    margin-top: 5px !important;
+    margin-bottom: 12px !important; 
+    padding-left: 5px;
+    border: none !important;       
+}
+
+.left-menu-area a:hover {
+    color: #004499 !important;     
+}
+
+/* 不要な水平線タグ（hr）を完全に消去 */
+.left-menu-area hr {
+    display: none !important;
+    border: none !important;
+}
+
+
+/* ==========================================================================
+   3. 右側コンテンツエリア・タイトル
+   ========================================================================== */
 .content-body {
     flex: 1;
+    padding-top: 30px;
+    padding-left: 40px; /* 縦線の右側に十分な余白を空ける */
 }
+
 .right-container {
     width: 100%;
 }
 
-/* ① 成績管理 タイトル（グレーの背景帯） */
+/* ① タイトル（グレーの背景帯） */
 .search-title {
-    background-color: #f2f2f2; /* 薄いグレーの背景 */
+    background-color: #f2f2f2; 
     font-size: 20px;
     font-weight: bold;
     padding: 8px 15px;
@@ -70,63 +163,173 @@ body {
     margin-bottom: 20px;
 }
 
-/* 検索フォーム（各項目を横一列に並べる） */
+
+/* ==========================================================================
+   4. 検索フォームエリア（設計資料の ⑮・⑯ 枠線対応 ＆ 横幅拡大）
+   ========================================================================== */
+/* 検索フォーム全体を囲む四角い枠 */
 .search-form {
     display: flex;
-    align-items: flex-end; /* ラベルとセレクトボックスのボトムラインを揃える */
-    gap: 15px;             /* 項目ごとの横の隙間 */
-    flex-wrap: wrap;       /* 画面が狭いときは折り返す */
-}
-
-/* 各入力項目の外枠（ラベルとセレクトを縦並びに） */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;              /* 文字とボックスの隙間 */
-}
-/* 科目など、少し横幅を広く取りたい項目用 */
-.form-group-wide {
-    min-width: 180px;
-}
-
-/* ②③④⑤ 各項目のラベル文字 */
-.form-label {
-    font-size: 13px;
-    color: #333333;
-}
-
-/* ⑥⑦⑧⑨ セレクトボックスのデザイン */
-.form-select {
-    height: 30px;
-    border: 1px solid #b5b5b5;
+    flex-direction: column;   
+    border: 1px solid #d3d3d3 !important; 
     border-radius: 4px;
-    padding: 0 25px 0 10px;
-    font-size: 14px;
-    background-color: #ffffff;
-    min-width: 100px;
-    width: 100%;
+    padding: 15px 25px !important;       /* 内側の余白を広げてゆったりさせます */
+    background-color: #ffffff !important;
+    width: 100% !important;              /* 🌟横幅いっぱいにしっかり広げる */
     box-sizing: border-box;
 }
 
-/* ⑩ 検索ボタン（濃いグレー） */
+/* 1段目（科目情報）と 2段目（学生情報）の各セクション */
+.search-section {
+    display: flex;
+    align-items: center;      
+    padding: 15px 0;
+    width: 100%;
+}
+
+/* 1段目と2段目の間の点線 */
+.search-section-border {
+    border-bottom: 1px dashed #ddd;
+}
+
+/* 「科目情報」「学生情報」見出し文字の固定幅（②・⑩） */
+.section-title {
+    width: 100px;
+    min-width: 100px;
+    font-weight: bold;
+    color: #444444;
+    font-size: 14px;
+}
+
+/* 各入力項目の外枠 */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;                 
+    margin-right: 15px;       
+}
+
+.form-group-wide {
+    width: 250px;
+}
+
+.form-label {
+    font-size: 12px;
+    color: #666666;
+}
+
+/* 入力ボックス・セレクトボックスの基本デザイン（⑥⑦⑧⑫） */
+.form-select, .input-student-id {
+    height: 30px;
+    border: 1px solid #b5b5b5;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-size: 14px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.form-select {
+    width: 110px;
+}
+
+.form-group-wide .form-select {
+    width: 100%;
+}
+
+.input-student-id {
+    width: 230px;
+}
+
+/* 検索ボタン（⑨⑬：入力欄のすぐ右隣に配置） */
 .search-btn {
-    background-color: #555555; /* 濃いグレー */
+    background-color: #2a2a2a; 
     color: #ffffff;
     border: none;
     border-radius: 4px;
     height: 30px;
     padding: 0 15px;
-    font-size: 14px;
+    font-size: 13px;
     cursor: pointer;
     box-sizing: border-box;
+    margin-left: 20px;         
+    transition: background-color 0.2s;
 }
+
 .search-btn:hover {
-    background-color: #333333;
+    background-color: #000000; 
+}
+
+
+/* ==========================================================================
+   5. 結果表示・テーブル・その他メッセージ
+   ========================================================================== */
+/* ⑭ 案内メッセージ用のスタイル（明るく鮮やかな水色に変更） */
+.initial-message {
+    color: #33a6ff !important;     /* 🌟設計書のイメージに合わせた鮮やかな水色 */
+    font-size: 14.5px !important;
+    margin-top: 25px;      
+    font-weight: normal;
+    letter-spacing: 0.5px;         /* 文字間隔を少し広げて優しく見せる */
+}
+
+/* 科目・回数情報の表示ヘッダー */
+.subject-info-header {
+    font-size: 15px;
+    font-weight: normal;
+    color: #333333;
+    margin: 25px 0 10px 0;
+}
+
+/* 成績一覧の表示テーブル */
+.score-edit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.score-edit-table th, .score-edit-table td {
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #333333;
+    border-bottom: 1px solid #f0f4f8; 
+}
+
+.score-edit-table th {
+    font-weight: bold;
+    background-color: #ffffff;
+}
+
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.score-table th, .score-table td {
+    border: 1px solid #d3d3d3;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.score-table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    color: #333333;
+}
+
+.score-table tr:nth-child(even) {
+    background-color: #fcfcfc;
 }
 
 .action-area {
     margin: 25px 0 15px 0;
 }
+
 .add-link {
     display: inline-block;
     font-size: 14px;
@@ -137,60 +340,11 @@ body {
     border-radius: 4px;
     background-color: #ffffff;
 }
+
 .add-link:hover {
     background-color: #f0f7ff;
 }
 
-/* 検索結果テーブルのビジネス風調整 */
-.score-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-.score-table th, .score-table td {
-    border: 1px solid #d3d3d3;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-}
-.score-table th {
-    background-color: #f9f9f9;
-    font-weight: bold;
-    color: #333333;
-}
-.score-table tr:nth-child(even) {
-    background-color: #fcfcfc;
-}
-/* ① 科目・回数情報の表示ヘッダー */
-.subject-info-header {
-    font-size: 15px;
-    font-weight: normal;
-    color: #333333;
-    margin: 25px 0 10px 0;
-}
-
-/* 一括編集用テーブル（枠線なし・シンプルな横線ベースのビジネスデザイン） */
-.score-edit-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    border-top: 1px solid #e2e8f0;
-    border-bottom: 1px solid #e2e8f0;
-}
-.score-edit-table th, .score-edit-table td {
-    padding: 12px 10px;
-    text-align: center;
-    font-size: 14px;
-    color: #333333;
-    border-bottom: 1px solid #f0f4f8; /* 薄い区切り線 */
-}
-.score-edit-table th {
-    font-weight: bold;
-    background-color: #ffffff;
-    text-align: center;
-}
-
-/* ⑫ 点数の入力テキストボックス */
 .point-input {
     width: 100%;
     max-width: 200px;
@@ -202,12 +356,12 @@ body {
     box-sizing: border-box;
 }
 
-/* ⑬ 登録して終了ボタンのデザイン */
 .btn-area {
     margin-top: 20px;
 }
+
 .regist-end-btn {
-    background-color: #555555; /* 画像通りの濃いグレー */
+    background-color: #555555; 
     color: #ffffff;
     border: none;
     border-radius: 4px;
@@ -216,6 +370,7 @@ body {
     cursor: pointer;
     box-sizing: border-box;
 }
+
 .regist-end-btn:hover {
     background-color: #333333;
 }

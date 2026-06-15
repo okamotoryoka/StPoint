@@ -194,13 +194,22 @@ List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request
                     <% } %>
                 </table>
 
-            <% 
+                        <% 
             } else if (scoreDisplayList != null && scoreDisplayList.isEmpty()) { 
             %>
                 <div style="text-align: center; color: #999; margin-top: 20px;">
                     該当する成績データが見つかりませんでした。
                 </div>
+            <% 
+            } else { 
+                // 🌟 まだ検索していない初回アクセス時
+            %>
+                <!-- 先ほど追加したCSSのクラス（initial-message）をここで指定します -->
+                <div class="initial-message">
+                    科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
+                </div>
             <% } %>
+            
             
         </div>
     </div>

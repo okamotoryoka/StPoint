@@ -17,6 +17,7 @@
 <body>
 
 <%
+// 検索条件の取得とNULLチェック
 String entYear = (String) request.getAttribute("selectedYear");
 String classNum = (String) request.getAttribute("selectedClass");
 String subjectCd = (String) request.getAttribute("selectedSubjectCd");
@@ -33,6 +34,10 @@ List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request
 
 <header class="system-header">
     <div class="header-title">得点管理システム</div>
+    <div class="header-user">
+        <span>${sessionScope.teacher_name}様</span>
+        <a href="#" class="logout-btn">ログアウト</a>
+    </div>
 </header>
 
 <div class="main-layout">

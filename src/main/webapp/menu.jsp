@@ -178,7 +178,11 @@ body {
             <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/StudentList.action" style="border: none; outline: none; display: inline-block;">学生管理</a></li>
             <li class="menu-title" style="margin-bottom: 8px; color: #333; font-weight: bold;">成績管理</li>
             <li style="padding-left: 20px; margin-bottom: 8px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action" style="border: none; outline: none; display: inline-block;">成績登録</a></li>
+<<<<<<< HEAD
             <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreInsertServlet.action" style="border: none; outline: none; display: inline-block;">成績参照</a></li>
+=======
+            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreSubjectAction.action" style="border: none; outline: none; display: inline-block;">成績参照</a></li>
+>>>>>>> branch 'admin' of https://github.com/okamotoryoka/StPoint.git
             <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/SubjectList.action" style="border: none; outline: none; display: inline-block;">科目管理</a></li>
         </ul>
     </aside>
@@ -203,7 +207,11 @@ body {
                     <!-- 成績登録 -->
                     <a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a>
                     <!-- 成績参照 -->
+<<<<<<< HEAD
                     <a href="${pageContext.request.contextPath}/ScoreInsertServlet.action">成績参照</a>
+=======
+                    <a href="${pageContext.request.contextPath}/ScoreSubjectAction.action">成績参照</a>
+>>>>>>> branch 'admin' of https://github.com/okamotoryoka/StPoint.git
                 </div>
             </div>
 

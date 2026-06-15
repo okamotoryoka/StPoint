@@ -49,8 +49,10 @@
 <body>
     <!-- 外側の error-box を削除し、構造をシンプルにしました -->
     <h2 class="error-title">得点管理システム</h2>
-    <div class="error-content">エラーが発生しました</div>
-
+    <div class="error-content">
+    エラーが発生しました<br>
+    詳細: ${errorMessage}
+</div>
     <div class="login-footer">&copy; 2023 TIC<br>大原学園</div>
 </body>
 </html>

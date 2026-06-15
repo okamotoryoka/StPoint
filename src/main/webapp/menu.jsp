@@ -177,8 +177,8 @@ body {
             <li style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/Menu.action" style="border: none; outline: none; display: inline-block;">メニュー</a></li>
             <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/StudentList.action" style="border: none; outline: none; display: inline-block;">学生管理</a></li>
             <li class="menu-title" style="margin-bottom: 8px; color: #333; font-weight: bold;">成績管理</li>
-            <li style="padding-left: 20px; margin-bottom: 8px;"><a href="${pageContext.request.contextPath}/ScoreInsertServlet.action" style="border: none; outline: none; display: inline-block;">成績登録</a></li>
-            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action" style="border: none; outline: none; display: inline-block;">成績参照</a></li>
+            <li style="padding-left: 20px; margin-bottom: 8px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action" style="border: none; outline: none; display: inline-block;">成績登録</a></li>
+            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreInsertServlet.action" style="border: none; outline: none; display: inline-block;">成績参照</a></li>
             <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/SubjectList.action" style="border: none; outline: none; display: inline-block;">科目管理</a></li>
         </ul>
     </aside>
@@ -201,9 +201,9 @@ body {
                 <div class="score-title-custom">成績管理</div>
                 <div class="score-links-custom">
                     <!-- 成績登録 -->
-                    <a href="${pageContext.request.contextPath}/ScoreInsertServlet.action">成績登録</a>
+                    <a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a>
                     <!-- 成績参照 -->
-                    <a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績参照</a>
+                    <a href="${pageContext.request.contextPath}/ScoreInsertServlet.action">成績参照</a>
                 </div>
             </div>
 

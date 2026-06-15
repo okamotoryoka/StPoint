@@ -6,6 +6,8 @@ import Action.Login.LoginAction;
 import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
 import Action.Score.ScoreListServletAction;
+import Action.Score.ScoreSearchAction;
+import Action.Score.ScoreSubjectAction;
 import Action.Score.ScoreUpdateServletAction;
 import Action.Student.StudentCreateAction;
 import Action.Student.StudentCreateExecuteAction;
@@ -73,6 +75,14 @@ public class FrontController extends HttpServlet {
 
             else if (path.equals("/ScoreListServlet.action")) {
             	action = new ScoreListServletAction();
+            }
+            
+            else if (path.equals("/ScoreSearch.action")) {
+            	action = new ScoreSearchAction();
+            }
+            
+            else if (path.equals("/ScoreSubject.action")) {
+            	action = new ScoreSubjectAction();
             }
             
             else if (path.equals("/ScoreUpdateServlet.action")) {

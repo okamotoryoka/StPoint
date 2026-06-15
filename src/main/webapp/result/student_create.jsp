@@ -1,109 +1,63 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<% request.setAttribute("pageTitle", "生徒登録"); %>
+<%@ page import="java.util.Map" %>
+<%-- ★重要：JSTLの宣言を追加 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../header.html" %>
+<%
+    Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");
+    String name = request.getAttribute("name") != null ? (String) request.getAttribute("name") : "";
+    String no = request.getAttribute("no") != null ? (String) request.getAttribute("no") : "";
+    String entYear = request.getAttribute("entYear") != null ? (String) request.getAttribute("entYear") : "";
+    String classNum = request.getAttribute("classNum") != null ? (String) request.getAttribute("classNum") : "";
+%>
 
 <style>
-    /* 1. 基本リセット：隙間を強制的にゼロにする */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { margin: 0; padding: 0; font-family: sans-serif; }
-
-    /* 2. 全体レイアウト：メニューとメインを並べる */
-    .layout-wrapper { display: flex; width: 100%; min-height: 100vh; }
-    
-    /* 3. サイドメニュー */
-    .side-menu { 
-        width: 200px; 
-        flex-shrink: 0; 
-        background-color: #f8f9fa; 
-        border-right: 1px solid #e2e8f0; 
-        padding: 20px; 
-    }
-    
-    /* 4. メインエリア */
-    .main-content { flex: 1; padding: 40px; }
-    
-    /* 5. フォームパネル：左寄せにする */
-    .page-panel { max-width: 800px; margin: 0; }
-    
-    /* 6. タイトル帯 */
-    .page-title { 
-        background-color: #e9ecef; 
-        padding: 15px; 
-        font-weight: bold; 
-        font-size: 18px; 
-        margin-bottom: 25px; 
-    }
-
-    /* 7. フォーム部品 */
+    /* （CSSはそのまま） */
+    .page-panel { max-width: 800px; margin: 20px; font-family: sans-serif; }
+    .page-title { background-color: #e9ecef; padding: 15px; font-weight: bold; font-size: 18px; margin-bottom: 25px; }
     .stacked-form { display: flex; flex-direction: column; gap: 20px; }
-    .stacked-form label { display: flex; flex-direction: column; font-weight: bold; color: #333; gap: 8px; }
-    .stacked-form input, .stacked-form select { 
-        width: 100%; height: 40px; padding: 0 10px; border: 1px solid #ced4da; border-radius: 4px; background-color: #fff; 
-    }
-
-    /* 8. ボタン */
-  .form-actions {
-    margin-top: 20px;
-    text-align: left; /* 左寄せにする場合 */
-}
-
-.form-actions input[type="submit"] {
-    width: auto;             /* 幅を自動（文字サイズ合わせ）にする */
-    min-width: 120px;        /* ただし小さすぎないよう最低限の幅を確保 */
-    padding: 10px 20px;      /* 左右に余白をとってボタンらしくする */
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-    /* 9. 戻るリンク */
-    .actions { margin-top: 20px; }
-    .link-next { color: #3182ce; text-decoration: none; }
+    .stacked-form label { display: block; font-weight: bold; margin-bottom: 5px; }
+    .stacked-form input, .stacked-form select { width: 100%; height: 40px; padding: 0 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+    .error-msg { color: #f59f00; font-weight: bold; font-size: 14px; margin-top: 5px; display: block; }
 </style>
 
-<div class="layout-wrapper">
-    <div class="side-menu">
-        <jsp:include page="/tag.jsp" />
-    </div>
+<div class="page-panel">
+    <div class="page-title">学生情報登録</div>
+    <form class="stacked-form" action="${pageContext.request.contextPath}/StudentCreateExecute.action" method="post">
+        
+        <label>入学年度
+            <select name="entYear">
+                <option value="">--------</option>
+                <%-- ★データベースから取得したリストを展開 --%>
+                <c:forEach var="year" items="${entYears}">
+                    <option value="${year}" ${String.valueOf(year) == entYear ? 'selected' : ''}>${year}</option>
+                </c:forEach>
+            </select>
+            <% if(errors != null && errors.get("entYear") != null) { %><span class="error-msg"><%= errors.get("entYear") %></span><% } %>
+        </label>
 
-    <main class="main-content">
-        <div class="page-panel">
-            <div class="page-title">学生情報登録</div>
-            
-            <form class="stacked-form" action="${pageContext.request.contextPath}/StudentCreateExecute.action" method="post">
-                <label>入学年度
-                    <select name="entYear">
-                        <option value="">--------</option>
-                    </select>
-                </label>
+        <label>学生番号
+            <input type="text" name="no" value="<%= no %>" placeholder="学生番号を入力してください">
+            <% if(errors != null && errors.get("no") != null) { %><span class="error-msg"><%= errors.get("no") %></span><% } %>
+        </label>
 
-                <label>学生番号
-                    <input type="text" name="no" placeholder="学生番号を入力してください">
-                </label>
+        <label>氏名
+            <input type="text" name="name" value="<%= name %>" placeholder="氏名を入力してください">
+            <% if(errors != null && errors.get("name") != null) { %><span class="error-msg"><%= errors.get("name") %></span><% } %>
+        </label>
 
-                <label>氏名
-                    <input type="text" name="name" placeholder="氏名を入力してください">
-                </label>
+        <label>クラス
+            <select name="classNum">
+                <option value="">--------</option>
+                <%-- ★データベースから取得したリストを展開 --%>
+                <c:forEach var="cNum" items="${classNums}">
+                    <option value="${cNum}" ${cNum == classNum ? 'selected' : ''}>${cNum}</option>
+                </c:forEach>
+            </select>
+            <% if(errors != null && errors.get("classNum") != null) { %><span class="error-msg"><%= errors.get("classNum") %></span><% } %>
+        </label>
 
-                <label>クラス
-                    <select name="classNum">
-                        <option value="101">101</option>
-                    </select>
-                </label>
-
-                <div class="form-actions">
-                    <input type="submit" value="登録して終了">
-                </div>
-            </form>
-
-            <p class="actions">
-                <a class="link-next" href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
-            </p>
-        </div>
-    </main>
+        <input type="submit" value="登録して終了" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    </form>
+    <a href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
 </div>
-
-<%@ include file="../footer.jsp" %>

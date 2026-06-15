@@ -12,7 +12,7 @@
         .main-content { flex: 1; padding: 30px; }
         .filter-box { display: flex; gap: 20px; align-items: center; padding: 20px; background-color: #f8f9fa; border: 1px solid #ddd; margin-bottom: 20px; }
         .filter-group { display: flex; align-items: center; gap: 10px; }
-        .btn-submit { padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-submit { padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; }
         .student-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .student-table th, .student-table td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
         .footer { background-color: #eee; padding: 15px; text-align: center; font-size: 12px; color: #666; margin-top: 30px; }
@@ -25,7 +25,10 @@
     </div>
 
     <main class="main-content">
-        <h1>学生管理</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>学生管理</h1>
+            <a href="${pageContext.request.contextPath}/StudentCreate.action" class="btn-submit">新規登録</a>
+        </div>
 
         <form action="${pageContext.request.contextPath}/StudentList.action" method="post" class="filter-box">
             <div class="filter-group">
@@ -33,7 +36,6 @@
                 <select name="entYear">
                     <option value="">--------</option>
                     <%
-                        // Object型で取得してからtoString()で比較することで、型不一致エラーを防ぐ
                         List<?> yearList = (List<?>) request.getAttribute("yearList");
                         String sYear = String.valueOf(request.getAttribute("selectedYear") != null ? request.getAttribute("selectedYear") : "");
                         if (yearList != null) {
@@ -41,8 +43,7 @@
                                 String val = String.valueOf(y);
                     %>
                                 <option value="<%= val %>" <%= val.equals(sYear) ? "selected" : "" %>><%= val %></option>
-                    <%
-                            }
+                    <%      }
                         }
                     %>
                 </select>
@@ -59,8 +60,7 @@
                                 String val = String.valueOf(c);
                     %>
                                 <option value="<%= val %>" <%= val.equals(sClass) ? "selected" : "" %>><%= val %></option>
-                    <%
-                            }
+                    <%      }
                         }
                     %>
                 </select>
@@ -88,16 +88,13 @@
                                 <td><%= s.getName() %></td>
                                 <td><%= s.getClassNum() %></td>
                                 <td><%= s.isAttend() ? "〇" : "×" %></td>
-                                <td></td>
+                                <td><a href="${pageContext.request.contextPath}/StudentUpdate.action?no=<%= s.getNo() %>">変更</a></td>
                             </tr>
-                <%
-                        }
+                <%      }
                     } else {
                 %>
                         <tr><td colspan="6" style="text-align: center;">データが見つかりません。</td></tr>
-                <%
-                    }
-                %>
+                <%  } %>
             </tbody>
         </table>
     </main>

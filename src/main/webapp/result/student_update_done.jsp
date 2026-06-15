@@ -1,61 +1,38 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>学生情報変更完了</title>
-
-<link rel="stylesheet"
-href="${pageContext.request.contextPath}/css/style2.css">
-
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style2.css">
+<style>
+    /* リンクの表示崩れを修正 */
+    .link-box { margin-top: 20px; }
+    .link-box a { color: #0000ee; text-decoration: underline; }
+</style>
 </head>
-
 <body>
 
-<!-- 全体 -->
 <div class="container">
-
-    <!-- 左右レイアウト -->
     <div class="layout-wrapper">
 
-        <!-- 左メニュー -->
         <div class="side-menu">
-            <ul>
-                <li><a href="#">メニュー</a></li>
-                <li><a href="#">学生管理</a></li>
-                <li><a href="#">成績管理</a></li>
-                <li class="sub-menu"><a href="#">成績登録</a></li>
-                <li class="sub-menu"><a href="#">成績参照</a></li>
-                <li><a href="#">科目管理</a></li>
-            </ul>
+            <jsp:include page="/tag.jsp" />
         </div>
 
-        <!-- 右コンテンツ -->
         <div class="main-content">
+            <div class="title-box">学生情報変更</div>
 
-            <!-- タイトル -->
-            <div class="title-box">
-                学生情報変更
-            </div>
-
-            <!-- 完了メッセージ -->
-            <div class="success-box">
+            <div class="success-box" style="margin: 20px 0; font-weight: bold;">
                 変更が完了しました
             </div>
 
-            <!-- 戻るリンク -->
             <div class="link-box">
-                      <a href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
-                    学生一覧
-                </a>
+                <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧へ戻る</a>
             </div>
-
         </div>
 
     </div>
-
 </div>
 
 </body>

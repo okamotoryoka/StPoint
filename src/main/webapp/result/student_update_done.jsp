@@ -6,20 +6,23 @@
 <title>学生情報変更完了</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 <style>
-    /* 成功メッセージを他の画面と統一 */
+    /* 成功メッセージを左寄せ（検索フォームの最大幅950pxと統一） */
     .success-message {
         background-color: #c8e6c9; /* 淡い緑色 */
-        padding: 15px;
-        text-align: center;
+        padding: 15px 20px;
+        text-align: left;        /* 中央寄せから左寄せに変更 */
         border: 1px solid #a5d6a7;
-        margin: 20px 0;
+        margin: 20px 0 30px 0;
         border-radius: 4px;
         font-weight: bold;
+        color: #2e7d32;
+        max-width: 950px;         /* 検索フォームやテーブルと横幅を合わせる */
+        box-sizing: border-box;
     }
+    
+    /* JSP内の .back-link 独自スタイルを削除、または外部CSSを活かす設定に修正 */
     .back-link {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
+        /* text-align: center; と display: block; を削除し、外部CSSの flex などを活かします */
     }
 </style>
 </head>
@@ -42,6 +45,7 @@
                 変更が完了しました
             </div>
 
+            <!-- 外部CSSの .back-link（左寄せ・横並び設定）がそのまま適用されます -->
             <div class="back-link">
                 <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧へ戻る</a>
             </div>

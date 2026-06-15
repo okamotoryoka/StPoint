@@ -1,61 +1,48 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>学生情報登録完了</title>
-
-<link rel="stylesheet"
-href="${pageContext.request.contextPath}/css/style2.css">
-
+<title>学生情報登録</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+<style>
+    /* ヘッダーやレイアウト用CSSは style.css に集約し、ここでは微調整のみを行う */
+    .success-message {
+        background-color: #c8e6c9;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #a5d6a7;
+        margin: 20px 0;
+        font-weight: bold;
+    }
+</style>
 </head>
-
 <body>
 
-<!-- 全体 -->
-<div class="container">
+<header class="system-header">
+    <div class="header-title">得点管理システム</div>
+</header>
 
-    <!-- 左右レイアウト -->
-    <div class="layout-wrapper">
+<div class="main-layout">
+    <nav class="left-menu-area">
+        <jsp:include page="/tag.jsp" />
+    </nav>
 
-        <!-- 左メニュー -->
-        <div class="side-menu">
-            <ul>
-                <li><a href="#">メニュー</a></li>
-                <li><a href="#">学生管理</a></li>
-                <li><a href="#">成績管理</a></li>
-                <li class="sub-menu"><a href="#">成績登録</a></li>
-                <li class="sub-menu"><a href="#">成績参照</a></li>
-                <li><a href="#">科目管理</a></li>
-            </ul>
-        </div>
+    <main class="content-body">
+        <div class="right-container">
+            <div class="search-title">学生情報登録</div>
 
-        <!-- 右コンテンツ -->
-        <div class="main-content">
-
-            <!-- タイトル -->
-            <div class="title-box">
-                学生情報登録
+            <div class="success-message">
+               登録が完了しました
             </div>
 
-            <!-- 完了メッセージ -->
-            <div class="success-box">
-                登録が完了しました
-            </div>
-
-            <!-- 戻るリンク -->
-            <div class="link-box">
-                <a href="${pageContext.request.contextPath}/StudentList.action">
-                    学生一覧
-                </a>
-            </div>
+            <div class="back-link">
+    <a href="javascript:history.back()">戻る</a>
+    <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧に戻る</a>
+</div>
 
         </div>
-
-    </div>
-
+    </main>
 </div>
 
 </body>

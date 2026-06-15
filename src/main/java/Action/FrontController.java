@@ -6,6 +6,7 @@ import Action.Login.LoginAction;
 import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
 import Action.Score.ScoreListServletAction;
+import Action.Score.ScoreRegistAction;
 import Action.Score.ScoreSearchAction;
 import Action.Score.ScoreSubjectAction;
 import Action.Score.ScoreUpdateServletAction;
@@ -49,82 +50,50 @@ public class FrontController extends HttpServlet {
         try {
             if (path.equals("/Login.action")) {
                 action = new LoginAction();
-            } 
-            
-            else if(path.equals("/Logout.action")) {
-            	action = new LogoutAction();
-            }
-            else if (path.equals("/StudentCreate.action")) {
+            } else if (path.equals("/Logout.action")) {
+                action = new LogoutAction();
+            } else if (path.equals("/StudentCreate.action")) {
                 action = new StudentCreateAction();
-            }
-            else if (path.equals("/StudentCreateExecute.action")) {
+            } else if (path.equals("/StudentCreateExecute.action")) {
                 action = new StudentCreateExecuteAction();
-            }
-            else if (path.equals("/StudentList.action")) {
+            } else if (path.equals("/StudentList.action")) {
                 action = new StudentListAction();
-            }
-            else if (path.equals("/StudentUpdate.action")) {
+            } else if (path.equals("/StudentUpdate.action")) {
                 action = new StudentUpdateAction();
-            }
-            else if (path.equals("/StudentUpdatExecute.action")) {
+            } else if (path.equals("/StudentUpdatExecute.action")) {
                 action = new StudentUpdatExecuteAction();
-            } 
-            else if (path.equals("/StudentSearch.action")) {
+            } else if (path.equals("/StudentSearch.action")) {
                 action = new StudentSearchAction();
-            } 
-
-            else if (path.equals("/ScoreListServlet.action")) {
-            	action = new ScoreListServletAction();
-            }
-            
-            else if (path.equals("/ScoreSearch.action")) {
-            	action = new ScoreSearchAction();
-            }
-            
-            else if (path.equals("/ScoreSubject.action")) {
-            	action = new ScoreSubjectAction();
-            }
-            
-            else if (path.equals("/ScoreUpdateServlet.action")) {
-            	action = new ScoreUpdateServletAction();
-            }
-            
-            else if (path.equals("/ScoreInsertServlet.action")) {
-            	action = new ScoreInsertServletAction();
-            }
-            
-            else if (path.equals("/SubjectList.action")) {
-            	action = new SubjectListAction();
-            }
-            
-            else if (path.equals("/SubjectUpdateExecute.action")) {
-            	action = new SubjectUpdateExecuteAction();
-            }
-            
-            else if (path.equals("/SubjectUpdate.action")) {
-            	action = new SubjectUpdateAction();
-            }
-           
-            
-            else if (path.equals("/SubjectCreate.action")) {
+            } else if (path.equals("/ScoreListServlet.action")) {
+                action = new ScoreListServletAction();
+            } else if (path.equals("/ScoreSearch.action")) {
+                action = new ScoreSearchAction();
+            } else if (path.equals("/ScoreSubject.action")) {
+                action = new ScoreSubjectAction();
+            } else if (path.equals("/ScoreUpdateServlet.action")) {
+                action = new ScoreUpdateServletAction();
+            } else if (path.equals("/ScoreInsertServlet.action")) {
+                action = new ScoreInsertServletAction();
+            } else if (path.equals("/SubjectList.action")) {
+                action = new SubjectListAction();
+            } else if (path.equals("/SubjectUpdateExecute.action")) {
+                action = new SubjectUpdateExecuteAction();
+            } else if (path.equals("/SubjectUpdate.action")) {
+                action = new SubjectUpdateAction();
+            } else if (path.equals("/SubjectCreate.action")) {
                 action = new SubjectCreateAction();
-            }
-            else if (path.equals("/SubjectCreateExecute.action")) {
+            } else if (path.equals("/SubjectCreateExecute.action")) {
                 action = new SubjectCreateExecuteAction();
-            }
-            
-            
-            else if (path.equals("/SubjectDelete.action")) {
+            } else if (path.equals("/SubjectDelete.action")) {
                 action = new SubjectDeleteAction();
-            } 
-            else if (path.equals("/SubjectDeleteExecute.action")) {
+            } else if (path.equals("/SubjectDeleteExecute.action")) {
                 action = new SubjectDeleteExecuteAction();
+            } else if (path.equals("/TestRegist.action")) {
+                action = new TestRegistAction();
+            } else if (path.equals("/ScoreRegistAction.action")) {
+                action = new ScoreRegistAction();
             }
 
-            else if (path.equals("/TestRegist.action")) {
-            	action = new TestRegistAction();
-            }
-            
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);
                 return;
@@ -134,7 +103,6 @@ public class FrontController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            // ここでエラーの内容を画面に出す
             response.getWriter().println("<h1>Error occurred:</h1>");
             response.getWriter().println("<pre>");
             e.printStackTrace(response.getWriter());

@@ -146,6 +146,9 @@ public class ScoreDAO {
                     // Bean.Scoreのインスタンスを生成して値を詰める
                     Bean.Score score = new Bean.Score();
                     
+                    // 💡 【ここを追加】データベースの ent_year を Java の score に詰め込みます
+                    score.setEntYear(rs.getString("ent_year")); 
+                    
                     score.setStudentId(rs.getString("student_id"));
                     score.setStudentName(rs.getString("student_name") == null ? "未登録" : rs.getString("student_name"));
                     score.setSubjectName(rs.getString("subject_name") == null ? "不明な科目" : rs.getString("subject_name"));
@@ -267,4 +270,30 @@ public class ScoreDAO {
         }
         return count;
     }
+    
+    /**
+     * 指定された学生・科目・回数の点数を更新（上書き）するメソッド
+     */
+    public boolean save(String studentId, String subjectCd, int no, int point) throws Exception {
+        // TESTテーブルの特定のレコードの点数を更新するSQL
+        String sql = "UPDATE TEST SET POINT = ? WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
+        
+        InitialContext ic = new InitialContext();
+        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+        
+        int rowCount = 0;
+        try (Connection con = ds.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, point);
+            pstmt.setString(2, studentId);
+            pstmt.setString(3, subjectCd);
+            pstmt.setInt(4, no);
+            
+            rowCount = pstmt.executeUpdate();
+        }
+        // 1行以上更新できたら成功（true）を返す
+        return rowCount > 0;
+    }
+
 }

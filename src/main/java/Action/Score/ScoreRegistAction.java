@@ -42,7 +42,8 @@ public class ScoreRegistAction extends Action {
             }
 
             // 元の検索画面（FrontControllerに定義された正しいパス）へフォワードで戻る
-            request.getRequestDispatcher("/ScoreSearch.action").forward(request, response);
+         // 💡 フォワード先を、新しく作った完了画面のJSPファイルパスに変更します
+            request.getRequestDispatcher("/management/score_regist_done.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

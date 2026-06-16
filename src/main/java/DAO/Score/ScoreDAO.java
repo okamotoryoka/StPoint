@@ -3,6 +3,7 @@ package DAO.Score;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +14,15 @@ import javax.sql.DataSource;
 
 public class ScoreDAO {
 
+    private DataSource getDataSource() throws Exception {
+        InitialContext ic = new InitialContext();
+        return (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+    }
+
     public List<String> getEntYearList() throws Exception {
         List<String> yearList = new ArrayList<>();
         String sql = "SELECT DISTINCT ENT_YEAR FROM STUDENT WHERE ENT_YEAR IS NOT NULL ORDER BY ENT_YEAR DESC";
-        InitialContext ic = new InitialContext();
-        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
-        try (Connection con = ds.getConnection();
+        try (Connection con = getDataSource().getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
@@ -31,9 +35,7 @@ public class ScoreDAO {
     public List<String> getClassNumList() throws Exception {
         List<String> classList = new ArrayList<>();
         String sql = "SELECT DISTINCT CLASS_NUM FROM TEST WHERE CLASS_NUM IS NOT NULL ORDER BY CLASS_NUM ASC";
-        InitialContext ic = new InitialContext();
-        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
-        try (Connection con = ds.getConnection();
+        try (Connection con = getDataSource().getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
@@ -46,9 +48,7 @@ public class ScoreDAO {
     public List<Map<String, String>> getSubjectList() throws Exception {
         List<Map<String, String>> subjectList = new ArrayList<>();
         String sql = "SELECT CD, NAME FROM SUBJECT ORDER BY CD";
-        InitialContext ic = new InitialContext();
-        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
-        try (Connection con = ds.getConnection();
+        try (Connection con = getDataSource().getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
@@ -61,7 +61,7 @@ public class ScoreDAO {
         return subjectList;
     }
 
-    // 検索用（引数5つ：入学年度、クラス、科目、学生番号、回数に対応）
+    // --- 成績検索 (Bean形式) ---
     public List<Bean.Score> search(String entYear, String classNum, String subjectCd, String studentId, String noStr) throws Exception {
         List<Bean.Score> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
@@ -82,9 +82,7 @@ public class ScoreDAO {
         
         sql.append(" ORDER BY t.STUDENT_NO ASC, t.NO ASC");
 
-        InitialContext ic = new InitialContext();
-        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
-        try (Connection con = ds.getConnection();
+        try (Connection con = getDataSource().getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql.toString())) {
             
             int paramIndex = 1;
@@ -113,17 +111,50 @@ public class ScoreDAO {
         return list;
     }
 
+    // --- 成績検索 (Map形式: searchMapsの定義を追加) ---
     public List<Map<String, Object>> searchMaps(String entYear, String classNum, String subjectCd, String studentId) throws Exception {
-        return new ArrayList<>(); 
+        List<Map<String, Object>> list = new ArrayList<>();
+        // ※必要に応じてここもsearchメソッドと同様に動的SQLを作成してください
+        String sql = "SELECT * FROM TEST WHERE 1=1";
+        
+        try (Connection con = getDataSource().getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            ResultSetMetaData meta = rs.getMetaData();
+            int colCount = meta.getColumnCount();
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<>();
+                for (int i = 1; i <= colCount; i++) {
+                    map.put(meta.getColumnName(i), rs.getObject(i));
+                }
+                list.add(map);
+            }
+        }
+        return list;
     }
 
     public int delete(Bean.Score score) throws Exception {
-        int count = 0;
         String sql = "DELETE FROM TEST WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND SCHOOL_CD = ? AND NO = ?";
-        InitialContext ic = new InitialContext();
-        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
-        try (Connection con = ds.getConnection();
+        try (Connection con = getDataSource().getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, score.getStudentId());
             pstmt.setString(2, score.getSubjectCd());
-            pstmt.setString(3, score.
+            pstmt.setString(3, score.getSchoolCd());
+            pstmt.setInt(4, score.getNo());
+            return pstmt.executeUpdate();
+        }
+    }
+
+    public boolean save(String studentId, String subjectCd, int no, int point) throws Exception {
+        String sql = "UPDATE TEST SET POINT = ? WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
+        try (Connection con = getDataSource().getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setInt(1, point);
+            pstmt.setString(2, studentId);
+            pstmt.setString(3, subjectCd);
+            pstmt.setInt(4, no);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+}

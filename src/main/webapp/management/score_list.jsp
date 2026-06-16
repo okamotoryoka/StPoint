@@ -151,5 +151,12 @@ if (noStr == null) noStr = "";
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("wheel", function() {
+    if (document.activeElement.type === "number") {
+        document.activeElement.blur();
+    }
+});
+</script>
 </body>
 </html>

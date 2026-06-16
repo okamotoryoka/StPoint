@@ -254,3 +254,17 @@ body {
     text-decoration: underline;
     font-size: 14px;
 }
+
+/* ==========================================================================
+   点数入力欄の上でマウスホイールを回しても、数値が変わらないようにする設定
+   ========================================================================== */
+/* 入学年度、クラス、回数などのセレクトボックスや点数欄の横並びを整えるための調整 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox用 */
+}

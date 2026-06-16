@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
-<%-- ★重要：JSTLの宣言を追加 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../header.html" %>
+
 <%
     Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");
     String name = request.getAttribute("name") != null ? (String) request.getAttribute("name") : "";
@@ -12,7 +12,6 @@
 %>
 
 <style>
-    /* （CSSはそのまま） */
     .page-panel { max-width: 800px; margin: 20px; font-family: sans-serif; }
     .page-title { background-color: #e9ecef; padding: 15px; font-weight: bold; font-size: 18px; margin-bottom: 25px; }
     .stacked-form { display: flex; flex-direction: column; gap: 20px; }
@@ -21,43 +20,51 @@
     .error-msg { color: #f59f00; font-weight: bold; font-size: 14px; margin-top: 5px; display: block; }
 </style>
 
-<div class="page-panel">
-    <div class="page-title">学生情報登録</div>
-    <form class="stacked-form" action="${pageContext.request.contextPath}/StudentCreateExecute.action" method="post">
-        
-        <label>入学年度
-            <select name="entYear">
-                <option value="">--------</option>
-                <%-- ★データベースから取得したリストを展開 --%>
-                <c:forEach var="year" items="${entYears}">
-                    <option value="${year}" ${String.valueOf(year) == entYear ? 'selected' : ''}>${year}</option>
-                </c:forEach>
-            </select>
-            <% if(errors != null && errors.get("entYear") != null) { %><span class="error-msg"><%= errors.get("entYear") %></span><% } %>
-        </label>
+<%-- 全体を横並びにするコンテナ --%>
+<div style="display: flex; min-height: 100vh;">
 
-        <label>学生番号
-            <input type="text" name="no" value="<%= no %>" placeholder="学生番号を入力してください">
-            <% if(errors != null && errors.get("no") != null) { %><span class="error-msg"><%= errors.get("no") %></span><% } %>
-        </label>
+    <%-- 左側：共通メニュー --%>
+    <jsp:include page="/tag.jsp" />
 
-        <label>氏名
-            <input type="text" name="name" value="<%= name %>" placeholder="氏名を入力してください">
-            <% if(errors != null && errors.get("name") != null) { %><span class="error-msg"><%= errors.get("name") %></span><% } %>
-        </label>
+    <%-- 右側：メインコンテンツ --%>
+    <main style="flex: 1; padding: 20px;">
+        <div class="page-panel">
+            <div class="page-title">学生情報登録</div>
+            <form class="stacked-form" action="${pageContext.request.contextPath}/StudentCreateExecute.action" method="post">
+                <label>入学年度
+                    <select name="entYear">
+                        <option value="">--------</option>
+                        <c:forEach var="year" items="${entYears}">
+                            <option value="${year}" ${String.valueOf(year) == entYear ? 'selected' : ''}>${year}</option>
+                        </c:forEach>
+                    </select>
+                    <% if(errors != null && errors.get("entYear") != null) { %><span class="error-msg"><%= errors.get("entYear") %></span><% } %>
+                </label>
 
-        <label>クラス
-            <select name="classNum">
-                <option value="">--------</option>
-                <%-- ★データベースから取得したリストを展開 --%>
-                <c:forEach var="cNum" items="${classNums}">
-                    <option value="${cNum}" ${cNum == classNum ? 'selected' : ''}>${cNum}</option>
-                </c:forEach>
-            </select>
-            <% if(errors != null && errors.get("classNum") != null) { %><span class="error-msg"><%= errors.get("classNum") %></span><% } %>
-        </label>
+                <label>学生番号
+                    <input type="text" name="no" value="<%= no %>" placeholder="学生番号を入力してください">
+                    <% if(errors != null && errors.get("no") != null) { %><span class="error-msg"><%= errors.get("no") %></span><% } %>
+                </label>
 
-        <input type="submit" value="登録して終了" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
-    </form>
-    <a href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
+                <label>氏名
+                    <input type="text" name="name" value="<%= name %>" placeholder="氏名を入力してください">
+                    <% if(errors != null && errors.get("name") != null) { %><span class="error-msg"><%= errors.get("name") %></span><% } %>
+                </label>
+
+                <label>クラス
+                    <select name="classNum">
+                        <option value="">--------</option>
+                        <c:forEach var="cNum" items="${classNums}">
+                            <option value="${cNum}" ${cNum == classNum ? 'selected' : ''}>${cNum}</option>
+                        </c:forEach>
+                    </select>
+                    <% if(errors != null && errors.get("classNum") != null) { %><span class="error-msg"><%= errors.get("classNum") %></span><% } %>
+                </label>
+
+                <input type="submit" value="登録して終了" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            </form>
+            <br>
+            <a href="${pageContext.request.contextPath}/StudentList.action">戻る</a>
+        </div>
+    </main>
 </div>

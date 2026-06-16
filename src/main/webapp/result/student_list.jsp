@@ -93,7 +93,7 @@
                 <%      }
                     } else {
                 %>
-                        <tr><td colspan="6" style="text-align: center;">データが見つかりません。</td></tr>
+                        <tr><td colspan="6">学生情報が存在しませんでした</td></tr>
                 <%  } %>
             </tbody>
         </table>

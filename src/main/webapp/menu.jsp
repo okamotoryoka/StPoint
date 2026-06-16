@@ -56,7 +56,7 @@
                 <div class="score-title-custom">成績管理</div>
                 <div class="score-links-custom">
                     <a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a>
-                    <a href="${pageContext.request.contextPath}/ScoreSubject.action.action">成績参照</a>
+                    <a href="${pageContext.request.contextPath}/ScoreSubject.action">成績参照</a>
                 </div>
             </div>
             <div class="menu-panel-custom panel-blue-custom">

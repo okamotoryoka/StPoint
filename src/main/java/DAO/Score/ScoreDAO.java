@@ -61,12 +61,7 @@ public class ScoreDAO {
         return subjectList;
     }
 
-    // 既存機能用（引数4つ）
-    public List<Bean.Score> search(String entYear, String classNum, String subjectCd, String studentId) throws Exception {
-        return search(entYear, classNum, subjectCd, studentId, null);
-    }
-
-    // 回数検索用（引数5つ）
+    // 検索用（引数5つ：入学年度、クラス、科目、学生番号、回数に対応）
     public List<Bean.Score> search(String entYear, String classNum, String subjectCd, String studentId, String noStr) throws Exception {
         List<Bean.Score> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
@@ -78,17 +73,20 @@ public class ScoreDAO {
             "LEFT JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD AND t.SCHOOL_CD = sub.SCHOOL_CD " +
             "WHERE 1=1"
         );
+
         if (entYear != null && !entYear.trim().isEmpty()) sql.append(" AND st.ENT_YEAR = ?");
         if (classNum != null && !classNum.trim().isEmpty()) sql.append(" AND t.CLASS_NUM = ?");
         if (subjectCd != null && !subjectCd.trim().isEmpty()) sql.append(" AND t.SUBJECT_CD = ?");
         if (studentId != null && !studentId.trim().isEmpty()) sql.append(" AND t.STUDENT_NO = ?");
         if (noStr != null && !noStr.trim().isEmpty()) sql.append(" AND t.NO = ?");
+        
         sql.append(" ORDER BY t.STUDENT_NO ASC, t.NO ASC");
 
         InitialContext ic = new InitialContext();
         DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
         try (Connection con = ds.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql.toString())) {
+            
             int paramIndex = 1;
             if (entYear != null && !entYear.trim().isEmpty()) pstmt.setString(paramIndex++, entYear);
             if (classNum != null && !classNum.trim().isEmpty()) pstmt.setString(paramIndex++, classNum);
@@ -116,7 +114,6 @@ public class ScoreDAO {
     }
 
     public List<Map<String, Object>> searchMaps(String entYear, String classNum, String subjectCd, String studentId) throws Exception {
-        // (省略せず元の処理を記述してください)
         return new ArrayList<>(); 
     }
 
@@ -129,26 +126,4 @@ public class ScoreDAO {
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, score.getStudentId());
             pstmt.setString(2, score.getSubjectCd());
-            pstmt.setString(3, score.getSchoolCd());
-            pstmt.setInt(4, score.getNo());
-            count = pstmt.executeUpdate();
-        }
-        return count;
-    }
-
-    public boolean save(String studentId, String subjectCd, int no, int point) throws Exception {
-        String sql = "UPDATE TEST SET POINT = ? WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
-        InitialContext ic = new InitialContext();
-        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
-        int rowCount = 0;
-        try (Connection con = ds.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, point);
-            pstmt.setString(2, studentId);
-            pstmt.setString(3, subjectCd);
-            pstmt.setInt(4, no);
-            rowCount = pstmt.executeUpdate();
-        }
-        return rowCount > 0;
-    }
-}
+            pstmt.setString(3, score.

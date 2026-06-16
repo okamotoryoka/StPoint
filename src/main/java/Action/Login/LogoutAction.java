@@ -25,7 +25,7 @@ public class LogoutAction extends Action {
             session.removeAttribute("teacher_name");
 
             // ログアウト成功ページへフォワード
-            request.getRequestDispatcher("login/logout-out.jsp").forward(request, response);
+            request.getRequestDispatcher("login/logout.jsp").forward(request, response);
             return;
         }
 

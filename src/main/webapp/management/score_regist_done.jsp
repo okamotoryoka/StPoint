@@ -13,7 +13,7 @@
     <div class="header-title">得点管理システム</div>
     <div class="header-user">
         <span>${sessionScope.teacher_name}様</span>
-        <a href="#" class="logout-btn">ログアウト</a>
+        <a href="Logout.action" class="logout-btn">ログアウト</a>
     </div>
 </header>
 

@@ -86,7 +86,10 @@ public class ScoreDAO {
     /**
      * 条件を指定して成績一覧を動的に検索するメソッド（学生番号の検索に対応）
      */
-    public List<Bean.Score> search(String entYear, String classNum, String subjectCd, String studentId) throws Exception {
+    /**
+     * 条件を指定して成績一覧を動的に検索するメソッド（回数での絞り込みに対応版）
+     */
+    public List<Bean.Score> search(String entYear, String classNum, String subjectCd, String noStr) throws Exception {
         List<Bean.Score> list = new ArrayList<>();
         
         StringBuilder sql = new StringBuilder(
@@ -115,8 +118,9 @@ public class ScoreDAO {
         if (subjectCd != null && !subjectCd.trim().isEmpty()) {
             sql.append(" AND t.SUBJECT_CD = ?");
         }
-        if (studentId != null && !studentId.trim().isEmpty()) {
-            sql.append(" AND t.STUDENT_NO = ?");
+        // 💡 引数名とSQLの条件を「学生番号」から「回数(t.NO)」に正しく修正しました
+        if (noStr != null && !noStr.trim().isEmpty()) {
+            sql.append(" AND t.NO = ?");
         }
         
         sql.append(" ORDER BY t.STUDENT_NO ASC, t.NO ASC");
@@ -137,18 +141,16 @@ public class ScoreDAO {
             if (subjectCd != null && !subjectCd.trim().isEmpty()) {
                 pstmt.setString(paramIndex++, subjectCd);
             }
-            if (studentId != null && !studentId.trim().isEmpty()) {
-                pstmt.setString(paramIndex++, studentId);
+            // 💡 プレースホルダー（?）に画面から選ばれた「回数」の数値をセットします
+            if (noStr != null && !noStr.trim().isEmpty()) {
+                pstmt.setInt(paramIndex++, Integer.parseInt(noStr));
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    // Bean.Scoreのインスタンスを生成して値を詰める
                     Bean.Score score = new Bean.Score();
                     
-                    // 💡 【ここを追加】データベースの ent_year を Java の score に詰め込みます
                     score.setEntYear(rs.getString("ent_year")); 
-                    
                     score.setStudentId(rs.getString("student_id"));
                     score.setStudentName(rs.getString("student_name") == null ? "未登録" : rs.getString("student_name"));
                     score.setSubjectName(rs.getString("subject_name") == null ? "不明な科目" : rs.getString("subject_name"));
@@ -164,6 +166,7 @@ public class ScoreDAO {
         }
         return list;
     }
+
 
     
     

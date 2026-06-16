@@ -33,7 +33,7 @@ if (noStr == null) noStr = "";
     <div class="header-title">得点管理システム</div>
     <div class="header-user">
         <span>${sessionScope.teacher_name}様</span>
-        <a href="#" class="logout-btn">ログアウト</a>
+        <a href="Logout.action" class="logout-btn">ログアウト</a>
     </div>
 </header>
 
@@ -47,7 +47,6 @@ if (noStr == null) noStr = "";
         <div class="right-container">
             
             <div class="search-title">成績管理</div>
-
             <form action="${pageContext.request.contextPath}/ScoreSearch.action" method="post" class="search-form">
                 
                 <div class="form-group">
@@ -108,7 +107,7 @@ if (noStr == null) noStr = "";
                     科目：<%= firstData.getSubjectName() %> （<%= firstData.getNo() %>回）
                 </div>
 
-                <form action="${pageContext.request.contextPath}/ScoreRegistAction.action" method="post">
+                <form action="${pageContext.request.contextPath}/ScoreRegist.action" method="post">
                     <table class="score-edit-table">
                         <tr>
                             <th>入学年度</th>
@@ -117,17 +116,29 @@ if (noStr == null) noStr = "";
                             <th>氏名</th>
                             <th>点数</th>
                         </tr>
-                        <% for(Bean.Score data : list) { %>
+                        <% 
+                        // すでに画面に表示した学生番号を記憶するセットを用意
+                        Set<String> displayedStudents = new HashSet<>();
+                        
+                        for(Bean.Score data : list) { 
+                            // すでに同じ学生番号が表示済みの場合は、この行のループをスキップ
+                            if (displayedStudents.contains(data.getStudentId())) {
+                                continue;
+                            }
+                            // 新しい学生番号ならセットに記憶
+                            displayedStudents.add(data.getStudentId());
+                        %>
                         <tr>
                             <td><%= entYear.equals("") ? data.getEntYear() : entYear %></td>
                             <td><%= data.getClassNum() %></td>
                             <td><%= data.getStudentId() %></td>
                             <td class="student-name-td"><%= data.getStudentName() %></td>
                             <td>
+                                <!-- 点数入力欄 -->
                                 <input type="number" name="point_<%= data.getStudentId() %>" value="<%= data.getPoint() %>" min="0" max="100">
-                                <input type="hidden" name="studentIds" value="<%= data.getStudentId() %>">
-                                <input type="hidden" name="subjectCd" value="<%= data.getSubjectCd() %>">
-                                <input type="hidden" name="no" value="<%= data.getNo() %>">
+                                
+                                <!-- 💡 3つのキー情報をハイフンで連結して1本のパラメータとして送信。これで配列の順番のズレを完璧に防ぎます -->
+                                <input type="hidden" name="studentIds" value="<%= data.getStudentId() %>-<%= data.getSubjectCd() %>-<%= data.getNo() %>">
                             </td>
                         </tr>
                         <% } %>
@@ -140,5 +151,12 @@ if (noStr == null) noStr = "";
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("wheel", function() {
+    if (document.activeElement.type === "number") {
+        document.activeElement.blur();
+    }
+});
+</script>
 </body>
 </html>

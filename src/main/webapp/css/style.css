@@ -268,3 +268,42 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield; /* Firefox用 */
 }
+
+
+/* ② 緑色のメッセージボックス（文字の太さを細く修正） */
+.alert-success-box {
+    background-color: #61b183; 
+    color: #333333;            
+    font-size: 14px;
+    
+    /* 💡 font-weight: bold; から normal に変更して文字の線を細くします */
+    font-weight: normal;         
+    
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+    width: 100%; 
+    max-width: 950px; 
+    box-sizing: border-box;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+    min-height: 45px; 
+}
+
+/* ③・④ リンクを配置するエリア（完全左寄せ ＋ 下方向へ調整） */
+.done-link-area {
+    display: flex;
+    gap: 40px;               /* リンク同士の間隔 */
+    width: 100%; 
+    max-width: 950px;        
+    box-sizing: border-box;
+    justify-content: flex-start; 
+    
+    /* 💡 左側の余白を完全にゼロにして、左端（タイトルの真下）にピタッと合わせます */
+    padding-left: 0;      
+    
+    /* 💡 上の緑ボックスとの隙間をさらに少し広げて（45px）、しっかり下に配置します */
+    padding-top: 45px;       
+}

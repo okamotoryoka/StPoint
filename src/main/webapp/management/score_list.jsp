@@ -108,7 +108,7 @@ if (noStr == null) noStr = "";
                     科目：<%= firstData.getSubjectName() %> （<%= firstData.getNo() %>回）
                 </div>
 
-                <form action="${pageContext.request.contextPath}/ScoreRegistAction.action" method="post">
+                <form action="${pageContext.request.contextPath}/ScoreRegist.action" method="post">
                     <table class="score-edit-table">
                         <tr>
                             <th>入学年度</th>

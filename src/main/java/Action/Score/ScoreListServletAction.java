@@ -17,15 +17,21 @@ public class ScoreListServletAction extends Action {
         try {
             ScoreDAO dao = new ScoreDAO();
             
-            // セレクトボックス用の科目リストだけは最初に取得して渡す
+            // 💡 検索画面と同じリスト取得処理をすべて追加
             List<Map<String, String>> subjectList = dao.getSubjectList();
             request.setAttribute("subjectList", subjectList);
 
-            // 🌟重要：初期表示はデータを一切取得せず、空のリストを渡す
+            List<String> entYearList = dao.getEntYearList();
+            request.setAttribute("entYearList", entYearList);
+
+            List<String> classNumList = dao.getClassNumList();
+            request.setAttribute("classList", classNumList);
+
+            // 初期表示はデータを一切取得せず、空のリストを渡す
             List<Score> list = new ArrayList<>();
             request.setAttribute("list", list);
             
-            // 🌟重要：初回アクセスフラグを true にしてテーブルを隠す
+            // 初回アクセスフラグを true にしてテーブルを隠す
             request.setAttribute("isFirstAccess", true);
             
             request.getRequestDispatcher("/management/score_list.jsp").forward(request, response);

@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>科目更新完了</title>
+    <title>学生変更完了</title>
     <!-- すべてのスタイルは外部CSSファイルから読み込みます -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 </head>
@@ -24,7 +24,7 @@
         <main class="content-body">
             
             <!-- ① グレーの見出し帯（前回作成した共通設定に連動） -->
-            <h2 class="page-title">科目情報変更</h2>
+            <h2 class="page-title">学生情報変更</h2>
 
             <!-- ② style.cssの指定色・細身文字を反映した完了通知バー -->
             <div class="alert-success-box">
@@ -34,7 +34,7 @@
             <!-- ③ 左寄せ ＋ 上部45px余白が効いたリンクエリア -->
             <div class="done-link-area">
                 <!-- 既存の back-link a の装飾がそのまま適用されます -->
-                <a href="SubjectList.action">科目一覧</a>
+                <a href="StudentList.action">学生一覧</a>
             </div>
 
         </main>

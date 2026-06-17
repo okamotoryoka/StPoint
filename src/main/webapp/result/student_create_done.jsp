@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>科目登録完了</title>
+    <title>学生情報登録完了</title>
     <!-- すべてのスタイルは外部CSSファイルから読み込みます -->
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 </head>
@@ -24,7 +24,7 @@
         <main class="content-body">
             
             <!-- ① グレーの見出し帯 -->
-            <h2 class="page-title">科目情報登録</h2>
+            <h2 class="page-title">学生情報登録</h2>
 
             <!-- ② 通知バー -->
             <div class="alert-success-box">
@@ -37,7 +37,7 @@
                 <a href="${pageContext.request.contextPath}/menu.jsp">戻る</a>
                 
                 <!-- ④ 科目一覧リンク -->
-                <a href="SubjectList.action">科目一覧</a>
+                <a href="StudentList.action">学生￥一覧</a>
             </div>
 
         </main>

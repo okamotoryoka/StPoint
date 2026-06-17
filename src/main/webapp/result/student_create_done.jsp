@@ -37,7 +37,7 @@
                 <a href="${pageContext.request.contextPath}/menu.jsp">戻る</a>
                 
                 <!-- ④ 科目一覧リンク -->
-                <a href="StudentList.action">学生一覧</a>
+                <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧</a>
             </div>
 
         </main>

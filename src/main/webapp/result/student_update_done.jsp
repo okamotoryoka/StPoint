@@ -22,9 +22,8 @@
 
         <!-- 右側：メインコンテンツエリア -->
         <main class="content-body">
-            
-            <!-- ① グレーの見出し帯（学生管理のタイトルに変更） -->
-            <div class="search-title">学生管理</div>
+            <!-- ① グレーの見出し帯（前回作成した共通設定に連動） -->
+            <h2 class="page-title">学生情報変更</h2>
 
             <!-- ② 変更完了通知バー -->
             <div class="alert-success-box">

@@ -17,7 +17,7 @@
         .wrapper {
             display: flex;
             width: 100%;
-            min-height: calc(100vh - 60px);
+            min-height: calc(100vh - 80px); /* ヘッダーの高さ(80px)に合わせて調整 */
         }
 
         /* サイドバーを固定する枠 */
@@ -50,7 +50,7 @@
 
         /* ② 変更が完了しました（緑色の通知バー） */
         .success-bar {
-            background-color: #83bda4; /* 画像に合わせた落ち着いた緑色 */
+            background-color: #83bda4;
             color: #333333;
             text-align: center;
             padding: 10px;
@@ -70,29 +70,22 @@
 </head>
 <body>
 
-    <!-- 共通ヘッダーの読み込み -->
     <jsp:include page="../header.jsp" />
 
-    <!-- ヘッダーより下のメイン領域 -->
     <div class="wrapper">
 
-        <!-- 共通サイドバーの読み込み -->
         <div class="sidebar-wrapper">
             <jsp:include page="../tag.jsp" />
         </div>
 
-        <!-- 右側のメインコンテンツ領域 -->
         <main class="main">
             
-            <!-- ① ページ見出し（画像に合わせて変更） -->
             <h2 class="page-title">科目情報変更</h2>
 
-            <!-- ② 緑色の完了通知バー -->
             <div class="success-bar">
                 変更が完了しました
             </div>
             
-            <!-- ③ 科目一覧へ戻るリンク -->
             <div style="margin-top: 20px;">
                 <a href="SubjectList.action" class="back-link">科目一覧</a>
             </div>

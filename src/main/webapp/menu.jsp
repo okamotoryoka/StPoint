@@ -35,16 +35,7 @@
 </header>
 
 <div class="container">
-    <aside class="sidebar" style="width: 220px; min-width: 220px; padding: 20px 10px 20px 20px;">
-        <ul style="list-style: none; padding-left: 0; margin: 0; line-height: 2.0;">
-            <li><a href="${pageContext.request.contextPath}/Menu.action">メニュー</a></li>
-            <li><a href="${pageContext.request.contextPath}/StudentList.action">学生管理</a></li>
-            <li style="font-weight: bold; color: #333;">成績管理</li>
-            <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a></li>
-            <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ScoreSubject.action">成績参照</a></li>
-            <li><a href="${pageContext.request.contextPath}/SubjectList.action">科目管理</a></li>
-        </ul>
-    </aside>
+    <jsp:include page="tag.jsp" />
 
     <main class="main">
         <h2>メニュー</h2>

@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* ==========================================================================
-   1. ベーススタイル・全体レイアウト（縦線を下まで伸ばすための全面修正）
+   1. ベーススタイル・全体レイアウト
    ========================================================================== */
 body {
     background-color: #ffffff;
@@ -40,29 +40,29 @@ body {
     margin-left: 10px;
 }
 
-/* メインレイアウト（🌟高さを画面最下部まで強制的に引き伸ばす） */
+/* メインレイアウト（高さを画面最下部まで強制的に引き伸ばす） */
 .main-layout {
     display: flex;
-    flex: 1;                   /* 🌟画面の残りの高さをすべてこのエリアに割り当てる */
+    flex: 1;                   /* 画面の残りの高さをすべてこのエリアに割り当てる */
     width: 100%;
     max-width: 1250px;         
     box-sizing: border-box;
     padding: 0 40px 20px 40px; 
     gap: 0;                    
-    align-items: stretch;      /* 🌟左右の要素（サイドメニューとメイン）の高さを均等に伸ばす */
+    align-items: stretch;      /* 左右の要素（サイドメニューとメイン）の高さを均等に伸ばす */
 }
 
 
 /* ==========================================================================
-   2. 左側サイドメニューエリア（🌟幅を広げ、縦線を最下部まで伸ばす）
+   2. 左側サイドメニューエリア
    ========================================================================== */
 .left-menu-area {
-    width: 220px;              /* 🌟サイドバーの横幅を180pxから220pxに広げてゆったりさせる */
+    width: 220px;              /* サイドバーの横幅を180pxから220pxに広げてゆったりさせる */
     min-width: 220px;
     padding-top: 30px;
     padding-bottom: 30px;
     padding-right: 30px;       
-    /* 🌟右側の縦線を優先度最大で引き、高さを親要素と同期させる */
+    /* 右側の縦線を優先度最大で引き、高さを親要素と同期させる */
     border-right: 1px solid #dcdcdc !important; 
     height: auto;              
 }
@@ -110,36 +110,6 @@ body {
 }
 
 
-/* 一番最初の見出し（メニュー）だけは上の余白をなしにする */
-.left-menu-area > :first-child,
-.left-menu-area p:first-of-type,
-.left-menu-area strong:first-of-type {
-    margin-top: 0 !important;
-}
-
-/* メニュー内のリンク（文字）のスタイル */
-.left-menu-area a {
-    display: block;                
-    color: #0066cc !important;
-    text-decoration: underline !important;
-    font-size: 14px;
-    margin-top: 5px !important;
-    margin-bottom: 12px !important; 
-    padding-left: 5px;
-    border: none !important;       
-}
-
-.left-menu-area a:hover {
-    color: #004499 !important;     
-}
-
-/* 不要な水平線タグ（hr）を完全に消去 */
-.left-menu-area hr {
-    display: none !important;
-    border: none !important;
-}
-
-
 /* ==========================================================================
    3. 右側コンテンツエリア・タイトル
    ========================================================================== */
@@ -153,14 +123,16 @@ body {
     width: 100%;
 }
 
-/* ① タイトル（グレーの背景帯） */
+/* ① タイトル（グレーの背景帯：お手本通り上下の余白を極限まで狭く、高さを薄くしました） */
 .search-title {
     background-color: #f2f2f2; 
     font-size: 20px;
     font-weight: bold;
-    padding: 8px 15px;
+    padding: 3px 15px; /* 上下の余白を 8px から 3px に削ってシャープに修正 */
     color: #333333;
     margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 
@@ -175,7 +147,7 @@ body {
     border-radius: 4px;
     padding: 15px 25px !important;       /* 内側の余白を広げてゆったりさせます */
     background-color: #ffffff !important;
-    width: 100% !important;              /* 🌟横幅いっぱいにしっかり広げる */
+    width: 100% !important;              /* 横幅いっぱいにしっかり広げる */
     box-sizing: border-box;
 }
 
@@ -373,4 +345,39 @@ body {
 
 .regist-end-btn:hover {
     background-color: #333333;
+}
+
+/* ② 登録完了画面用の緑色メッセージボックス（お手本通りスリムに調整済み） */
+.alert-success-box {
+    background-color: #61b183; 
+    color: #333333;            
+    font-size: 14px;
+    font-weight: normal;         
+    padding: 6px 20px; 
+    border-radius: 4px;
+    margin-bottom: 30px;
+    width: 100%; 
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+    min-height: 35px; 
+}
+
+/* ③・④ 登録完了画面用のリンクを配置するエリア */
+.done-link-area {
+    display: flex;
+    gap: 120px; 
+    width: 100%; 
+    box-sizing: border-box;
+    justify-content: flex-start; 
+    padding-left: 0;      
+    padding-top: 115px;       
+}
+
+/* 完了画面リンク共通の装飾 */
+.done-link-area a {
+    color: #0066cc;      
+    text-decoration: underline;
+    font-size: 14px;
 }

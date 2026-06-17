@@ -23,7 +23,7 @@
 <body>
 
 <%-- ヘッダーの読み込み --%>
-<%@ include file="../header.html" %>
+<%@ include file="../header.jsp" %>
 
 <div class="system-layout">
     <%-- 左側メニュー --%>

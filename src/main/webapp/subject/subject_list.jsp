@@ -6,12 +6,17 @@
 <head>
     <meta charset="UTF-8">
     <title>科目管理 - 得点管理システム</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
     <style>
+        /* レイアウト構造 */
+        body { margin: 0; font-family: sans-serif; }
         .system-layout { display: flex; flex-direction: column; min-height: 100vh; }
         .main-container { display: flex; flex: 1; }
-        .side-menu { width: 200px; flex-shrink: 0; background-color: #f8f9fa; border-right: 1px solid #ddd; padding-top: 20px; }
+        
+        /* サイドメニューとコンテンツ */
+        .side-menu { width: 220px; flex-shrink: 0; border-right: 1px solid #ddd; background-color: #f8f9fa; }
         .content-body { flex: 1; padding: 30px; }
+        
+        /* コンポーネントスタイル */
         .page-header { background-color: #f5f5f5; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ddd; }
         .student-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .student-table th, .student-table td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
@@ -20,11 +25,12 @@
 </head>
 <body>
 
-<%-- 共通ヘッダーを読み込み --%>
-<%@ include file="/header.jsp" %>
+<%-- 共通ヘッダー --%>
+<jsp:include page="/header.jsp" />
 
 <div class="system-layout">
     <div class="main-container">
+        
         <%-- サイドメニュー --%>
         <div class="side-menu">
             <jsp:include page="../tag.jsp" />
@@ -34,7 +40,7 @@
         <main class="content-body">
             <div class="page-header">
                 <h1 style="margin: 0; font-size: 20px;">科目管理</h1>
-                <a href="SubjectCreate.action" class="link-action">新規登録</a>
+                <a href="SubjectCreate.action">新規登録</a>
             </div>
 
             <%
@@ -74,7 +80,7 @@
             </table>
 
             <p style="margin-top: 30px;">
-                <a href="${pageContext.request.contextPath}/menu.jsp" class="link-action">メニューへ戻る</a>
+                <a href="${pageContext.request.contextPath}/menu.jsp">メニューへ戻る</a>
             </p>
         </main>
     </div>

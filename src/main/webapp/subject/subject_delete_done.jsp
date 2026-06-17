@@ -36,7 +36,7 @@
 </head>
 <body>
 
-<%@ include file="../header.html" %>
+<%@ include file="../header.jsp" %>
 
 <div class="system-layout" style="display: flex;">
     <jsp:include page="../tag.jsp" />

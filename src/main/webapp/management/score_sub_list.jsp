@@ -53,14 +53,8 @@ String selectedSubjectName = (String) request.getAttribute("selectedSubjectName"
 List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request.getAttribute("scoreDisplayList");
 %>
 
-<!-- 上部：水色のシステムヘッダー -->
-<header class="system-header">
-    <div class="header-title">得点管理システム</div>
-    <div class="header-user">
-        <span>${sessionScope.teacher_name}様</span>
-        <a href="Logout.action" class="logout-btn">ログアウト</a>
-    </div>
-</header>
+<!-- ★直書きされていた古いシステムヘッダーを削除し、共通ヘッダーに差し替えました -->
+<jsp:include page="../header.jsp" />
 
 <div class="main-layout">
 
@@ -184,17 +178,17 @@ List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request
                     for (Map<String, Object> row : scoreDisplayList) { 
                     %>
                     <tr>
-                        <td><%= row.get("entYear") %></td> <!-- ③ / ⑨ -->
-                        <td><%= row.get("classNum") %></td> <!-- ④ / ⑩ -->
-                        <td><%= row.get("studentId") %></td> <!-- ⑤ / ⑪ -->
-                        <td style="text-align: left; padding-left: 20px;"><%= row.get("studentName") %></td> <!-- ⑥ / ⑫ -->
-                        <td><%= row.get("score1") %></td> <!-- ⑦ / ⑬ -->
-                        <td><%= row.get("score2") %></td> <!-- ⑧ / ⑭ -->
+                        <td><%= row.get("entYear") %></td>
+                        <td><%= row.get("classNum") %></td>
+                        <td><%= row.get("studentId") %></td>
+                        <td style="text-align: left; padding-left: 20px;"><%= row.get("studentName") %></td>
+                        <td><%= row.get("score1") %></td>
+                        <td><%= row.get("score2") %></td>
                     </tr>
                     <% } %>
                 </table>
 
-                        <% 
+            <% 
             } else if (scoreDisplayList != null && scoreDisplayList.isEmpty()) { 
             %>
                 <div style="text-align: center; color: #999; margin-top: 20px;">
@@ -204,12 +198,10 @@ List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request
             } else { 
                 // 🌟 まだ検索していない初回アクセス時
             %>
-                <!-- 先ほど追加したCSSのクラス（initial-message）をここで指定します -->
                 <div class="initial-message">
                     科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
                 </div>
             <% } %>
-            
             
         </div>
     </div>

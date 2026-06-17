@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 
-<%@ include file="../header.html" %>
+<%@ include file="../header.jsp" %>
 
 <%-- 画面全体を左メニューと右メインコンテンツに分割するコンテナ --%>
 <div class="system-layout" style="display: flex; min-height: 80vh; flex-direction: column; position: relative; padding-bottom: 60px;">
@@ -21,10 +21,6 @@
       <div style="background-color: #f5f5f5; padding: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h1 style="margin: 0; font-size: 20px; background: none; padding: 0;">科目管理</h1>
         
-        <div class="user-info" style="font-size: 14px;">
-            ${sessionScope.teacher_name}様
-            <a href="Logout.action" style="margin-left: 5px;">ログアウト</a>
-        </div>
       </div>
 
       <%-- ② 新規登録リンク（右上に配置するためのスタイル） --%>

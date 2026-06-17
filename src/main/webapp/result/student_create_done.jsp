@@ -1,49 +1,48 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>学生情報登録</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-<style>
-    /* ヘッダーやレイアウト用CSSは style.css に集約し、ここでは微調整のみを行う */
-    .success-message {
-        background-color: #c8e6c9;
-        padding: 15px;
-        text-align: center;
-        border: 1px solid #a5d6a7;
-        margin: 20px 0;
-        font-weight: bold;
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>科目登録完了</title>
+    <!-- すべてのスタイルは外部CSSファイルから読み込みます -->
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 </head>
 <body>
 
-<header class="system-header">
-    <div class="header-title">得点管理システム</div>
-</header>
+    <!-- 共通ヘッダーの読み込み -->
+    <jsp:include page="../header.jsp" />
 
-<div class="main-layout">
-    <nav class="left-menu-area">
-        <jsp:include page="/tag.jsp" />
-    </nav>
+    <!-- style.cssで定義されている2カラムコンテナ -->
+    <div class="main-layout">
 
-    <main class="content-body">
-        <div class="right-container">
-            <div class="search-title">学生情報登録</div>
+        <!-- 左側：メニューエリア -->
+        <div class="left-menu-area">
+            <jsp:include page="../tag.jsp" />
+        </div>
 
-            <div class="success-message">
-               登録が完了しました
+        <!-- 右側：メインコンテンツエリア -->
+        <main class="content-body">
+            
+            <!-- ① グレーの見出し帯 -->
+            <h2 class="page-title">科目情報登録</h2>
+
+            <!-- ② 通知バー -->
+            <div class="alert-success-box">
+                登録が完了しました
+            </div>
+            
+            <!-- ③④ 2つのリンクを完全に左寄せ＆40pxの隙間で横並びにするエリア -->
+            <div class="done-link-area">
+                <!-- ③ 戻るリンク -->
+                <a href="${pageContext.request.contextPath}/menu.jsp">戻る</a>
+                
+                <!-- ④ 科目一覧リンク -->
+                <a href="SubjectList.action">科目一覧</a>
             </div>
 
-            <div class="back-link">
-    <a href="javascript:history.back()">戻る</a>
-    <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧に戻る</a>
-</div>
+        </main>
 
-        </div>
-    </main>
-</div>
+    </div>
 
 </body>
 </html>

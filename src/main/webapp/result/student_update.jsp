@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="Bean.Student" %>
 <%@ page import="java.util.List" %>
-<%@ include file="../header.html" %>
+<%@ include file="../header.jsp" %>
 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 

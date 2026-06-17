@@ -6,87 +6,24 @@
     <title>ログイン - 得点管理システム</title>
     <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { min-height: 100vh; display: flex; flex-direction: column; font-family: "Noto Sans JP", sans-serif; background: #fdfdfd; }
     
-    body { 
-        min-height: 100vh; 
-        display: flex; 
-        flex-direction: column;
-        font-family: "Noto Sans JP", sans-serif; 
-        background: #fdfdfd;
-    }
-    
-    /* 画面上部の固定ヘッダー */
-    .header-title { 
-        width: 100%;
-        background-color: #edf4ff; 
-        padding: 40px 24px; 
-        font-size: 24px; 
-        font-weight: bold; 
-        color: #2c3e50;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    .main-content { 
-        flex: 1; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .login-box {
-        width: 420px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        padding: 40px;
-        text-align: center;
-    }
-
-    /* エラーメッセージ */
-    .error-message {
-        background-color: #fff6f6;
-        border: 1px solid #f9d3d3;
-        color: #cd3d3d;
-        padding: 16px;
-        border-radius: 8px;
-        margin-bottom: 24px;
-        text-align: left;
-        font-size: 14.5px;
-    }
-
+    .main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
+    .login-box { width: 420px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); padding: 40px; text-align: center; }
+    .error-message { background-color: #fff6f6; border: 1px solid #f9d3d3; color: #cd3d3d; padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: left; font-size: 14.5px; }
     .form-group { margin-bottom: 16px; text-align: left; }
     .input-label { display: block; font-size: 11px; color: #888; margin-bottom: 4px; }
-    input[type="text"], input[type="password"] { 
-        width: 100%; height: 38px; padding: 0 10px;
-        border: 1px solid #ccc; border-radius: 4px; 
-    }
-    
-    /* パスワード表示チェックボックスエリア */
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        font-size: 13px;
-        color: #333;
-        margin-top: 4px;
-        margin-bottom: 24px;
-    }
+    input[type="text"], input[type="password"] { width: 100%; height: 38px; padding: 0 10px; border: 1px solid #ccc; border-radius: 4px; }
+    .checkbox-group { display: flex; align-items: center; font-size: 13px; color: #333; margin-top: 4px; margin-bottom: 24px; }
     .checkbox-group input { margin-right: 6px; cursor: pointer; }
-
-    button { 
-        width: 40%; padding: 10px; border: none; border-radius: 6px; 
-        background: #0066ec; color: #fff; font-weight: bold; cursor: pointer; 
-    }
-    
-    .login-footer {
-        background-color: #ebebeb; padding: 12px 0; text-align: center;
-        font-size: 12px; color: #7a7a7a; border-top: 1px solid #dfdfdf;
-    }
+    button { width: 40%; padding: 10px; border: none; border-radius: 6px; background: #0066ec; color: #fff; font-weight: bold; cursor: pointer; }
+    .login-footer { background-color: #ebebeb; padding: 12px 0; text-align: center; font-size: 12px; color: #7a7a7a; border-top: 1px solid #dfdfdf; }
     </style>
 </head>
 <body>
 
-    <header class="header-title">得点管理システム</header>
+    <%-- 共通ヘッダーを読み込み --%>
+    <%@ include file="/header.jsp" %>
 
     <main class="main-content">
         <div class="login-box">

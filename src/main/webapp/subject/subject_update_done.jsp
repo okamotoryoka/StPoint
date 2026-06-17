@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 
-<%@ include file="../header.html" %>
+<%@ include file="../header.jsp" %>
 
 <%-- 画面全体を左メニューと右メインコンテンツに分割するコンテナ --%>
 <div class="system-layout" style="display: flex; min-height: 80vh;">

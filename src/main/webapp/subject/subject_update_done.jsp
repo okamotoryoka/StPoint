@@ -87,7 +87,7 @@
             </div>
             
             <div style="margin-top: 20px;">
-                <a href="SubjectList.action" class="back-link">科目一覧</a>
+                <a href="${pageContext.request.contextPath}/SubjectList.action" class="back-link">科目一覧</a>
             </div>
 
         </main>

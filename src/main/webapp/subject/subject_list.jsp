@@ -1,100 +1,95 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Bean.Subject" %>
-
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
-
-<%@ include file="../header.html" %>
-
-<%-- 画面全体を左メニューと右メインコンテンツに分割するコンテナ --%>
-<div class="system-layout" style="display: flex; min-height: 80vh; flex-direction: column; position: relative; padding-bottom: 60px;">
-
-  <div style="display: flex; flex: 1;">
-    <jsp:include page="../tag.jsp" />
-
-    <%-- =========================================================
-         Right Main Content Area
-         ========================================================= --%>
-    <div class="content-body" style="flex: 1; padding: 20px;">
-
-      <%-- ① タイトル領域とユーザー情報を鼠色の枠の中に統合 --%>
-      <div style="background-color: #f5f5f5; padding: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h1 style="margin: 0; font-size: 20px; background: none; padding: 0;">科目管理</h1>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>科目管理 - 得点管理システム</title>
+    <style>
+        /* レイアウト構造 */
+        body { margin: 0; font-family: sans-serif; }
+        .system-layout { display: flex; flex-direction: column; min-height: 100vh; }
+        .main-container { display: flex; flex: 1; }
         
-        <div class="user-info" style="font-size: 14px;">
-            ${sessionScope.teacher_name}様
-            <a href="Logout.action" style="margin-left: 5px;">ログアウト</a>
+        /* サイドメニューとコンテンツ */
+        .side-menu { width: 220px; flex-shrink: 0; border-right: 1px solid #ddd; background-color: #f8f9fa; }
+        .content-body { flex: 1; padding: 30px; }
+        
+        /* コンポーネントスタイル */
+        .page-header { background-color: #f5f5f5; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #ddd; }
+        .student-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .student-table th, .student-table td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        .footer { background-color: #eee; padding: 15px; text-align: center; font-size: 12px; color: #666; margin-top: auto; }
+    </style>
+</head>
+<body>
+
+<%-- 共通ヘッダー --%>
+<jsp:include page="/header.jsp" />
+
+<div class="system-layout">
+    <div class="main-container">
+        
+        <%-- サイドメニュー --%>
+        <div class="side-menu">
+            <jsp:include page="../tag.jsp" />
         </div>
-      </div>
 
-      <%-- ② 新規登録リンク（右上に配置するためのスタイル） --%>
-      <div style="text-align: right; margin-bottom: 10px;">
-        <a href="SubjectCreate.action" class="link-action" style="font-size: 14px; text-decoration: none;">新規登録</a>
-      </div>
+        <%-- メインコンテンツ --%>
+        <main class="content-body">
+            <div class="page-header">
+                <h1 style="margin: 0; font-size: 20px;">科目管理</h1>
+                <a href="SubjectCreate.action">新規登録</a>
+            </div>
 
-      <%
-        // Java側からセットされた科目の全件リストを取得
-        List<Subject> subjects = (List<Subject>) request.getAttribute("subjects");
-      %>
+            <%
+                List<Subject> subjects = (List<Subject>) request.getAttribute("subjects");
+            %>
 
-      <%-- ③〜⑨ 科目一覧テーブル --%>
-      <table class="student-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <thead>
-          <tr style="border-bottom: 2px solid #ccc; text-align: left;">
-            <th style="padding: 10px; width: 20%;">科目コード</th>
-            <th style="padding: 10px; width: 50%;">科目名</th>
-            <th style="padding: 10px; width: 15%;"></th>
-            <th style="padding: 10px; width: 15%;"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%
-            if (subjects != null && !subjects.isEmpty()) {
-                for (Subject sub : subjects) {
-          %>
-            <tr style="border-bottom: 1px solid #eee;">
-              <%-- ⑥ 科目コード --%>
-              <td style="padding: 12px 10px;"><%= sub.getCd() %></td>
-              
-              <%-- ⑦ 科目名 --%>
-              <td style="padding: 12px 10px;"><%= sub.getName() %></td>
-              
-              <%-- ⑧ 変更リンク（主キーとなる科目コードをパラメータに付与） --%>
-              <td style="padding: 12px 10px; text-align: center;">
-                <a href="SubjectUpdate.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #337ab7;">変更</a>
-              </td>
-              
-              <%-- ⑨ 削除リンク（主キーとなる科目コードをパラメータに付与） --%>
-              <td style="padding: 12px 10px; text-align: center;">
-            <a href="${pageContext.request.contextPath}/SubjectDelete.action?cd=<%= sub.getCd() %>" style="text-decoration: none; color: #337ab7;">削除</a>
-          
-              </td>
-            </tr>
-          <%
-                }
-            } else {
-          %>
-            <tr>
-              <td colspan="4" style="text-align: center; padding: 20px; color: #999;">登録されている科目がありません。</td>
-            </tr>
-          <%
-            }
-          %>
-        </tbody>
-      </table>
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>科目コード</th>
+                        <th>科目名</th>
+                        <th style="text-align: center;">変更</th>
+                        <th style="text-align: center;">削除</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        if (subjects != null && !subjects.isEmpty()) {
+                            for (Subject sub : subjects) {
+                    %>
+                        <tr>
+                            <td><%= sub.getCd() %></td>
+                            <td><%= sub.getName() %></td>
+                            <td style="text-align: center;">
+                                <a href="SubjectUpdate.action?cd=<%= sub.getCd() %>">変更</a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a href="${pageContext.request.contextPath}/SubjectDelete.action?cd=<%= sub.getCd() %>">削除</a>
+                            </td>
+                        </tr>
+                    <%      }
+                        } else {
+                    %>
+                        <tr><td colspan="4" style="text-align: center; padding: 20px;">登録されている科目がありません。</td></tr>
+                    <%  } %>
+                </tbody>
+            </table>
 
-      <%-- メメニュー戻るボタン --%>
-      <p style="margin-top: 30px;">
-        <a href="${pageContext.request.contextPath}/menu.jsp" class="link-action">メニューへ戻る</a>
-      </p>
-
+            <p style="margin-top: 30px;">
+                <a href="${pageContext.request.contextPath}/menu.jsp">メニューへ戻る</a>
+            </p>
+        </main>
     </div>
-  </div>
 
-  <%-- 横いっぱいに広がるグレーのフッター帯 --%>
-  <div style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: #ebebeb; padding: 12px 0; text-align: center; line-height: 1.6; font-size: 12px; color: #7a7a7a; border-top: 1px solid #dfdfdf;">
-      &copy; 2023 TIC<br>
-      大原学園
-  </div>
-
+    <%-- 共通フッター --%>
+    <footer class="footer">
+        &copy; 2023 TIC 大原学園
+    </footer>
 </div>
+
+</body>
+</html>

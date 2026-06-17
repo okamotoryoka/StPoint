@@ -1,42 +1,39 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>メニュー</title> <!-- headタグ内には本来タイトルを入れます -->
-</head>
+<%-- 
+    【修正のポイント】
+    1. padding-top: 0; にして上部の隙間を完全になくしました
+    2. line-height: 1.6; にして、行間を詰めました
+    3. margin-bottom を 5px にして、項目同士の距離を縮めました
+--%>
+<aside class="sidebar" style="width: 200px; padding: 0 0 20px 20px; box-sizing: border-box; background-color: #ffffff; height: 100vh;">
+    <style>
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        
+        /* 行間を詰める設定 */
+        .sidebar li { line-height: 1.6; margin-bottom: 5px; }
+        
+        /* リンクの青色設定 */
+        .sidebar a {
+            color: #0000EE;
+            text-decoration: none;
+            display: block;
+            padding: 4px 0; /* リンクの上下余白を最小化 */
+        }
+        .sidebar a:hover { text-decoration: underline; }
+        
+        /* タイトル（見出し）のスタイル */
+        .menu-title { font-weight: bold; color: #333; margin-top: 10px; }
+    </style>
 
-<body> <!-- 画面の表示内容は本来bodyタグの中に書きます -->
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/menu.jsp">メニュー</a></li>
+        <li><a href="${pageContext.request.contextPath}/StudentList.action">学生管理</a></li>
 
-<!-- 全体 -->
-<div class="container">
+        <li class="menu-title">成績管理</li>
+        <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a></li>
+        <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ScoreSubject.action">成績参照</a></li>
 
-    <!-- 左メニュー：横幅を220pxに広げて固定し、右側にゆとりを持たせました -->
-    <aside class="sidebar" style="width: 220px; min-width: 220px; padding: 20px 10px 20px 20px; box-sizing: border-box;">
-
-        <!-- すべての文字の左端を綺麗に揃えるため、内側の余白を0にリセットしています -->
-        <ul style="list-style: none; padding-left: 0; margin: 0; line-height: 2.0; width: 100%;">
-            <!-- トップ画面（自分自身）へのリンク -->
-            <li style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/menu.jsp">メニュー</a></li>
-
-            <!-- 学生管理 -->
-            <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/StudentList.action">学生管理</a></li>
-
-            <!-- 成績管理（大項目はリンクなし、見出しとして表示） -->
-            <li class="menu-title" style="margin-bottom: 8px; color: #333; font-weight: bold;">成績管理</li>
-            
-            <!-- 左メニューの成績リンク群（内側にきれいに20px字下げ） -->
-            <li style="padding-left: 20px; margin-bottom: 8px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a></li>
-            <li style="padding-left: 20px; margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/ScoreSubject.action">成績参照</a></li>
-
-            <!-- 科目管理（二重になっていたダブルクォーテーションを修正しました） -->
-            <li class="menu-title" style="margin-bottom: 16px;"><a href="${pageContext.request.contextPath}/SubjectList.action">科目管理</a></li>
-        </ul>
-
-    </aside>
-
-</div>
-
-</body>
-</html>
+        <li class="menu-title"><a href="${pageContext.request.contextPath}/SubjectList.action">科目管理</a></li>
+    </ul>
+</aside>

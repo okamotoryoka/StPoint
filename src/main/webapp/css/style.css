@@ -1,5 +1,3 @@
-@charset "UTF-8";
-
 /* ==========================================================================
    全体レイアウト・共通設定
    ========================================================================== */
@@ -11,28 +9,33 @@ body {
     background-color: #fff;
 }
 
-/* 上部：水色のシステムヘッダー */
+/* 上部：水色のシステムヘッダー（太さとサイズを調整済み） */
 .system-header {
+    width: 100%;
+    height: 80px; /* 高さを80pxにして帯を太く */
     background: linear-gradient(to bottom, #e6f2ff, #cce6ff);
-    padding: 15px 30px;
+    padding: 0 40px; /* 左右の余白を少し広げてバランスを調整 */
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #b3d7ff;
+    box-sizing: border-box;
 }
 
 .header-title {
-    font-size: 28px;
+    font-size: 30px; /* タイトルの文字を一回り大きく */
     font-weight: bold;
     color: #1a334d;
+    margin: 0;
 }
 
 .header-user {
-    font-size: 14px;
+    font-size: 16px; /* 右側ユーザー情報の文字を一回り大きく */
+    font-weight: bold;
 }
 
 .header-user span {
-    margin-right: 15px;
+    margin-right: 20px;
 }
 
 .logout-btn {
@@ -43,12 +46,14 @@ body {
 /* メイン全体のレイアウト (メニューとコンテンツの2カラム) */
 .main-layout {
     display: flex;
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 80px); /* 80pxの太いヘッダーに合わせて固定 */
+    width: 100%;
 }
 
-/* 左側：メニューエリア */
+/* 左側：メニューエリア（幅を完全固定） */
 .left-menu-area {
     width: 220px;
+    min-width: 220px;
     padding: 20px;
     border-right: 1px solid #e0e0e0;
     background-color: #fff;
@@ -58,13 +63,97 @@ body {
 /* 右側：メインコンテンツエリア */
 .content-body {
     flex: 1;
-    padding: 20px 40px;
+    padding: 30px; /* 内側の余白を全画面で30pxに統一 */
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* 縦にパーツが美しく並ぶように設定 */
 }
 
 .right-container {
     width: 100%;
 }
+
+/* 各画面共通：グレーの見出し帯 */
+.page-title {
+    background-color: #f0f0f0;
+    padding: 10px 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 25px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* フォームの項目名（ラベル） */
+.form-label {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+
+/* ==========================================================================
+   入力・表示フォーム用パーツ（学生変更・科目変更など）
+   ========================================================================== */
+
+/* 入学年度・学生番号・科目コードなどの変更不可の値表示 */
+.readonly-text {
+    font-size: 16px;
+    color: #333;
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+/* 氏名や科目名などの入力欄 */
+.input-text {
+    width: 100%;
+    max-width: 600px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+/* クラスのセレクトボックス（変更画面用幅広タイプ） */
+.input-select {
+    width: 100%;
+    max-width: 600px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+}
+
+/* 在学中のチェックボックスエリア */
+.checkbox-area {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 25px;
+}
+.checkbox-area input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* 削除・変更画面などで、左の「科目管理」の高さに合わせるための大きな上部余白 */
+.link-back-aligned {
+    color: #0066cc;
+    text-decoration: underline;
+    font-size: 14px;
+    display: inline-block;
+    margin-left: 20px;
+    margin-top: 120px; /* 削除ボタン等の下から大きく余白を空けて高さを引き下げる */
+}
+
 
 /* ==========================================================================
    検索フォームエリア（中間幅・ボタン中央配置版）
@@ -101,13 +190,6 @@ body {
     gap: 6px;
 }
 
-/* 各フォームの項目名（ラベル） */
-.form-label {
-    font-size: 14px;
-    color: #555;
-    font-weight: 500;
-}
-
 /* セレクトボックスの共通デザイン */
 .form-select {
     height: 35px;
@@ -129,7 +211,7 @@ body {
     width: 220px;
 }
 
-/* 検索ボタンの配置用枠（残りの右側余白のちょうど真ん中に配置する） */
+/* 検索ボタンの配置用枠 */
 .form-group-btn {
     margin-left: 0;
     flex-grow: 1;
@@ -155,6 +237,7 @@ body {
 .search-btn:hover {
     background-color: #333333;
 }
+
 
 /* ==========================================================================
    検索後の成績登録テーブル・ボタン（見本画像完全再現版）
@@ -255,10 +338,10 @@ body {
     font-size: 14px;
 }
 
+
 /* ==========================================================================
    点数入力欄の上でマウスホイールを回しても、数値が変わらないようにする設定
    ========================================================================== */
-/* 入学年度、クラス、回数などのセレクトボックスや点数欄の横並びを整えるための調整 */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -275,17 +358,13 @@ input[type="number"] {
     background-color: #61b183; 
     color: #333333;            
     font-size: 14px;
-    
-    /* 💡 font-weight: bold; から normal に変更して文字の線を細くします */
     font-weight: normal;         
-    
     padding: 12px 20px;
     border-radius: 4px;
     margin-bottom: 30px;
     width: 100%; 
     max-width: 950px; 
     box-sizing: border-box;
-    
     display: flex;
     align-items: center;
     justify-content: center;   
@@ -300,10 +379,13 @@ input[type="number"] {
     max-width: 950px;        
     box-sizing: border-box;
     justify-content: flex-start; 
-    
-    /* 💡 左側の余白を完全にゼロにして、左端（タイトルの真下）にピタッと合わせます */
     padding-left: 0;      
-    
-    /* 💡 上の緑ボックスとの隙間をさらに少し広げて（45px）、しっかり下に配置します */
     padding-top: 45px;       
+}
+
+/* 完了画面リンク共通の装飾 */
+.done-link-area a {
+    color: #0066cc;
+    text-decoration: underline;
+    font-size: 14px;
 }

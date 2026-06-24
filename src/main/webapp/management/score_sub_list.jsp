@@ -65,6 +65,52 @@
     .filter-btn-group button:hover {
         background: #f0f0f0;
     }
+    
+        /* 💡追加：簡易ミニグラフ用のスタイル */
+    .graph-container {
+        margin-top: 25px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        max-width: 950px;
+    }
+    .graph-title {
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 15px;
+        border-left: 4px solid #0066cc;
+        padding-left: 10px;
+    }
+    .graph-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
+    .graph-label {
+        width: 60px;
+        font-weight: bold;
+    }
+    .graph-bar-wrap {
+        flex: 1;
+        background-color: #e9ecef;
+        border-radius: 3px;
+        height: 16px;
+        margin-right: 15px;
+        max-width: 400px; /* グラフの最大横幅 */
+    }
+    .graph-bar {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s;
+    }
+    .graph-count {
+        width: 40px;
+        color: #666;
+    }
+    
 </style>
 </head>
 <body>
@@ -212,6 +258,10 @@ List<String> gradeList = (List<String>) request.getAttribute("gradeList");
                 int count1 = 0;
                 int total2 = 0;
                 int count2 = 0;
+                
+                // 💡1回目と2回目のグラフ集計用の変数
+                int yu1 = 0, ryo1 = 0, ka1 = 0, aka1 = 0, totalCount1 = 0;
+                int yu2 = 0, ryo2 = 0, ka2 = 0, aka2 = 0, totalCount2 = 0;
 
                 for (Map<String, Object> row : scoreDisplayList) { 
                     // --- 1回目の点数と判定の処理 ---
@@ -225,10 +275,12 @@ List<String> gradeList = (List<String>) request.getAttribute("gradeList");
                             total1 += s1;
                             count1++;
 
-                            if (s1 < 40) { judgeStr1 = "赤点"; judgeStyle1 = "color: red; font-weight: bold;"; }
-                            else if (s1 < 60) { judgeStr1 = "可"; }
-                            else if (s1 < 80) { judgeStr1 = "良"; }
-                            else { judgeStr1 = "優"; judgeStyle1 = "color: #0066cc; font-weight: bold;"; }
+                            // 💡変更：条件に一致した評価の人数を「++」で数える処理を追加しました
+                            if (s1 < 40) { judgeStr1 = "赤点"; judgeStyle1 = "color: red; font-weight: bold;"; aka1++; }
+                            else if (s1 < 60) { judgeStr1 = "可"; ka1++; }
+                            else if (s1 < 80) { judgeStr1 = "良"; ryo1++; }
+                            else { judgeStr1 = "優"; judgeStyle1 = "color: #0066cc; font-weight: bold;"; yu1++; }
+                            totalCount1++; 
                         } catch (NumberFormatException e) {}
                     }
 
@@ -243,13 +295,16 @@ List<String> gradeList = (List<String>) request.getAttribute("gradeList");
                             total2 += s2;
                             count2++;
 
-                            if (s2 < 40) { judgeStr2 = "赤点"; judgeStyle2 = "color: red; font-weight: bold;"; }
-                            else if (s2 < 60) { judgeStr2 = "可"; }
-                            else if (s2 < 80) { judgeStr2 = "良"; }
-                            else { judgeStr2 = "優"; judgeStyle2 = "color: #0066cc; font-weight: bold;"; }
+                            // 💡変更：2回目も同様に人数を数える処理を追加しました
+                            if (s2 < 40) { judgeStr2 = "赤点"; judgeStyle2 = "color: red; font-weight: bold;"; aka2++; }
+                            else if (s2 < 60) { judgeStr2 = "可"; ka2++; }
+                            else if (s2 < 80) { judgeStr2 = "良"; ryo2++; }
+                            else { judgeStr2 = "優"; judgeStyle2 = "color: #0066cc; font-weight: bold;"; yu2++; }
+                            totalCount2++; 
                         } catch (NumberFormatException e) {}
                     }
                 %>
+                
                 <!-- データ行に 'student-data-row' クラスを追加 -->
                 <tr class="student-data-row">
                     <td><%= row.get("entYear") != null ? row.get("entYear") : "-" %></td>
@@ -339,6 +394,32 @@ List<String> gradeList = (List<String>) request.getAttribute("gradeList");
 
                 </tbody>
             </table>
+            
+                        <!-- 💡追加：1回目と2回目の簡易ミニグラフ表示エリア -->
+            <div class="graph-container">
+                <div class="graph-title">評価別の人数分布グラフ</div>
+                
+                <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                    <!-- 左側：1回目のグラフ -->
+                    <div style="flex: 1; min-width: 300px;">
+                        <div style="font-weight: bold; margin-bottom: 10px; color: #555; font-size: 13px;">【 1回目テスト 】</div>
+                        <div class="graph-row"><div class="graph-label" style="color: #0066cc;">優</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount1 > 0 ? (yu1 * 100 / totalCount1) : 0 %>%; background-color: #0066cc;"></div></div><div class="graph-count"><%= yu1 %>人</div></div>
+                        <div class="graph-row"><div class="graph-label">良</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount1 > 0 ? (ryo1 * 100 / totalCount1) : 0 %>%; background-color: #28a745;"></div></div><div class="graph-count"><%= ryo1 %>人</div></div>
+                        <div class="graph-row"><div class="graph-label">可</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount1 > 0 ? (ka1 * 100 / totalCount1) : 0 %>%; background-color: #ffc107;"></div></div><div class="graph-count"><%= ka1 %>人</div></div>
+                        <div class="graph-row"><div class="graph-label" style="color: red;">赤点</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount1 > 0 ? (aka1 * 100 / totalCount1) : 0 %>%; background-color: red;"></div></div><div class="graph-count"><%= aka1 %>人</div></div>
+                    </div>
+                    
+                    <!-- 右側：2回目のグラフ -->
+                    <div style="flex: 1; min-width: 300px;">
+                        <div style="font-weight: bold; margin-bottom: 10px; color: #555; font-size: 13px;">【 2回目テスト 】</div>
+                        <div class="graph-row"><div class="graph-label" style="color: #0066cc;">優</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount2 > 0 ? (yu2 * 100 / totalCount2) : 0 %>%; background-color: #0066cc;"></div></div><div class="graph-count"><%= yu2 %>人</div></div>
+                        <div class="graph-row"><div class="graph-label">良</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount2 > 0 ? (ryo2 * 100 / totalCount2) : 0 %>%; background-color: #28a745;"></div></div><div class="graph-count"><%= ryo2 %>人</div></div>
+                        <div class="graph-row"><div class="graph-label">可</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount2 > 0 ? (ka2 * 100 / totalCount2) : 0 %>%; background-color: #ffc107;"></div></div><div class="graph-count"><%= ka2 %>人</div></div>
+                        <div class="graph-row"><div class="graph-label" style="color: red;">赤点</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount2 > 0 ? (aka2 * 100 / totalCount2) : 0 %>%; background-color: red;"></div></div><div class="graph-count"><%= aka2 %>人</div></div>
+                    </div>
+                </div>
+            </div>
+            
         <% } else if (scoreDisplayList != null && scoreDisplayList.isEmpty()) { %>
             <div class="initial-message">該当する成績データが見つかりませんでした。</div>
         <% } else { %>

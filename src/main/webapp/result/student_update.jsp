@@ -35,12 +35,19 @@
     <%
         Student student = (Student) request.getAttribute("student");
         List<String> classList = (List<String>) request.getAttribute("class_list");
+        List<?> grades = (List<?>) request.getAttribute("grades"); // ★追加: 動的な学年選択肢のリスト
         
         String no = (student != null) ? student.getNo() : "";
         String name = (student != null) ? student.getName() : "";
         int entYear = (student != null) ? student.getEntYear() : 0;
         boolean isAttend = (student != null) ? student.isAttend() : true;
         String currentClass = (student != null) ? student.getClassNum() : "";
+        
+        // 💡 正常時はstudentから取得、エラーによる差し戻し時はrequestパラメータから現在の入力を復元
+        int currentGrade = (student != null) ? student.getGrade() : 0;
+        if (request.getAttribute("grade") != null) {
+            currentGrade = Integer.parseInt(String.valueOf(request.getAttribute("grade")));
+        }
     %>
 
     <jsp:include page="../header.jsp" />
@@ -55,6 +62,9 @@
 
             <form action="${pageContext.request.contextPath}/StudentUpdatExecute.action" method="post">
                 <input type="hidden" name="no" value="<%= no %>">
+
+                <!-- 💡 エラー差し戻し用に隠しフィールドとして入学年度も送信 -->
+                <input type="hidden" name="entYear" value="<%= entYear %>">
 
                 <div class="form-label">入学年度</div>
                 <div class="readonly-text"><%= entYear %></div>
@@ -75,6 +85,32 @@
                                 <option value="<%= c %>" <%= selected %>><%= c %></option>
                         <%  }
                            } %>
+                    </select>
+                </div>
+
+                <!-- 💡追加: 学年変更用のプルダウンエリア -->
+                <div class="form-label">学年</div>
+                <div>
+                    <select name="grade" class="input-select" required>
+                        <option value="">-- 学年を選択してください --</option>
+                        <% 
+                            if (grades != null && !grades.isEmpty()) {
+                                // DBに登録されている既存の学年リストから動的に生成
+                                for (Object g : grades) {
+                                    int val = Integer.parseInt(String.valueOf(g));
+                                    String selected = (val == currentGrade) ? "selected" : "";
+                        %>
+                                    <option value="<%= val %>" <%= selected %>><%= val %>年</option>
+                        <%      }
+                            } else {
+                                // 万が一DBが空の場合の固定デフォルト選択肢（1〜3年）
+                                for (int i = 1; i <= 3; i++) {
+                                    String selected = (i == currentGrade) ? "selected" : "";
+                        %>
+                                    <option value="<%= i %>" <%= selected %>><%= i %>年</option>
+                        <%      }
+                            } 
+                        %>
                     </select>
                 </div>
 

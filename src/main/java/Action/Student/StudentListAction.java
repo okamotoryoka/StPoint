@@ -21,6 +21,7 @@ public class StudentListAction extends Action {
         // 1. JSPの絞り込みフォームから送られてきた値を取得する
         String entYearStr = request.getParameter("entYear");
         String classNum = request.getParameter("classNum");
+        String gradeStr = request.getParameter("grade"); // 追加: 学年のパラメータ取得
         String isAttendStr = request.getParameter("isAttend"); 
 
         // リクエストの判定（初回や戻ってきたときはGET、絞り込みボタンはPOST）
@@ -37,6 +38,7 @@ public class StudentListAction extends Action {
         // 2. 画面の選択状態をキープするためにリクエスト属性に送り返す
         request.setAttribute("selectedYear", entYearStr);
         request.setAttribute("selectedClass", classNum);
+        request.setAttribute("selectedGrade", gradeStr); // 追加: 選択された学年の保持
         request.setAttribute("selectedAttend", currentAttendChecked);
 
         StudentDAO dao = new StudentDAO();
@@ -45,28 +47,42 @@ public class StudentListAction extends Action {
         List<Student> allStudents = dao.findAll();
         Set<Integer> yearSet = new HashSet<>();
         Set<String> classSet = new HashSet<>();
+        Set<Integer> gradeSet = new HashSet<>(); // 追加: 学年重複排除用のセット
         
         if (allStudents != null) {
             for (Student s : allStudents) {
                 if (s.getEntYear() > 0) yearSet.add(s.getEntYear());
                 if (s.getClassNum() != null && !s.getClassNum().isEmpty()) classSet.add(s.getClassNum());
+                if (s.getGrade() > 0) gradeSet.add(s.getGrade()); // 追加: 学年をセットに蓄積
             }
         }
         
         List<Integer> yearList = new ArrayList<>(yearSet);
         List<String> classList = new ArrayList<>(classSet);
+        List<Integer> gradeList = new ArrayList<>(gradeSet); // 追加: 学年リストの生成
+        
         Collections.sort(yearList);
         Collections.sort(classList);
+        Collections.sort(gradeList); // 追加: 学年を昇順にソート
         
         request.setAttribute("yearList", yearList);
         request.setAttribute("classList", classList);
+        request.setAttribute("gradeList", gradeList); // 追加: 学年リストをJSPに渡す
 
         // 4.表示データの取得
         List<Student> students = null;
 
         if (isPost) {
             String classQuery = (classNum != null) ? classNum : "";
-            students = dao.search("", classQuery, "no");
+            
+            // 追加・修正: 画面から送られてきた学年を数値に変換（未指定や空文字なら0にする）
+            int gradeQuery = 0;
+            if (gradeStr != null && !gradeStr.isEmpty()) {
+                gradeQuery = Integer.parseInt(gradeStr);
+            }
+            
+            // 修正: 引数に学年（gradeQuery）を追加してDAOの検索を呼び出す
+            students = dao.search("", classQuery, gradeQuery, "no");
         } else {
             students = dao.findAll();
         }

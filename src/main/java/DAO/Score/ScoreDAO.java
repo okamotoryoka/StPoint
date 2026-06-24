@@ -54,6 +54,26 @@ public class ScoreDAO {
     }
 
     /**
+     * 追加: 重複のない学年の一覧を昇順で取得するメソッド（画面のプルダウン用）
+     */
+    public List<String> getGradeList() throws Exception {
+        List<String> gradeList = new ArrayList<>();
+        String sql = "SELECT DISTINCT GRADE FROM STUDENT WHERE GRADE IS NOT NULL ORDER BY GRADE ASC";
+
+        InitialContext ic = new InitialContext();
+        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+
+        try (Connection con = ds.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                gradeList.add(rs.getString("GRADE"));
+            }
+        }
+        return gradeList;
+    }
+
+    /**
      * 科目マスタの一覧を取得するメソッド
      */
     public List<Map<String, String>> getSubjectList() throws Exception {
@@ -78,18 +98,9 @@ public class ScoreDAO {
     }
 
     /**
-     * 条件を指定して成績一覧を動的に検索するメソッド（確実に動かすためMap形式で返却します）
+     * 条件を指定して成績一覧を動的に検索するメソッド（学年絞り込み対応版）
      */
-    /**
-     * 条件を指定して成績一覧を動的に検索するメソッド（未選択時は全件表示に対応）
-     */
-    /**
-     * 条件を指定して成績一覧を動的に検索するメソッド（学生番号の検索に対応）
-     */
-    /**
-     * 条件を指定して成績一覧を動的に検索するメソッド（回数での絞り込みに対応版）
-     */
-    public List<Bean.Score> search(String entYear, String classNum, String subjectCd, String noStr) throws Exception {
+    public List<Bean.Score> search(String entYear, String classNum, String subjectCd, String noStr, String gradeStr) throws Exception {
         List<Bean.Score> list = new ArrayList<>();
         
         StringBuilder sql = new StringBuilder(
@@ -102,7 +113,8 @@ public class ScoreDAO {
             "t.SCHOOL_CD AS school_cd, " +
             "t.NO AS no, " +
             "t.POINT AS point, " +
-            "t.CLASS_NUM AS class_num " +
+            "t.CLASS_NUM AS class_num, " +
+            "st.GRADE AS grade " + // 追加: SELECT項目に学生の学年を追加
             "FROM TEST t " +
             "LEFT JOIN STUDENT st ON t.STUDENT_NO = st.NO AND t.SCHOOL_CD = st.SCHOOL_CD " +
             "LEFT JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD AND t.SCHOOL_CD = sub.SCHOOL_CD " +
@@ -118,9 +130,12 @@ public class ScoreDAO {
         if (subjectCd != null && !subjectCd.trim().isEmpty()) {
             sql.append(" AND t.SUBJECT_CD = ?");
         }
-        // 💡 引数名とSQLの条件を「学生番号」から「回数(t.NO)」に正しく修正しました
         if (noStr != null && !noStr.trim().isEmpty()) {
             sql.append(" AND t.NO = ?");
+        }
+        // 追加: 学年の絞り込み条件
+        if (gradeStr != null && !gradeStr.trim().isEmpty()) {
+            sql.append(" AND st.GRADE = ?");
         }
         
         sql.append(" ORDER BY t.STUDENT_NO ASC, t.NO ASC");
@@ -141,9 +156,12 @@ public class ScoreDAO {
             if (subjectCd != null && !subjectCd.trim().isEmpty()) {
                 pstmt.setString(paramIndex++, subjectCd);
             }
-            // 💡 プレースホルダー（?）に画面から選ばれた「回数」の数値をセットします
             if (noStr != null && !noStr.trim().isEmpty()) {
                 pstmt.setInt(paramIndex++, Integer.parseInt(noStr));
+            }
+            // 追加: 学年のプレースホルダーへのデータセット
+            if (gradeStr != null && !gradeStr.trim().isEmpty()) {
+                pstmt.setInt(paramIndex++, Integer.parseInt(gradeStr));
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -159,6 +177,9 @@ public class ScoreDAO {
                     score.setClassNum(rs.getString("class_num"));
                     score.setSubjectCd(rs.getString("subject_cd"));
                     score.setSchoolCd(rs.getString("school_cd"));
+                    score.setGrade(rs.getInt("grade")); 
+                    
+                    // 💡 もし Bean.Score 側にも setGrade メソッドを将来的に作る場合は、ここで rs.getInt("grade") をセット可能です。
                     
                     list.add(score);
                 }
@@ -167,19 +188,10 @@ public class ScoreDAO {
         return list;
     }
 
-
-    
-    
     /**
-     * 条件を指定して成績一覧を動的に検索するメソッド（確実に動かすためMap形式で返却します）
+     * 条件を指定して成績一覧を動的に検索するメソッド（Map形式・学年絞り込み対応版）
      */
-    /**
-     * 条件を指定して成績一覧を動的に検索するメソッド（未選択時は全件表示に対応）
-     */
-    /**
-     * 条件を指定して成績一覧を動的に検索するメソッド（学生番号の検索に対応）
-     */
-    public List<Map<String, Object>> searchMaps(String entYear, String classNum, String subjectCd, String studentId) throws Exception {
+    public List<Map<String, Object>> searchMaps(String entYear, String classNum, String subjectCd, String studentId, String gradeStr) throws Exception {
         List<Map<String, Object>> list = new ArrayList<>();
         
         StringBuilder sql = new StringBuilder(
@@ -192,7 +204,8 @@ public class ScoreDAO {
             "t.SCHOOL_CD AS school_cd, " +
             "t.NO AS no, " +
             "t.POINT AS point, " +
-            "t.CLASS_NUM AS class_num " +
+            "t.CLASS_NUM AS class_num, " +
+            "st.GRADE AS grade " + // 追加
             "FROM TEST t " +
             "LEFT JOIN STUDENT st ON t.STUDENT_NO = st.NO AND t.SCHOOL_CD = st.SCHOOL_CD " +
             "LEFT JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD AND t.SCHOOL_CD = sub.SCHOOL_CD " +
@@ -208,9 +221,12 @@ public class ScoreDAO {
         if (subjectCd != null && !subjectCd.trim().isEmpty()) {
             sql.append(" AND t.SUBJECT_CD = ?");
         }
-        // ★追加：学生番号が入力されている場合は条件に加える
         if (studentId != null && !studentId.trim().isEmpty()) {
             sql.append(" AND t.STUDENT_NO = ?");
+        }
+        // 追加: 学年の絞り込み条件
+        if (gradeStr != null && !gradeStr.trim().isEmpty()) {
+            sql.append(" AND st.GRADE = ?");
         }
         
         sql.append(" ORDER BY t.STUDENT_NO ASC, t.NO ASC");
@@ -231,72 +247,114 @@ public class ScoreDAO {
             if (subjectCd != null && !subjectCd.trim().isEmpty()) {
                 pstmt.setString(paramIndex++, subjectCd);
             }
-            // ★追加：プレースホルダー（?）に値をセット
             if (studentId != null && !studentId.trim().isEmpty()) {
                 pstmt.setString(paramIndex++, studentId);
             }
+            // 追加: 学年のプレースホルダーへのデータセット
+            if (gradeStr != null && !gradeStr.trim().isEmpty()) {
+                pstmt.setInt(paramIndex++, Integer.parseInt(gradeStr)); // 💡 Integer.parseInt() で囲む
+            }
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Map<String, Object> map = new HashMap<>();
-                    String dbEntYear = rs.getString("ent_year");
-                    map.put("ent_year", dbEntYear == null ? "未設定" : dbEntYear);
-                    map.put("student_id", rs.getString("student_id"));
-                    map.put("student_name", rs.getString("student_name") == null ? "未登録" : rs.getString("student_name"));
-                    map.put("subject_name", rs.getString("subject_name") == null ? "不明な科目" : rs.getString("subject_name"));
-                    map.put("subject_cd", rs.getString("subject_cd"));
-                    map.put("school_cd", rs.getString("school_cd"));
-                    map.put("no", rs.getInt("no"));
-                    map.put("point", rs.getInt("point"));
-                    map.put("class_num", rs.getString("class_num"));
-                    list.add(map);
+                    while (rs.next()) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("ent_year", rs.getString("ent_year"));
+                        map.put("student_id", rs.getString("student_id"));
+                        map.put("student_name", rs.getString("student_name") == null ? "未登録" : rs.getString("student_name"));
+                        map.put("subject_name", rs.getString("subject_name") == null ? "不明な科目" : rs.getString("subject_name"));
+                        map.put("subject_cd", rs.getString("subject_cd"));
+                        map.put("school_cd", rs.getString("school_cd"));
+                        map.put("no", rs.getInt("no"));
+                        map.put("point", rs.getInt("point"));
+                        map.put("class_num", rs.getString("class_num"));
+                        map.put("grade", rs.getInt("grade")); // 追加: 学年をMapに格納
+                        
+                        list.add(map);
+                    }
+                }
+            }
+            return list;
+        }
+    
+    /**
+     * 追加: 学生・科目・回数を指定して点数を保存（存在すれば更新、なければ新規挿入）するメソッド
+     */
+    public boolean save(String studentId, String subjectCd, int no, int point) throws Exception {
+        // まずデータが存在するか確認
+        String checkSql = "SELECT COUNT(*) FROM TEST WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
+        String insertSql = "INSERT INTO TEST (POINT, CLASS_NUM, STUDENT_NO, SUBJECT_CD, SCHOOL_CD, NO) VALUES (?, ?, ?, ?, ?, ?)";
+        String updateSql = "UPDATE TEST SET POINT = ? WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
+        
+        InitialContext ic = new InitialContext();
+        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+
+        try (Connection con = ds.getConnection()) {
+            // 1. 既存データの存在チェック
+            boolean isExist = false;
+            try (PreparedStatement pstmt = con.prepareStatement(checkSql)) {
+                pstmt.setString(1, studentId);
+                pstmt.setString(2, subjectCd);
+                pstmt.setInt(3, no);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        isExist = true;
+                    }
+                }
+            }
+
+            // 2. 所属クラス番号をSTUDENTテーブルからついでに取得（新規登録用）
+            String classNum = "";
+            String schoolCd = "tes"; // デフォルト値
+            String studentSql = "SELECT CLASS_NUM, SCHOOL_CD FROM STUDENT WHERE NO = ?";
+            try (PreparedStatement pstmt = con.prepareStatement(studentSql)) {
+                pstmt.setString(1, studentId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        classNum = rs.getString("CLASS_NUM");
+                        schoolCd = rs.getString("SCHOOL_CD");
+                    }
+                }
+            }
+
+            // 3. 存在すればUPDATE、なければINSERT
+            if (isExist) {
+                try (PreparedStatement pstmt = con.prepareStatement(updateSql)) {
+                    pstmt.setInt(1, point);
+                    pstmt.setString(2, studentId);
+                    pstmt.setString(3, subjectCd);
+                    pstmt.setInt(4, no);
+                    return pstmt.executeUpdate() > 0;
+                }
+            } else {
+                try (PreparedStatement pstmt = con.prepareStatement(insertSql)) {
+                    pstmt.setInt(1, point);
+                    pstmt.setString(2, classNum != null ? classNum : "");
+                    pstmt.setString(3, studentId);
+                    pstmt.setString(4, subjectCd);
+                    pstmt.setString(5, schoolCd);
+                    pstmt.setInt(6, no);
+                    return pstmt.executeUpdate() > 0;
                 }
             }
         }
-        return list;
+        
     }
-
-
-    // 既存のdeleteメソッド等、不要な箇所は省略可能ですが残してあっても問題ありません
-    public int delete(Bean.Score score) throws Exception {
-        int count = 0;
+    public boolean delete(Bean.Score score) throws Exception {
         String sql = "DELETE FROM TEST WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND SCHOOL_CD = ? AND NO = ?";
+        
         InitialContext ic = new InitialContext();
         DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+
         try (Connection con = ds.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
             pstmt.setString(1, score.getStudentId());
             pstmt.setString(2, score.getSubjectCd());
             pstmt.setString(3, score.getSchoolCd());
             pstmt.setInt(4, score.getNo());
-            count = pstmt.executeUpdate();
-        }
-        return count;
-    }
-    
-    /**
-     * 指定された学生・科目・回数の点数を更新（上書き）するメソッド
-     */
-    public boolean save(String studentId, String subjectCd, int no, int point) throws Exception {
-        // TESTテーブルの特定のレコードの点数を更新するSQL
-        String sql = "UPDATE TEST SET POINT = ? WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND NO = ?";
-        
-        InitialContext ic = new InitialContext();
-        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
-        
-        int rowCount = 0;
-        try (Connection con = ds.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql)) {
             
-            pstmt.setInt(1, point);
-            pstmt.setString(2, studentId);
-            pstmt.setString(3, subjectCd);
-            pstmt.setInt(4, no);
-            
-            rowCount = pstmt.executeUpdate();
+            return pstmt.executeUpdate() > 0;
         }
-        // 1行以上更新できたら成功（true）を返す
-        return rowCount > 0;
     }
 
 }

@@ -25,14 +25,17 @@
     String classNum = (String) request.getAttribute("classNum");
     String subjectCd = (String) request.getAttribute("subjectCd");
     String noStr = (String) request.getAttribute("no");
+    String gradeStr = (String) request.getAttribute("grade"); // ★学年の保持データ
     List<String> entYearList = (List<String>) request.getAttribute("entYearList");
     List<String> classList = (List<String>) request.getAttribute("classList");
+    List<String> gradeList = (List<String>) request.getAttribute("gradeList"); // ★学年リストの受け取り
     Boolean isFirstAccess = (Boolean) request.getAttribute("isFirstAccess");
 
     if (entYear == null) entYear = "";
     if (classNum == null) classNum = "";
     if (subjectCd == null) subjectCd = "";
     if (noStr == null) noStr = "";
+    if (gradeStr == null) gradeStr = "";
 %>
 
 <jsp:include page="../header.jsp" />
@@ -66,6 +69,18 @@
                     <% } } %>
                 </select>
             </div>
+            
+            <!-- ★追加: 学年の絞り込みプルダウン -->
+            <div class="form-group">
+                <label class="form-label">学年</label>
+                <select name="grade" class="form-select">
+                    <option value="" <%= gradeStr.equals("") ? "selected" : "" %>>--------</option>
+                    <% if (gradeList != null) { for (String g : gradeList) { %>
+                        <option value="<%= g %>" <%= gradeStr.equals(g) ? "selected" : "" %>><%= g %>年</option>
+                    <% } } %>
+                </select>
+            </div>
+
             <div class="form-group form-group-wide">
                 <label class="form-label">科目</label>
                 <select name="subjectCd" class="form-select">
@@ -100,23 +115,53 @@
             <form action="${pageContext.request.contextPath}/ScoreRegist.action" method="post">
                 <table class="score-edit-table">
                     <thead>
-                        <tr><th>入学年度</th><th>クラス</th><th>学生番号</th><th>氏名</th><th>点数</th></tr>
+                        <tr>
+                            <th>入学年度</th>
+                            <th>クラス</th>
+                            <th>学生番号</th>
+                            <th>氏名</th>
+                            <th>学年</th> <!-- ★追加: テーブルヘッダーに学年 -->
+                            <th>点数</th>
+                            <th>判定</th> <!-- ★追加: テーブルヘッダーに判定列を追加 -->
+                        </tr>
                     </thead>
                     <tbody>
                         <% Set<String> displayedStudents = new HashSet<>();
                            for(Bean.Score data : list) { 
                                if (displayedStudents.contains(data.getStudentId())) continue;
                                displayedStudents.add(data.getStudentId());
+
+                               // ★追加: 各学生の点数に応じた判定ロジック
+                               int score = data.getPoint();
+                               String judgeStr = "";
+                               String judgeStyle = ""; 
+
+                               if (score < 40) {
+                                   judgeStr = "赤点";
+                                   judgeStyle = "color: red; font-weight: bold;"; // 赤点時は赤文字かつ太字にする
+                               } else if (score < 60) {
+                                   judgeStr = "可";
+                                   judgeStyle = "color: #333333;";
+                               } else if (score < 80) {
+                                   judgeStr = "良";
+                                   judgeStyle = "color: #333333;";
+                               } else {
+                                   judgeStr = "優";
+                                   judgeStyle = "color: #0066cc; font-weight: bold;"; // 優のときも少し目立たせる（青文字など）
+                               }
                         %>
                         <tr>
-                            <td><%= entYear.equals("") ? data.getEntYear() : entYear %></td>
+                            <td><%= data.getEntYear() != null ? data.getEntYear() : "-" %></td>
                             <td><%= data.getClassNum() %></td>
                             <td><%= data.getStudentId() %></td>
                             <td class="student-name-td"><%= data.getStudentName() %></td>
+                            <td><%= data.getGrade() > 0 ? data.getGrade() + "年" : "-" %></td> <!-- ★追加: テーブルデータ行に学年 -->
                             <td>
                                 <input type="number" name="point_<%= data.getStudentId() %>" value="<%= data.getPoint() %>" min="0" max="100">
                                 <input type="hidden" name="studentIds" value="<%= data.getStudentId() %>-<%= data.getSubjectCd() %>-<%= data.getNo() %>">
                             </td>
+                            <!-- ★追加: 判定結果を出力する列 -->
+                            <td style="<%= judgeStyle %>"><%= judgeStr %></td>
                         </tr>
                         <% } %>
                     </tbody>

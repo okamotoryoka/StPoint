@@ -28,14 +28,17 @@ String entYear = (String) request.getAttribute("selectedYear");
 String classNum = (String) request.getAttribute("selectedClass");
 String subjectCd = (String) request.getAttribute("selectedSubjectCd");
 String studentId = (String) request.getAttribute("selectedStudentId");
+String gradeStr = (String) request.getAttribute("selectedGrade"); // ★追加: 検索された学年の保持データ
 
 if (entYear == null) entYear = "";
 if (classNum == null) classNum = "";
 if (subjectCd == null) subjectCd = "";
 if (studentId == null) studentId = "";
+if (gradeStr == null) gradeStr = ""; // ★追加: 初期化
 
 String selectedSubjectName = (String) request.getAttribute("selectedSubjectName");
 List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request.getAttribute("scoreDisplayList");
+List<String> gradeList = (List<String>) request.getAttribute("gradeList"); // ★追加: 学年リストの受け取り
 %>
 
 <jsp:include page="../header.jsp" />
@@ -71,6 +74,18 @@ List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request
                         <% } } %>
                     </select>
                 </div>
+                
+                <!-- 💡追加: 学年の絞り込みプルダウン項目 -->
+                <div class="form-group form-margin">
+                    <label class="form-label">学年</label>
+                    <select name="grade" class="form-select">
+                        <option value="" <%= gradeStr.equals("") ? "selected" : "" %>>--------</option>
+                        <% if (gradeList != null) { for (String g : gradeList) { %>
+                            <option value="<%= g %>" <%= gradeStr.equals(g) ? "selected" : "" %>><%= g %>年</option>
+                        <% } } %>
+                    </select>
+                </div>
+
                 <div class="form-group form-group-wide form-margin">
                     <label class="form-label">科目</label>
                     <select name="subjectCd" class="form-select" style="width: 250px;">
@@ -100,24 +115,72 @@ List<Map<String, Object>> scoreDisplayList = (List<Map<String, Object>>) request
 
         <% if (scoreDisplayList != null && !scoreDisplayList.isEmpty()) { %>
             <table class="score-edit-table" style="margin-top: 20px;">
-                <tr>
-                    <th>入学年度</th>
-                    <th>クラス</th>
-                    <th>学生番号</th>
-                    <th>氏名</th>
-                    <th>1回</th>
-                    <th>2回</th>
-                </tr>
-                <% for (Map<String, Object> row : scoreDisplayList) { %>
+                <thead>
+                    <tr>
+                        <th>入学年度</th>
+                        <th>クラス</th>
+                        <th>学生番号</th>
+                        <th style="text-align: left; padding-left: 20px;">氏名</th>
+                        <th>学年</th>
+                        <th>1回</th>
+                        <th>1回判定</th> <!-- ★追加: 1回目の判定ヘッダー -->
+                        <th>2回</th>
+                        <th>2回判定</th> <!-- ★追加: 2回目の判定ヘッダー -->
+                    </tr>
+                </thead>
+                <tbody>
+                <% for (Map<String, Object> row : scoreDisplayList) { 
+                    // --- 1回目の点数と判定の処理 ---
+                    Object score1Obj = row.get("score1");
+                    String judgeStr1 = "-";
+                    String judgeStyle1 = "color: #333;";
+                    
+                    if (score1Obj != null) {
+                        try {
+                            int s1 = Integer.parseInt(score1Obj.toString());
+                            if (s1 < 40) { judgeStr1 = "赤点"; judgeStyle1 = "color: red; font-weight: bold;"; }
+                            else if (s1 < 60) { judgeStr1 = "可"; }
+                            else if (s1 < 80) { judgeStr1 = "良"; }
+                            else { judgeStr1 = "優"; judgeStyle1 = "color: #0066cc; font-weight: bold;"; }
+                        } catch (NumberFormatException e) {
+                            // 点数が数値に変換できない（未受験など）の場合は「-」のままにする
+                        }
+                    }
+
+                    // --- 2回目の点数と判定の処理 ---
+                    Object score2Obj = row.get("score2");
+                    String judgeStr2 = "-";
+                    String judgeStyle2 = "color: #333;";
+                    
+                    if (score2Obj != null) {
+                        try {
+                            int s2 = Integer.parseInt(score2Obj.toString());
+                            if (s2 < 40) { judgeStr2 = "赤点"; judgeStyle2 = "color: red; font-weight: bold;"; }
+                            else if (s2 < 60) { judgeStr2 = "可"; }
+                            else if (s2 < 80) { judgeStr2 = "良"; }
+                            else { judgeStr2 = "優"; judgeStyle2 = "color: #0066cc; font-weight: bold;"; }
+                        } catch (NumberFormatException e) {
+                            // 同様に数値に変換できない場合は「-」
+                        }
+                    }
+                %>
                 <tr>
                     <td><%= row.get("entYear") %></td>
                     <td><%= row.get("classNum") %></td>
                     <td><%= row.get("studentId") %></td>
                     <td style="text-align: left; padding-left: 20px;"><%= row.get("studentName") %></td>
-                    <td><%= row.get("score1") %></td>
-                    <td><%= row.get("score2") %></td>
+                    <td><%= row.get("grade") != null && (Integer)row.get("grade") > 0 ? row.get("grade") + "年" : "-" %></td>
+                    
+                    <!-- 1回目の点数と判定 -->
+                    <td><%= score1Obj != null ? score1Obj : "-" %></td>
+                    <td style="<%= judgeStyle1 %>"><%= judgeStr1 %></td>
+                    
+                    <!-- 2回目の点数と判定 -->
+                    <td><%= score2Obj != null ? score2Obj : "-" %></td>
+                    <td style="<%= judgeStyle2 %>"><%= judgeStr2 %></td>
                 </tr>
                 <% } %>
+                </tbody>
             </table>
         <% } else if (scoreDisplayList != null && scoreDisplayList.isEmpty()) { %>
             <div class="initial-message">該当する成績データが見つかりませんでした。</div>

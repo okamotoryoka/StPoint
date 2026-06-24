@@ -8,6 +8,7 @@ public class Student implements java.io.Serializable {
     private String classNum;  
     private boolean isAttend; 
     private School school;    
+    private int grade;        // 追加: 学年
     
     // --- Getter ---
     public String getNo() {
@@ -29,6 +30,10 @@ public class Student implements java.io.Serializable {
     public School getSchool() {
         return school;
     }
+    // 追加: 学年のゲッター
+    public int getGrade() {
+        return grade;
+    }
     
     // --- Setter ---
     public void setNo(String no) {
@@ -49,5 +54,9 @@ public class Student implements java.io.Serializable {
     }
     public void setSchool(School school) {
         this.school = school; 
+    }
+    // 追加: 学年のセッター
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 }

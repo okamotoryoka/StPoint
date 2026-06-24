@@ -2,7 +2,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="Bean.Student" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>学生管理</title>

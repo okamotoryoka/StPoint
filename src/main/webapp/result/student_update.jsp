@@ -2,7 +2,7 @@
 <%@ page import="Bean.Student" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>学生情報変更</title>

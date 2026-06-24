@@ -2,7 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="Bean.Student" %>
 
-<html>
+<html lang="ja">
 <head>
 <title>学生検索</title>
 </head>

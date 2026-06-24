@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <title>得点管理システム</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
     <style>
@@ -16,6 +17,40 @@
 
         .page-title { background-color: #f0f0f0; padding: 12px 25px; margin-bottom: 25px; width: 100%; max-width: 950px; }
         .page-title h2 { margin: 0; font-size: 26px; font-weight: bold; color: #333; }
+
+        /* 評価基準（凡例）を表示するエリアのスタイル */
+        .grade-criteria-box {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #555;
+            max-width: 950px;
+        }
+        .criteria-title {
+            font-weight: bold;
+            margin-right: 15px;
+            border-right: 2px solid #ccc;
+            padding-right: 15px;
+            color: #333;
+        }
+        .criteria-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .badge-red { color: red; font-weight: bold; }
+        .badge-blue { color: #0066cc; font-weight: bold; }
+
+        /* ★変更：行（tr）ではなく、赤点のセル（td）だけをピンクにするスタイル */
+        .score-cell-danger {
+            background-color: #ffeaea !important;
+        }
     </style>
 </head>
 <body>
@@ -25,10 +60,10 @@
     String classNum = (String) request.getAttribute("classNum");
     String subjectCd = (String) request.getAttribute("subjectCd");
     String noStr = (String) request.getAttribute("no");
-    String gradeStr = (String) request.getAttribute("grade"); // ★学年の保持データ
+    String gradeStr = (String) request.getAttribute("grade"); 
     List<String> entYearList = (List<String>) request.getAttribute("entYearList");
     List<String> classList = (List<String>) request.getAttribute("classList");
-    List<String> gradeList = (List<String>) request.getAttribute("gradeList"); // ★学年リストの受け取り
+    List<String> gradeList = (List<String>) request.getAttribute("gradeList"); 
     Boolean isFirstAccess = (Boolean) request.getAttribute("isFirstAccess");
 
     if (entYear == null) entYear = "";
@@ -70,7 +105,6 @@
                 </select>
             </div>
             
-            <!-- ★追加: 学年の絞り込みプルダウン -->
             <div class="form-group">
                 <label class="form-label">学年</label>
                 <select name="grade" class="form-select">
@@ -112,6 +146,15 @@
                 Bean.Score firstData = list.get(0);
         %>
             <div class="subject-info-header">科目：<%= firstData.getSubjectName() %> （<%= firstData.getNo() %>回）</div>
+            <!-- 評価基準の案内ボックス -->
+            <div class="grade-criteria-box">
+                <div class="criteria-title">評価基準</div>
+                <div class="criteria-item"><span class="badge-red">赤点</span>：40点未満</div>
+                <div class="criteria-item"><span>可</span>：40点〜59点</div>
+                <div class="criteria-item"><span>良</span>：60点〜79点</div>
+                <div class="criteria-item"><span class="badge-blue">優</span>：80点以上</div>
+            </div>
+
             <form action="${pageContext.request.contextPath}/ScoreRegist.action" method="post">
                 <table class="score-edit-table">
                     <thead>
@@ -120,9 +163,9 @@
                             <th>クラス</th>
                             <th>学生番号</th>
                             <th>氏名</th>
-                            <th>学年</th> <!-- ★追加: テーブルヘッダーに学年 -->
+                            <th>学年</th> 
                             <th>点数</th>
-                            <th>判定</th> <!-- ★追加: テーブルヘッダーに判定列を追加 -->
+                            <th>判定</th> 
                         </tr>
                     </thead>
                     <tbody>
@@ -131,14 +174,15 @@
                                if (displayedStudents.contains(data.getStudentId())) continue;
                                displayedStudents.add(data.getStudentId());
 
-                               // ★追加: 各学生の点数に応じた判定ロジック
                                int score = data.getPoint();
                                String judgeStr = "";
                                String judgeStyle = ""; 
+                               String dangerCellClass = ""; // ★赤点判定セル用クラス名
 
                                if (score < 40) {
                                    judgeStr = "赤点";
-                                   judgeStyle = "color: red; font-weight: bold;"; // 赤点時は赤文字かつ太字にする
+                                   judgeStyle = "color: red; font-weight: bold;"; 
+                                   dangerCellClass = "score-cell-danger"; // ★赤点ならクラス名をセット
                                } else if (score < 60) {
                                    judgeStr = "可";
                                    judgeStyle = "color: #333333;";
@@ -147,7 +191,7 @@
                                    judgeStyle = "color: #333333;";
                                } else {
                                    judgeStr = "優";
-                                   judgeStyle = "color: #0066cc; font-weight: bold;"; // 優のときも少し目立たせる（青文字など）
+                                   judgeStyle = "color: #0066cc; font-weight: bold;"; 
                                }
                         %>
                         <tr>
@@ -155,27 +199,74 @@
                             <td><%= data.getClassNum() %></td>
                             <td><%= data.getStudentId() %></td>
                             <td class="student-name-td"><%= data.getStudentName() %></td>
-                            <td><%= data.getGrade() > 0 ? data.getGrade() + "年" : "-" %></td> <!-- ★追加: テーブルデータ行に学年 -->
-                            <td>
-                                <input type="number" name="point_<%= data.getStudentId() %>" value="<%= data.getPoint() %>" min="0" max="100">
+                            <td><%= data.getGrade() > 0 ? data.getGrade() + "年" : "-" %></td> 
+                            
+                            <!-- ★点数と判定のマス目(td)だけ個別に背景色を切り替えます -->
+                            <td class="<%= dangerCellClass %>">
+                                <input type="number" name="point_<%= data.getStudentId() %>" value="<%= data.getPoint() %>" min="0" max="100" class="score-input">
                                 <input type="hidden" name="studentIds" value="<%= data.getStudentId() %>-<%= data.getSubjectCd() %>-<%= data.getNo() %>">
                             </td>
-                            <!-- ★追加: 判定結果を出力する列 -->
-                            <td style="<%= judgeStyle %>"><%= judgeStr %></td>
+                            <td class="judge-td <%= dangerCellClass %>" style="<%= judgeStyle %>"><%= judgeStr %></td>
                         </tr>
                         <% } %>
                     </tbody>
                 </table>
-                <div class="btn-area"><button type="submit" class="regist-end-btn">登録して終了</button></div>
+                <div class="btn-area" style="margin-top: 20px; clear: both;"><button type="submit" class="regist-end-btn">登録して終了</button></div>
             </form>
         <% } } %>
     </main>
 </div>
 
+<!-- ★リアルタイムでマス目だけをピンクにするためのJavaScript -->
 <script>
+    document.querySelectorAll('.score-input').forEach(function(input) {
+        input.addEventListener('input', function() {
+            var score = parseInt(this.value) || 0;
+            
+            var tdScore = this.closest('td'); // 点数入力欄があるマス
+            var tr = this.closest('tr');
+            var judgeTd = tr.querySelector('.judge-td'); // 判定の文字があるマス
+            
+            if (score < 40) {
+                judgeTd.textContent = "赤点";
+                judgeTd.style.color = "red";
+                judgeTd.style.fontWeight = "bold";
+                
+                // ★2つのマス目だけにピンク背景を追加
+                tdScore.classList.add('score-cell-danger');
+                judgeTd.classList.add('score-cell-danger');
+            } else if (score < 60) {
+                judgeTd.textContent = "可";
+                judgeTd.style.color = "#333333";
+                judgeTd.style.fontWeight = "normal";
+                
+                // ピンク背景を消す
+                tdScore.classList.remove('score-cell-danger');
+                judgeTd.classList.remove('score-cell-danger');
+            } else if (score < 80) {
+                judgeTd.textContent = "良";
+                judgeTd.style.color = "#333333";
+                judgeTd.style.fontWeight = "normal";
+                
+                tdScore.classList.remove('score-cell-danger');
+                judgeTd.classList.remove('score-cell-danger');
+            } else {
+                judgeTd.textContent = "優";
+                judgeTd.style.color = "#0066cc";
+                judgeTd.style.fontWeight = "bold";
+                
+                tdScore.classList.remove('score-cell-danger');
+                judgeTd.classList.remove('score-cell-danger');
+            }
+        });
+    });
+
     document.addEventListener("wheel", function(e) {
-        if (document.activeElement.type === "number") document.activeElement.blur();
+        if (document.activeElement.type === "number") {
+            document.activeElement.blur();
+        }
     });
 </script>
 </body>
 </html>
+            

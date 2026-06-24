@@ -350,43 +350,70 @@ List<String> gradeList = (List<String>) request.getAttribute("gradeList");
 <!-- 統計行に影響を与えず、学生データ行だけを絞り込む制御スクリプト -->
 <script>
 function filterGradeSub(targetGrade) {
-    // 対象回数のプルダウンの選択値を取得 (either / both / first / second)
+    // 対象回数のプルダウンの選択値を取得
     var timing = document.getElementById('filterTiming').value;
     
-    // 学生データ行だけを取得（平均点行などは除外）
+    // --- 💡追加：テーブルのヘッダー(th)の表示・非表示を切り替える ---
+    var thList = document.querySelectorAll('.score-edit-table th');
+    if (thList.length >= 9) { // 列が正しく存在する場合のみ処理
+        // thList[5]=1回, thList[6]=1回判定, thList[7]=2回, thList[8]=2回判定
+        thList[5].style.display = (timing === 'second') ? 'none' : '';
+        thList[6].style.display = (timing === 'second') ? 'none' : '';
+        thList[7].style.display = (timing === 'first') ? 'none' : '';
+        thList[8].style.display = (timing === 'first') ? 'none' : '';
+    }
+
+    // --- 💡追加：最下部の集計行(平均・最高・最低)のセルの表示・非表示を切り替える ---
+    var statRows = document.querySelectorAll('.score-edit-table tbody tr:not(.student-data-row)');
+    statRows.forEach(function(row) {
+        var tds = row.querySelectorAll('td');
+        if (tds.length >= 5) {
+            // tds[1]=1回目数値, tds[2]=1回目空欄, tds[3]=2回目数値, tds[4]=2回目空欄
+            tds[1].style.display = (timing === 'second') ? 'none' : '';
+            tds[2].style.display = (timing === 'second') ? 'none' : '';
+            tds[3].style.display = (timing === 'first') ? 'none' : '';
+            tds[4].style.display = (timing === 'first') ? 'none' : '';
+            
+            // 左側の結合セル(colspan)の数を列数に合わせて自動で伸縮させる
+            tds[0].colSpan = (timing === 'first' || timing === 'second') ? 5 : 5; 
+        }
+    });
+
+    // --- 学生のデータ行の絞り込み処理 ---
     var rows = document.querySelectorAll('.score-edit-table tbody tr.student-data-row');
     
     rows.forEach(function(row) {
         var judge1Td = row.querySelector('.judge1');
         var judge2Td = row.querySelector('.judge2');
+        var score1Td = judge1Td ? judge1Td.previousElementSibling : null;
+        var score2Td = judge2Td ? judge2Td.previousElementSibling : null;
         
+        // 💡追加：データ行の「縦のマス目(td)」自体の表示・非表示を切り替える
+        if (score1Td) score1Td.style.display = (timing === 'second') ? 'none' : '';
+        if (judge1Td) judge1Td.style.display = (timing === 'second') ? 'none' : '';
+        if (score2Td) score2Td.style.display = (timing === 'first') ? 'none' : '';
+        if (judge2Td) judge2Td.style.display = (timing === 'first') ? 'none' : '';
+
         var grade1 = judge1Td ? judge1Td.textContent.trim() : "";
         var grade2 = judge2Td ? judge2Td.textContent.trim() : "";
         
-        // 「すべて」ボタンが押された場合は無条件で表示
+        // 「すべて」ボタンが押された場合は無条件で行自体は表示
         if (targetGrade === 'all') {
             row.style.display = '';
             return;
         }
         
         var match = false;
-        
-        // プルダウンの選択肢に応じた条件分岐
         if (timing === 'either') {
-            // 1回目か2回目のどちらか片方でも一致すればOK
             match = (grade1 === targetGrade || grade2 === targetGrade);
         } else if (timing === 'both') {
-            // 1回目と2回目の両方とも一致しなければダメ
             match = (grade1 === targetGrade && grade2 === targetGrade);
         } else if (timing === 'first') {
-            // 1回目だけをチェック
             match = (grade1 === targetGrade);
         } else if (timing === 'second') {
-            // 2回目だけをチェック
             match = (grade2 === targetGrade);
         }
         
-        // 判定結果に合わせて表示・非表示を切り替え
         if (match) {
             row.style.display = '';
         } else {
@@ -394,6 +421,7 @@ function filterGradeSub(targetGrade) {
         }
     });
 }
+
 
 </script
 </body>

@@ -10,35 +10,58 @@ import Bean.Student;
 import DAO.Student.StudentDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession; // ★追加：セッション用
 import tool.Action;
 
 public class StudentListAction extends Action {
 
-    // 戻り値の型を String から void に変更します
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // セッションオブジェクトの取得
+        HttpSession session = request.getSession();
         
         // 1. JSPの絞り込みフォームから送られてきた値を取得する
         String entYearStr = request.getParameter("entYear");
         String classNum = request.getParameter("classNum");
-        String gradeStr = request.getParameter("grade"); // 追加: 学年のパラメータ取得
+        String gradeStr = request.getParameter("grade"); 
         String isAttendStr = request.getParameter("isAttend"); 
 
         // リクエストの判定（初回や戻ってきたときはGET、絞り込みボタンはPOST）
         boolean isPost = "POST".equalsIgnoreCase(request.getMethod());
         boolean currentAttendChecked = false;
         
-        if (isPost) {
-            // 絞り込み時は、チェックボックスにチェックが入っている場合だけONにする
+        // ★最重要：変更画面から「戻る」で戻ってきたとき（GETかつ全パラメータが空）は、セッションから前回値を復元する
+        if (!isPost && entYearStr == null && classNum == null && gradeStr == null && isAttendStr == null) {
+            entYearStr = (String) session.getAttribute("sess_entYear");
+            classNum = (String) session.getAttribute("sess_classNum");
+            gradeStr = (String) session.getAttribute("sess_grade");
+            Boolean sessAttend = (Boolean) session.getAttribute("sess_isAttend");
+            currentAttendChecked = (sessAttend != null) ? sessAttend : false;
+            
+            // 戻り時も、過去に検索ボタンが押されていた状態（POST相当の挙動）としてデータを出すためにフラグを擬似的に立てる
+            if (entYearStr != null || classNum != null || gradeStr != null || currentAttendChecked) {
+                isPost = true; 
+            }
+        } else if (isPost) {
+            // 絞り込みボタン（POST）が押されたときは、現在の条件をセッションに記憶する
             currentAttendChecked = (isAttendStr != null);
+            session.setAttribute("sess_entYear", entYearStr);
+            session.setAttribute("sess_classNum", classNum);
+            session.setAttribute("sess_grade", gradeStr);
+            session.setAttribute("sess_isAttend", currentAttendChecked);
         } else {
+            // 初回アクセス（メニューから直で来たGET）のときは検索条件を初期化する
+            session.removeAttribute("sess_entYear");
+            session.removeAttribute("sess_classNum");
+            session.removeAttribute("sess_grade");
+            session.removeAttribute("sess_isAttend");
             currentAttendChecked = false;
         }
 
         // 2. 画面の選択状態をキープするためにリクエスト属性に送り返す
         request.setAttribute("selectedYear", entYearStr);
         request.setAttribute("selectedClass", classNum);
-        request.setAttribute("selectedGrade", gradeStr); // 追加: 選択された学年の保持
+        request.setAttribute("selectedGrade", gradeStr); 
         request.setAttribute("selectedAttend", currentAttendChecked);
 
         StudentDAO dao = new StudentDAO();
@@ -47,27 +70,27 @@ public class StudentListAction extends Action {
         List<Student> allStudents = dao.findAll();
         Set<Integer> yearSet = new HashSet<>();
         Set<String> classSet = new HashSet<>();
-        Set<Integer> gradeSet = new HashSet<>(); // 追加: 学年重複排除用のセット
+        Set<Integer> gradeSet = new HashSet<>(); 
         
         if (allStudents != null) {
             for (Student s : allStudents) {
                 if (s.getEntYear() > 0) yearSet.add(s.getEntYear());
                 if (s.getClassNum() != null && !s.getClassNum().isEmpty()) classSet.add(s.getClassNum());
-                if (s.getGrade() > 0) gradeSet.add(s.getGrade()); // 追加: 学年をセットに蓄積
+                if (s.getGrade() > 0) gradeSet.add(s.getGrade()); 
             }
         }
         
         List<Integer> yearList = new ArrayList<>(yearSet);
         List<String> classList = new ArrayList<>(classSet);
-        List<Integer> gradeList = new ArrayList<>(gradeSet); // 追加: 学年リストの生成
+        List<Integer> gradeList = new ArrayList<>(gradeSet); 
         
         Collections.sort(yearList);
         Collections.sort(classList);
-        Collections.sort(gradeList); // 追加: 学年を昇順にソート
+        Collections.sort(gradeList); 
         
         request.setAttribute("yearList", yearList);
         request.setAttribute("classList", classList);
-        request.setAttribute("gradeList", gradeList); // 追加: 学年リストをJSPに渡す
+        request.setAttribute("gradeList", gradeList); 
 
         // 4.表示データの取得
         List<Student> students = null;
@@ -75,13 +98,11 @@ public class StudentListAction extends Action {
         if (isPost) {
             String classQuery = (classNum != null) ? classNum : "";
             
-            // 追加・修正: 画面から送られてきた学年を数値に変換（未指定や空文字なら0にする）
             int gradeQuery = 0;
             if (gradeStr != null && !gradeStr.isEmpty()) {
                 gradeQuery = Integer.parseInt(gradeStr);
             }
             
-            // 修正: 引数に学年（gradeQuery）を追加してDAOの検索を呼び出す
             students = dao.search("", classQuery, gradeQuery, "no");
         } else {
             students = dao.findAll();

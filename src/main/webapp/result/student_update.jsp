@@ -35,7 +35,6 @@
     <%
         Student student = (Student) request.getAttribute("student");
         List<String> classList = (List<String>) request.getAttribute("class_list");
-        List<?> grades = (List<?>) request.getAttribute("grades"); // ★追加: 動的な学年選択肢のリスト
         
         String no = (student != null) ? student.getNo() : "";
         String name = (student != null) ? student.getName() : "";
@@ -88,27 +87,18 @@
                     </select>
                 </div>
 
-                <!-- 💡追加: 学年変更用のプルダウンエリア -->
+                <!-- 💡追加: 学年変更用のプルダウンエリア（バグ防止のため固定ループ形式に統合） -->
                 <div class="form-label">学年</div>
                 <div>
                     <select name="grade" class="input-select" required>
                         <option value="">-- 学年を選択してください --</option>
                         <% 
-                            if (grades != null && !grades.isEmpty()) {
-                                // DBに登録されている既存の学年リストから動的に生成
-                                for (Object g : grades) {
-                                    int val = Integer.parseInt(String.valueOf(g));
-                                    String selected = (val == currentGrade) ? "selected" : "";
+                            // 💡 修正：1年〜4年の選択肢を確実に生成します（3年制の場合は i <= 3 に変更してください）
+                            for (int i = 1; i <= 4; i++) {
+                                String selected = (i == currentGrade) ? "selected" : "";
                         %>
-                                    <option value="<%= val %>" <%= selected %>><%= val %>年</option>
-                        <%      }
-                            } else {
-                                // 万が一DBが空の場合の固定デフォルト選択肢（1〜3年）
-                                for (int i = 1; i <= 3; i++) {
-                                    String selected = (i == currentGrade) ? "selected" : "";
-                        %>
-                                    <option value="<%= i %>" <%= selected %>><%= i %>年</option>
-                        <%      }
+                                <option value="<%= i %>" <%= selected %>><%= i %>年</option>
+                        <% 
                             } 
                         %>
                     </select>

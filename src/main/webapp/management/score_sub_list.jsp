@@ -334,14 +334,7 @@
                 </tr>
                 </tbody>
             </table>
-            
-            <!-- 評価別の人数分布グラフ -->
-            <div class="graph-container">
-                <div class="graph-title">評価別の人数分布グラフ</div>
-                <div style="display: flex; gap: 40px; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 300px;">
-                        <div style="font-weight: bold; margin-bottom: 10px; color: #555; font-size: 13px;">【 1回目テスト 】</div>
-                        <div class="graph-row"><div class="graph-label" style="color: #0066cc;">優</div><div class="graph-bar-wrap"><div class="graph-bar" style="width: <%= totalCount1 > 0 ? (yu1 * 100 / totalCount1) : 0 %>%; background-color: #0066cc;"></div></div><div class="graph-count"><%= yu1 %>人</div></div>
+           
                    <!-- 💡追加：1回目と2回目の簡易ミニグラフ表示エリア -->
             <div class="graph-container">
                 <div class="graph-title">評価別の人数分布グラフ</div>

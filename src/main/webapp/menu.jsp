@@ -5,65 +5,69 @@
 <head>
 <meta charset="UTF-8">
 <title>メニュー - 得点管理システム</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style3.css">
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif !important; background-color: #fdfdfd; min-height: 100vh; display: flex; flex-direction: column; }
-    
-    .container { display: flex; flex: 1; width: 100%; }
-    
-    /* サイドメニュー（tag.jsp）用エリア */
-    .sidebar { width: 200px; flex-shrink: 0; border-right: 1px solid #ddd; padding: 20px 0; background-color: #f9f9f9; }
-    
-    .main { flex: 1; padding: 20px; }
-    .main h2 { background-color: #f5f5f5; padding: 12px 20px; font-size: 20px; font-weight: bold; border-bottom: 1px solid #dfdfdf; margin-bottom: 40px; }
-    
-    .card-area { display: flex; gap: 20px; justify-content: flex-start; align-items: stretch; padding: 0 10px; }
-    .menu-panel-custom { width: 220px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 25px 20px; }
-    .menu-panel-custom a { color: #0000ee !important; text-decoration: underline !important; font-size: 22px !important; }
-    .panel-red-custom { background-color: #e2bdbe; }
-    .panel-green-custom { background-color: #b9dcb8; }
-    .panel-blue-custom { background-color: #b8b9df; }
-    .score-title-custom { font-size: 22px !important; font-weight: bold !important; color: #333333 !important; margin-bottom: 5px !important; }
-    .score-links-custom { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-    .score-links-custom a { font-size: 18px !important; text-align: center !important; }
-    
-    .login-footer { background-color: #ebebeb; padding: 12px 0; text-align: center; font-size: 12px; color: #7a7a7a; border-top: 1px solid #dfdfdf; margin-top: auto; }
-</style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style5.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
-<%-- 共通ヘッダーを読み込み --%>
+<%-- 1. 共通ヘッダー --%>
 <%@ include file="/header.jsp" %>
 
+<%-- 2. コンテナエリア --%>
 <div class="container">
-    <%-- サイドメニューとして tag.jsp を配置 --%>
-    <div class="sidebar">
-        <jsp:include page="tag.jsp" />
-    </div>
+    
+    <%-- サイドメニュー (tag.jsp) --%>
+    <jsp:include page="tag.jsp" />
 
+    <%-- メインコンテンツ --%>
     <main class="main">
-        <h2>メニュー</h2>
-        <div class="card-area">
-            <div class="menu-panel-custom panel-red-custom">
-                <a href="${pageContext.request.contextPath}/StudentList.action">学生管理</a>
-            </div>
-            <div class="menu-panel-custom panel-green-custom">
-                <div class="score-title-custom">成績管理</div>
-                <div class="score-links-custom">
-                    <a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a>
-                    <a href="${pageContext.request.contextPath}/ScoreSubject.action">成績参照</a>
-                </div>
-            </div>
-            <div class="menu-panel-custom panel-blue-custom">
-                <a href="${pageContext.request.contextPath}/SubjectList.action">科目管理</a>
+        <div class="welcome">
+            <img src="${pageContext.request.contextPath}/images/welcome_banner.png" alt="Welcome Banner">
+            <div class="welcome-text">
+                <h1>ようこそ！</h1>
+                <h2>得点管理システムへ</h2>
+                <p>各種管理メニューから操作を選択してください。</p>
             </div>
         </div>
-    </main>
-</div>
+        
+        <div class="card-area">
+            <div class="card student-card">
+                <div class="card-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                <h3>学生管理</h3>
+                <p>学生情報の登録・編集・管理を行います。</p>
+                <a href="${pageContext.request.contextPath}/StudentList.action" class="student-btn">
+                    学生一覧へ →
+                </a>
+            </div>
 
+            <div class="card score-card">
+                <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>成績管理</h3>
+                <p>成績の登録や参照を行います。</p>
+                <a href="${pageContext.request.contextPath}/ScoreListServlet.action" class="score-btn">
+                    成績登録 →
+                </a>
+                <a href="${pageContext.request.contextPath}/ScoreSubject.action" class="score-btn">
+                    成績参照 →
+                </a>
+            </div>
+
+            <div class="card subject-card">
+                <div class="card-icon"><i class="fa-solid fa-book-open"></i></div>
+                <h3>科目管理</h3>
+                <p>科目情報の登録・編集・管理を行います。</p>
+                <a href="${pageContext.request.contextPath}/SubjectList.action" class="subject-btn">
+                    科目一覧へ →
+                </a>
+            </div>
+        </div>
+        </main>
+</div> <%-- 💡 container の閉じタグ --%>
+
+<%-- 💡 3. フッターを画面全体の最下部（containerの外、bodyの直下）に配置 --%>
 <div class="login-footer">
     &copy; 2023 TIC<br>大原学園
 </div>
+
 </body>
 </html>

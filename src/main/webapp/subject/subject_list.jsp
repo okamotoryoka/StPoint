@@ -85,11 +85,7 @@
         </main>
     </div>
 
-    <%-- 共通フッター --%>
-    <footer class="footer">
-        &copy; 2023 TIC 大原学園
-    </footer>
-</div>
+    
 
 </body>
 </html>

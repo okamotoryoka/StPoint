@@ -18,6 +18,7 @@ public class StudentCreateExecuteAction extends Action {
         String no = request.getParameter("no");
         String entYearStr = request.getParameter("entYear");
         String classNum = request.getParameter("classNum");
+        String gradeStr = request.getParameter("grade"); // 追加: 学年のパラメータ取得
 
         Map<String, String> errors = new HashMap<>();
         StudentDAO dao = new StudentDAO();
@@ -25,6 +26,7 @@ public class StudentCreateExecuteAction extends Action {
         // ★追加：エラー発生時に戻る画面でも必要なリストを再取得してセットする
         request.setAttribute("entYears", dao.getEntYears());
         request.setAttribute("classNums", dao.getClassNums());
+        request.setAttribute("grades", dao.getGrades()); // 追加: 学年リストの再セット
 
         // 2. バリデーションチェック
         if (entYearStr == null || entYearStr.isEmpty()) {
@@ -38,6 +40,10 @@ public class StudentCreateExecuteAction extends Action {
         if (name == null || name.isEmpty()) {
             errors.put("name", "氏名を入力してください");
         }
+        // 追加: 学年のバリデーション（未選択チェック）
+        if (gradeStr == null || gradeStr.isEmpty()) {
+            errors.put("grade", "学年を選択してください");
+        }
 
         // 3. エラーがある場合、情報をセットして元の画面（student_create.jsp）に戻る
         if (!errors.isEmpty()) {
@@ -46,6 +52,7 @@ public class StudentCreateExecuteAction extends Action {
             request.setAttribute("no", no);
             request.setAttribute("entYear", entYearStr);
             request.setAttribute("classNum", classNum);
+            request.setAttribute("grade", gradeStr); // 追加: 入力された学年の保持
             request.getRequestDispatcher("/result/student_create.jsp").forward(request, response);
             return;
         }
@@ -57,6 +64,8 @@ public class StudentCreateExecuteAction extends Action {
         s.setEntYear(Integer.parseInt(entYearStr));
         s.setClassNum(classNum);
         s.setAttend(true);
+        s.setGrade(Integer.parseInt(gradeStr)); // 追加: 学年をセット
+        
         School school = new School();
         school.setCd("tes");
         s.setSchool(school);

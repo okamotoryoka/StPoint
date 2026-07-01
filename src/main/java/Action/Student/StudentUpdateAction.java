@@ -28,9 +28,10 @@ public class StudentUpdateAction extends Action {
         // 4. 引数は空文字のまま呼び出し、上で直した「全件取得のDAO」を動かします
         List<String> classList = classNumDAO.filter(""); 
 
-        // 5. 取得したクラス一覧と学生データをお皿（request）にセット
+        // 5. 取得したクラス一覧と学生データ、および学年リストをお皿（request）にセット
         req.setAttribute("class_list", classList);
         req.setAttribute("student", student);
+        req.setAttribute("grades", studentDAO.getGrades()); // 追加: 画面のプルダウン用に学年リストをセット
 
         // 【修正】その場で直接JSPへフォワードし、画面を表示します
         req.getRequestDispatcher("/result/student_update.jsp").forward(req, res); 

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>学生情報登録完了</title>
@@ -37,7 +37,7 @@
                 <a href="${pageContext.request.contextPath}/menu.jsp">戻る</a>
                 
                 <!-- ④ 科目一覧リンク -->
-                <a href="StudentList.action">学生￥一覧</a>
+                <a href="${pageContext.request.contextPath}/StudentList.action">学生一覧</a>
             </div>
 
         </main>

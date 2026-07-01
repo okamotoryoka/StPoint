@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<aside class="sidebar" id="sidebar-menu">
+
+<%-- 
+    【修正のポイント】
+    1. 「席替え機能」の下に「エラー共有」の見出しを追加しました
+    2. インデントを合わせて「エラー投稿」と「エラー検索」のリンクを配置しました
+--%>
+<aside class="sidebar" style="width: 200px; padding: 0 0 20px 20px; box-sizing: border-box; background-color: #ffffff; height: 100vh;">
+
     <style>
         /* --- サイドバー全体のベース --- */
         .sidebar {
@@ -257,57 +264,22 @@
     </div>
 </aside>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const toggleBtn = document.getElementById("toggle-sidebar");
-        const sidebar = document.getElementById("sidebar-menu");
-        const mainContent = document.querySelector(".main");
+        <li class="menu-title">成績管理</li>
+        <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ScoreListServlet.action">成績登録</a></li>
+        <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ScoreSubject.action">成績参照</a></li>
+        
+        <!-- どの画面からでも1秒で起動できるように「席替え機能」を配置しました -->
+        <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/SeatChange.action">席替え機能</a></li>
 
-        const submenuToggle = document.getElementById("submenu-toggle");
-        const targetSubmenu = document.getElementById("target-submenu");
-        const submenuArrow = document.getElementById("submenu-arrow"); // 💡 矢印要素を取得
+                <!-- 💡追加：エラー共有機能への導線 -->
+        <li class="menu-title">エラー共有</li>
+        <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ErrorPostInput.action">エラー投稿</a></li>
+        <li style="padding-left: 20px;"><a href="${pageContext.request.contextPath}/ErrorPostList.action">エラー検索</a></li>
+        
 
-        // 1. 成績管理をクリックしたときにアコーディオンを開閉し、矢印を回転させる
-        if (submenuToggle && targetSubmenu) {
-            submenuToggle.addEventListener("click", function(e) {
-                e.preventDefault(); 
-                targetSubmenu.classList.toggle("open");
-                
-                // 💡 メニューの開閉状態に合わせて矢印を180度回転
-                if (targetSubmenu.classList.contains("open")) {
-                    submenuArrow.style.transform = "rotate(180deg)";
-                } else {
-                    submenuArrow.style.transform = "rotate(0deg)";
-                }
-            });
-        }
+        <li class="menu-title"><a href="${pageContext.request.contextPath}/StudentPromote.action">年度末処理</a></li>
 
-        // 2. ページ読み込み時にサイドバーの状態（折りたたみ）を再現
-        if (localStorage.getItem("sidebar-state") === "collapsed") {
-            sidebar.classList.add("collapsed");
-            if(mainContent) mainContent.classList.add("full-width");
-        }
+        <li class="menu-title"><a href="${pageContext.request.contextPath}/SubjectList.action">科目管理</a></li>
+    </ul>
+</aside>
 
-        if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener("click", function() {
-                sidebar.classList.toggle("collapsed");
-                if (sidebar.classList.contains("collapsed")) {
-                    localStorage.setItem("sidebar-state", "collapsed");
-                    if(mainContent) mainContent.classList.add("full-width");
-                } else {
-                    localStorage.setItem("sidebar-state", "opened");
-                    if(mainContent) mainContent.classList.remove("full-width");
-                }
-            });
-
-            const sidebarLinks = sidebar.querySelectorAll("a");
-            sidebarLinks.forEach(function(link) {
-                link.addEventListener("click", function() {
-                    if (link.getAttribute("href") !== "#") {
-                        localStorage.setItem("sidebar-state", "collapsed");
-                    }
-                });
-            });
-        }
-    });
-</script>

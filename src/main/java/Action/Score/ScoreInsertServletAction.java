@@ -27,12 +27,17 @@ public class ScoreInsertServletAction extends Action {
         List<String> classNumList = dao.getClassNumList();
         request.setAttribute("classList", classNumList);
 
+        // ★追加: 画面のプルダウン用に重複のない学年リストを取得してセット
+        List<String> gradeList = dao.getGradeList();
+        request.setAttribute("gradeList", gradeList);
+
         // 2. パラメータ取得
         String studentNo = request.getParameter("student_id");
         String studentName = request.getParameter("student_name"); 
         String subjectName = request.getParameter("subject_name");
         String schoolCd = request.getParameter("school_cd");
         String classNum = request.getParameter("class_num");
+        String gradeStr = request.getParameter("grade"); // ★追加: 学年のパラメータ取得
         
         String noStr = request.getParameter("no");
         String pointStr = request.getParameter("point");
@@ -47,6 +52,12 @@ public class ScoreInsertServletAction extends Action {
         try {
             int no = Integer.parseInt(noStr);
             int point = Integer.parseInt(pointStr);
+            
+            // ★追加: 学年の数値変換（未指定ならデフォルトで1年生にするなどの考慮）
+            int grade = 1;
+            if (gradeStr != null && !gradeStr.trim().isEmpty()) {
+                grade = Integer.parseInt(gradeStr);
+            }
 
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
@@ -65,12 +76,14 @@ public class ScoreInsertServletAction extends Action {
                 }
 
                 if (!studentExists) {
-                    String insertStudentSql = "INSERT INTO STUDENT (NO, NAME, SCHOOL_CD, CLASS_NUM, ENT_YEAR, IS_ATTEND) VALUES (?, ?, ?, ?, 2026, true)"; 
+                    // 💡 修正: INSERT文に GRADE カラムとそのプレースホルダー(?)を追加
+                    String insertStudentSql = "INSERT INTO STUDENT (NO, NAME, SCHOOL_CD, CLASS_NUM, ENT_YEAR, IS_ATTEND, GRADE) VALUES (?, ?, ?, ?, 2026, true, ?)"; 
                     try (PreparedStatement st = con.prepareStatement(insertStudentSql)) {
                         st.setString(1, studentNo);
                         st.setString(2, studentName); 
                         st.setString(3, schoolCd);
                         st.setString(4, classNum);
+                        st.setInt(5, grade); // ★追加: 変換した学年をセット
                         st.executeUpdate();
                     }
                 }
@@ -109,7 +122,6 @@ public class ScoreInsertServletAction extends Action {
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
-     
-        }
         }
     }
+}

@@ -19,6 +19,7 @@ public class ScoreSearchAction extends Action {
             String classNum = request.getParameter("classNum");
             String subjectCd = request.getParameter("subjectCd");
             String noStr = request.getParameter("no");
+            String gradeStr = request.getParameter("grade"); // ★追加: 学年のパラメータ取得
 
             ScoreDAO dao = new ScoreDAO();
             
@@ -33,8 +34,13 @@ public class ScoreSearchAction extends Action {
             List<String> classNumList = dao.getClassNumList();
             request.setAttribute("classList", classNumList); // JSP側では "classList" として受け取ります
 
+            // ★追加: データベースから学年の一覧を取得してJSPに送る（プルダウン維持用）
+            List<String> gradeList = dao.getGradeList();
+            request.setAttribute("gradeList", gradeList);
+
             // 3. 条件を渡してデータベースから絞り込んだ結果を取得
-            List<Score> list = dao.search(entYear, classNum, subjectCd, noStr);
+            // 💡修正: 5番目の引数に学年（gradeStr）を渡すように更新
+            List<Score> list = dao.search(entYear, classNum, subjectCd, noStr, gradeStr);
             request.setAttribute("list", list);
             
             // 🌟重要：検索が行われたので、初回アクセスフラグを false にしてテーブルを表示させる
@@ -45,6 +51,7 @@ public class ScoreSearchAction extends Action {
             request.setAttribute("classNum", classNum);
             request.setAttribute("subjectCd", subjectCd);
             request.setAttribute("no", noStr);
+            request.setAttribute("grade", gradeStr); // ★追加: 選んだ学年を画面に保持させる
 
             request.getRequestDispatcher("/management/score_list.jsp").forward(request, response);
 

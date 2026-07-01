@@ -12,8 +12,9 @@ public class Score implements Serializable {
     private String subjectCd;
     private String schoolCd;
     private String entYear;
+    private int grade; // ★追加: 学年フィールド
 
-    // ※各フィールドの getter / setter メソッドが用意されている状態にしてください
+    // --- Getter / Setter ---
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
     public String getStudentName() { return studentName; }
@@ -27,9 +28,13 @@ public class Score implements Serializable {
     public String getClassNum() { return classNum; }
     public void setClassNum(String classNum) { this.classNum = classNum; }
     public String getSubjectCd() { return subjectCd; }
-    public void setSubjectCd(String subjectCd) { this.subjectCd = subjectCd; }
+    public void setSubjectCd(String schoolCd) { this.subjectCd = schoolCd; } // ※既存の変数名に統一
     public String getSchoolCd() { return schoolCd; }
     public void setSchoolCd(String schoolCd) { this.schoolCd = schoolCd; }
-    public String getEntYear() { return entYear; } // ★ここを追加
+    public String getEntYear() { return entYear; }
     public void setEntYear(String entYear) { this.entYear = entYear; }
+    
+    // ★追加: 学年のゲッター・セッター
+    public int getGrade() { return grade; }
+    public void setGrade(int grade) { this.grade = grade; }
 }

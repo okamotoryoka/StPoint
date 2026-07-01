@@ -1,7 +1,5 @@
-<%@ page language="java"
-contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -77,7 +75,8 @@ body {
 
 /* 入力テキストボックス本体の調整 */
 .form-table input[type="text"],
-.form-table input[type="number"] {
+.form-table input[type="number"],
+.form-table select {
     width: 100%;
     padding: 8px 10px;
     font-size: 14px;
@@ -88,7 +87,8 @@ body {
 }
 
 /* 入力欄をクリックした時の枠線変化 */
-.form-table input:focus {
+.form-table input:focus,
+.form-table select:focus {
     border-color: #007bff;
 }
 
@@ -141,6 +141,11 @@ body {
         <h2>得点登録</h2>
     </div>
 
+    <%-- メッセージ（科目名が存在しないなど）があれば出力 --%>
+    <% if (request.getAttribute("message") != null) { %>
+        <div style="color: #ff0000; font-weight: bold; margin-bottom: 15px;"><%= request.getAttribute("message") %></div>
+    <% } %>
+
     <%-- URLパスに /score/ を追加し、ブラウザの自動入力をオフに設定 --%>
     <form action="<%=request.getContextPath()%>/ScoreInsertServlet.action" method="post" autocomplete="off">
 
@@ -158,6 +163,33 @@ body {
                 <th>名前</th>
                 <td>
                     <input type="text" name="student_name" required>
+                </td>
+            </tr>
+
+            <!-- ★追加: 学年の登録用プルダウン項目 -->
+            <tr>
+                <th>学年</th>
+                <td>
+                    <select name="grade" required>
+                        <option value="">-- 学年を選択してください --</option>
+                        <% 
+                            List<String> gradeList = (List<String>) request.getAttribute("gradeList");
+                            if (gradeList != null && !gradeList.isEmpty()) {
+                                for (String g : gradeList) { 
+                        %>
+                                    <option value="<%= g %>"><%= g %>年</option>
+                        <% 
+                                } 
+                            } else {
+                                // 万が一DBが空の場合の初期デフォルト用（1〜3年）
+                                for (int i = 1; i <= 3; i++) { 
+                        %>
+                                    <option value="<%= i %>"><%= i %>年</option>
+                        <% 
+                                } 
+                            } 
+                        %>
+                    </select>
                 </td>
             </tr>
 

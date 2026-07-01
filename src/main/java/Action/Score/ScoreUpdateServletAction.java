@@ -57,7 +57,10 @@ public class ScoreUpdateServletAction extends Action {
             DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
 
             try (Connection con = ds.getConnection()) {
-                String sql = "SELECT * FROM TEST WHERE STUDENT_NO = ? AND SUBJECT_CD = ? AND SCHOOL_CD = ? AND NO = ?";
+                // 💡 修正: STUDENTテーブルを結合し、学年(st.GRADE)も一緒に取得するSQLに変更
+                String sql = "SELECT t.*, st.GRADE FROM TEST t " +
+                             "LEFT JOIN STUDENT st ON t.STUDENT_NO = st.NO AND t.SCHOOL_CD = st.SCHOOL_CD " +
+                             "WHERE t.STUDENT_NO = ? AND t.SUBJECT_CD = ? AND t.SCHOOL_CD = ? AND t.NO = ?";
                 Map<String, Object> data = new HashMap<>();
 
                 try (PreparedStatement st = con.prepareStatement(sql)) {
@@ -74,6 +77,7 @@ public class ScoreUpdateServletAction extends Action {
                             data.put("no", rs.getInt("NO"));
                             data.put("point", rs.getInt("POINT"));
                             data.put("class_num", rs.getString("CLASS_NUM"));
+                            data.put("grade", rs.getInt("GRADE")); // ★追加: 学年をMapに格納
                         }
                     }
                 }

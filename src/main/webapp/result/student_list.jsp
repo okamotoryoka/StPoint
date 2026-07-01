@@ -2,7 +2,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="Bean.Student" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>学生管理</title>
@@ -20,10 +20,12 @@
         .create-link { color: #0066cc; text-decoration: underline; font-size: 14px; }
 
         /* 絞込みフォーム */
-        .filter-box { display: flex; align-items: center; gap: 50px; padding: 20px 30px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 20px; width: 100%; }
+        /* 💡学年が追加されたため、要素が並びやすいようgapを50pxから25pxに少し狭めました */
+        .filter-box { display: flex; align-items: center; gap: 25px; padding: 20px 30px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 20px; width: 100%; }
         .filter-group { display: flex; flex-direction: column; gap: 6px; }
         .filter-group label { font-size: 14px; color: #333; }
-        .filter-group select { height: 38px; width: 260px; padding: 0 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; background-color: #ffffff; }
+        /* 💡横幅が窮屈にならないようプルダウン幅を260pxから180pxに調整しました */
+        .filter-group select { height: 38px; width: 180px; padding: 0 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; background-color: #ffffff; }
         .filter-group-checkbox { display: flex; flex-direction: row; align-items: center; margin-top: 25px; }
         
         .btn-submit { height: 38px; padding: 0 25px; background-color: #555555; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-left: auto; }
@@ -91,6 +93,25 @@
                     </select>
                 </div>
 
+                <!-- 💡追加: 学年の絞り込みプルダウン -->
+                <div class="filter-group">
+                    <label>学年</label>
+                    <select name="grade">
+                        <option value="">--------</option>
+                        <%
+                            List<?> gradeList = (List<?>) request.getAttribute("gradeList");
+                            String sGrade = String.valueOf(request.getAttribute("selectedGrade") != null ? request.getAttribute("selectedGrade") : "");
+                            if (gradeList != null) {
+                                for (Object g : gradeList) {
+                                    String val = String.valueOf(g);
+                        %>
+                                    <option value="<%= val %>" <%= val.equals(sGrade) ? "selected" : "" %>><%= val %>年</option>
+                        <%      }
+                            }
+                        %>
+                    </select>
+                </div>
+
                 <div class="filter-group-checkbox">
                     <% Boolean isAttend = (Boolean) request.getAttribute("selectedAttend"); %>
                     <input type="checkbox" name="isAttend" value="true" <%= (isAttend != null && isAttend) ? "checked" : "" %> id="attend-cb">
@@ -112,6 +133,7 @@
                         <th>学生番号</th>
                         <th>氏名</th>
                         <th>クラス</th>
+                        <th>学年</th> <!-- 💡追加: 学年のヘッダー -->
                         <th>在学中</th>
                         <th></th>
                     </tr>
@@ -124,13 +146,15 @@
                                 <td><%= s.getNo() %></td>
                                 <td><%= s.getName() %></td>
                                 <td><%= s.getClassNum() %></td>
+                                <td><%= s.getGrade() > 0 ? s.getGrade() + "年" : "-" %></td> <!-- 💡追加: 学生の学年データ（0以下の場合はハイフン表示） -->
                                 <td><%= s.isAttend() ? "〇" : "×" %></td>
                                 <td style="text-align: right;">
                                     <a href="${pageContext.request.contextPath}/StudentUpdate.action?no=<%= s.getNo() %>">変更</a>
                                 </td>
                             </tr>
                     <%  } } else { %>
-                        <tr><td colspan="6" style="text-align: center; padding: 30px;">学生情報が存在しませんでした</td></tr>
+                        <!-- 💡列数が1つ増えたため、colspanを6から7に修正しました -->
+                        <tr><td colspan="7" style="text-align: center; padding: 30px;">学生情報が存在しませんでした</td></tr>
                     <% } %>
                 </tbody>
             </table>

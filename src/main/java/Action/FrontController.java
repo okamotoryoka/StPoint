@@ -2,6 +2,9 @@ package Action;
 
 import java.io.IOException;
 
+import Action.Error.ErrorPostExecuteAction;
+import Action.Error.ErrorPostInputAction;
+import Action.Error.ErrorPostListAction;
 import Action.Login.LoginAction;
 import Action.Login.LogoutAction;
 import Action.Score.ScoreInsertServletAction;
@@ -10,9 +13,11 @@ import Action.Score.ScoreRegistAction;
 import Action.Score.ScoreSearchAction;
 import Action.Score.ScoreSubjectAction;
 import Action.Score.ScoreUpdateServletAction;
+import Action.Score.SeatChangeAction;
 import Action.Student.StudentCreateAction;
 import Action.Student.StudentCreateExecuteAction;
 import Action.Student.StudentListAction;
+import Action.Student.StudentPromoteAction;
 import Action.Student.StudentSearchAction;
 import Action.Student.StudentUpdatExecuteAction;
 import Action.Student.StudentUpdateAction;
@@ -72,6 +77,9 @@ public class FrontController extends HttpServlet {
             } else if (path.equals("/StudentSearch.action")) {
                 action = new StudentSearchAction();
                 
+            } else if (path.equals("/StudentPromote.action")) {
+                action = new StudentPromoteAction();
+                
             } else if (path.equals("/ScoreListServlet.action")) {
                 action = new ScoreListServletAction();
                 
@@ -105,17 +113,29 @@ public class FrontController extends HttpServlet {
             } else if (path.equals("/SubjectDelete.action")) {
                 action = new SubjectDeleteAction();
                 
-            } else if (path.equals("/SubjectDeleteEx"
-            		+ "ecute.action")) {
+            } else if (path.equals("/SubjectDeleteExecute.action")) {
                 action = new SubjectDeleteExecuteAction();
                 
             } else if (path.equals("/TestRegist.action")) {
                 action = new TestRegistAction();
                 
+            } else if (path.equals("/SeatChange.action")) {
+                action = new SeatChangeAction();
+                
             } else if (path.equals("/ScoreRegist.action")) {
                 action = new ScoreRegistAction();
                 
+            /* 💡追加：エラー投稿の画面遷移（入力画面を開く） */
+            } else if (path.equals("/ErrorPostInput.action")) {
+                action = new ErrorPostInputAction();
+                
+            /* 💡追加：エラー投稿の登録処理を実行する */
+            } else if (path.equals("/ErrorPostExecute.action")) {
+                action = new ErrorPostExecuteAction();
+            } else if (path.equals("/ErrorPostList.action")) { // 💡ここから
+                action = new ErrorPostListAction();            // 💡追加してください
             }
+
 
             if (action == null) {
                 response.sendError(404, "Action not found: " + path);

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>科目更新完了</title>
@@ -87,7 +87,7 @@
             </div>
             
             <div style="margin-top: 20px;">
-                <a href="SubjectList.action" class="back-link">科目一覧</a>
+                <a href="${pageContext.request.contextPath}/SubjectList.action" class="back-link">科目一覧</a>
             </div>
 
         </main>

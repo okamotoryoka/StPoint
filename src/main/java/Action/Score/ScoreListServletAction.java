@@ -27,6 +27,10 @@ public class ScoreListServletAction extends Action {
             List<String> classNumList = dao.getClassNumList();
             request.setAttribute("classList", classNumList);
 
+            // ★追加: 画面のプルダウン用に重複のない学年リストを取得してセット
+            List<String> gradeList = dao.getGradeList();
+            request.setAttribute("gradeList", gradeList);
+
             // 初期表示はデータを一切取得せず、空のリストを渡す
             List<Score> list = new ArrayList<>();
             request.setAttribute("list", list);

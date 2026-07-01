@@ -2,7 +2,7 @@
 <%@ page import="Bean.Student" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>学生情報変更</title>
@@ -41,6 +41,12 @@
         int entYear = (student != null) ? student.getEntYear() : 0;
         boolean isAttend = (student != null) ? student.isAttend() : true;
         String currentClass = (student != null) ? student.getClassNum() : "";
+        
+        // 💡 正常時はstudentから取得、エラーによる差し戻し時はrequestパラメータから現在の入力を復元
+        int currentGrade = (student != null) ? student.getGrade() : 0;
+        if (request.getAttribute("grade") != null) {
+            currentGrade = Integer.parseInt(String.valueOf(request.getAttribute("grade")));
+        }
     %>
 
     <jsp:include page="../header.jsp" />
@@ -55,6 +61,9 @@
 
             <form action="${pageContext.request.contextPath}/StudentUpdatExecute.action" method="post">
                 <input type="hidden" name="no" value="<%= no %>">
+
+                <!-- 💡 エラー差し戻し用に隠しフィールドとして入学年度も送信 -->
+                <input type="hidden" name="entYear" value="<%= entYear %>">
 
                 <div class="form-label">入学年度</div>
                 <div class="readonly-text"><%= entYear %></div>
@@ -75,6 +84,23 @@
                                 <option value="<%= c %>" <%= selected %>><%= c %></option>
                         <%  }
                            } %>
+                    </select>
+                </div>
+
+                <!-- 💡追加: 学年変更用のプルダウンエリア（バグ防止のため固定ループ形式に統合） -->
+                <div class="form-label">学年</div>
+                <div>
+                    <select name="grade" class="input-select" required>
+                        <option value="">-- 学年を選択してください --</option>
+                        <% 
+                            // 💡 修正：1年〜4年の選択肢を確実に生成します（3年制の場合は i <= 3 に変更してください）
+                            for (int i = 1; i <= 4; i++) {
+                                String selected = (i == currentGrade) ? "selected" : "";
+                        %>
+                                <option value="<%= i %>" <%= selected %>><%= i %>年</option>
+                        <% 
+                            } 
+                        %>
                     </select>
                 </div>
 

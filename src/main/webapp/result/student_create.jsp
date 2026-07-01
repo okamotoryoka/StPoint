@@ -34,9 +34,11 @@
         String no = request.getAttribute("no") != null ? (String) request.getAttribute("no") : "";
         String entYear = request.getAttribute("entYear") != null ? (String) request.getAttribute("entYear") : "";
         String classNum = request.getAttribute("classNum") != null ? (String) request.getAttribute("classNum") : "";
+        String grade = request.getAttribute("grade") != null ? (String) request.getAttribute("grade") : ""; // ★追加: エラー時の学年の保持用
         
         List<?> entYears = (List<?>) request.getAttribute("entYears");
         List<?> classNums = (List<?>) request.getAttribute("classNums");
+        List<?> grades = (List<?>) request.getAttribute("grades"); // ★追加: Actionから渡された動的な学年選択肢のリスト
     %>
 
     <jsp:include page="../header.jsp" />
@@ -91,6 +93,32 @@
                         <%  } } %>
                     </select>
                     <% if(errors != null && errors.get("classNum") != null) { %><span class="error-msg"><%= errors.get("classNum") %></span><% } %>
+                </div>
+
+                <!-- 💡追加: 学年の登録用プルダウン項目 -->
+                <div class="form-label">
+                    <span>学年</span>
+                    <select name="grade" class="input-select">
+                        <option value="">--------</option>
+                        <% 
+                            if (grades != null && !grades.isEmpty()) {
+                                // DBにある学年リストをループ表示
+                                for (Object g : grades) {
+                                    String val = String.valueOf(g);
+                        %>
+                                    <option value="<%= val %>" <%= val.equals(grade) ? "selected" : "" %>><%= val %>年</option>
+                        <%      }
+                            } else {
+                                // DBが空（初期状態）の場合のための固定の選択肢（1〜3年）
+                                for (int i = 1; i <= 3; i++) {
+                                    String val = String.valueOf(i);
+                        %>
+                                    <option value="<%= val %>" <%= val.equals(grade) ? "selected" : "" %>><%= val %>年</option>
+                        <%      }
+                            } 
+                        %>
+                    </select>
+                    <% if(errors != null && errors.get("grade") != null) { %><span class="error-msg"><%= errors.get("grade") %></span><% } %>
                 </div>
 
                 <div>

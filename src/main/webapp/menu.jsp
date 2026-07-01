@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>メニュー - 得点管理システム</title>
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style3.css">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,20 +41,30 @@
     
     .login-footer { background-color: #ebebeb; padding: 12px 0; text-align: center; font-size: 12px; color: #7a7a7a; border-top: 1px solid #dfdfdf; margin-top: auto; }
 </style>
+
 </head>
 <body>
 
-<%-- 共通ヘッダーを読み込み --%>
+<%-- 1. 共通ヘッダー --%>
 <%@ include file="/header.jsp" %>
 
+<%-- 2. コンテナエリア --%>
 <div class="container">
-    <%-- サイドメニューとして tag.jsp を配置 --%>
-    <div class="sidebar">
-        <jsp:include page="tag.jsp" />
-    </div>
+    
+    <%-- サイドメニュー (tag.jsp) --%>
+    <jsp:include page="tag.jsp" />
 
+    <%-- メインコンテンツ --%>
     <main class="main">
-        <h2>メニュー</h2>
+        <div class="welcome">
+            <img src="${pageContext.request.contextPath}/images/welcome_banner.png" alt="Welcome Banner">
+            <div class="welcome-text">
+                <h1>ようこそ！</h1>
+                <h2>得点管理システムへ</h2>
+                <p>各種管理メニューから操作を選択してください。</p>
+            </div>
+        </div>
+        
         <div class="card-area">
             <!-- 学生管理（赤） -->
             <div class="menu-panel-custom panel-red-custom">
@@ -94,11 +105,13 @@
             </div>
             
         </div>
-    </main>
-</div>
+        </main>
+</div> <%-- 💡 container の閉じタグ --%>
 
+<%-- 💡 3. フッターを画面全体の最下部（containerの外、bodyの直下）に配置 --%>
 <div class="login-footer">
     &copy; 2023 TIC<br>大原学園
 </div>
+
 </body>
 </html>

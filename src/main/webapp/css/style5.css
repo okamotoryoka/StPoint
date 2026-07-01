@@ -1,0 +1,312 @@
+/* ---------- 共通 ---------- */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Yu Gothic","Meiryo",sans-serif;
+    background:#f5f7fb;
+    color:#333;
+    /* 💡 height: 100vh から min-heightに変更し、コンテンツに応じて全体の高さが伸びるようにします */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* 💡 overflow: hidden を解除し、画面全体でスクロールするように変更 */
+    overflow-y: auto; 
+}
+
+/* ---------- ヘッダー ---------- */
+.header_fixed_style {
+    all: unset !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important; 
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #edf2f7 !important;
+    height: 70px !important;
+    padding: 0 40px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    flex-shrink: 0 !important;
+}
+
+.header_fixed_style .header-left-box {
+    display: flex !important;
+    align-items: center !important;
+    margin-right: auto !important;
+}
+
+.header_fixed_style .menu-toggle-btn {
+    background: none !important;
+    border: none !important;
+    font-size: 20px !important;
+    color: #4a5568 !important;
+    cursor: pointer !important;
+    margin-right: 15px !important;
+    padding: 5px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+    transition: background-color 0.2s !important;
+}
+.header_fixed_style .menu-toggle-btn:hover {
+    background-color: #f7fafc !important;
+    color: #5d5fef !important;
+}
+
+.header_fixed_style .logo-icon-box {
+    font-size: 26px !important;
+    color: #5d5fef !important;
+    margin-right: 12px !important;
+    display: inline-block !important;
+}
+
+.header_fixed_style .logo-text-box {
+    display: flex !important;
+    flex-direction: column !important;
+    text-align: left !important;
+}
+
+.header_fixed_style .title-jp-box {
+    font-weight: bold !important;
+    font-size: 1.1em !important;
+    color: #1a202c !important;
+    line-height: 1.2 !important;
+}
+
+.header_fixed_style .title-en-box {
+    color: #a0aec0 !important;
+    font-size: 0.75em !important;
+    margin-top: 2px !important;
+}
+
+.header_fixed_style .header-right-box {
+    display: flex !important;
+    align-items: center !important;
+    gap: 35px !important;
+    margin-left: auto !important;
+}
+
+.header_fixed_style .user-info-box {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.header_fixed_style .user-icon-box {
+    font-size: 42px !important;
+    color: #7b6cff !important;
+}
+
+.header_fixed_style .user-name-box {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+}
+
+.header_fixed_style .logout-box {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    font-size: 17px !important;
+    font-weight: 600 !important;
+}
+
+.header_fixed_style .logout-box:hover {
+    color: #7b6cff !important;
+}
+
+
+/* ---------- 全体レイアウト（中央エリア） ---------- */
+.container{
+    display:flex;
+    flex:1;                  /* 💡 コンテンツが少ない時でも、フッターを最下部に固定させる突っ張り棒の役割 */
+    width: 100%;
+    /* 💡 overflow: hidden を削除して、中身と一緒に自然に縦伸びするように変更 */
+    background: #f5f7fb;
+}
+
+/* ---------- メイン（右側コンテンツエリア） ---------- */
+.main{
+    flex:1;
+    width: calc(100% - 280px); 
+    padding: 30px 35px 60px; /* 💡 下側に少し広めの余白（60px）を空けて、フッターとの距離を作ります */
+    /* 💡 高さを固定せず、独立したスクロール（overflow-y: auto）も解除します */
+    height: auto;
+    overflow-y: visible;     
+    box-sizing: border-box;
+    transition: width 0.25s ease; 
+}
+
+/* 他のボタンを押して、自動的にサイドバーが消えた時の全画面用クラス */
+.main.full-width {
+    width: 100% !important;
+}
+
+.main h2{
+    font-size:22px;
+    margin-bottom:20px;
+    color:#222;
+}
+
+/* ---------- 用意された各パーツ（省略なし） ---------- */
+.welcome{
+    position:relative;
+    height:180px;
+    margin-bottom:15px;
+    overflow:hidden;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.welcome img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    display:block;
+}
+
+.welcome-text{
+    position:absolute;
+    top:50%;
+    left:50px;
+    transform:translateY(-50%);
+}
+
+.welcome-text h1{
+    font-size:32px;
+    color:#222;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+.welcome-text h2{
+    font-size:26px;
+    color:#222;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+.welcome-text p{
+    font-size:16px;
+    color:#222;
+}
+
+.card-area{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    padding:15px;
+    text-align:center;
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    border:1px solid #ececec;
+    transition:.3s;
+}
+
+.card-icon{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0 auto 12px;
+    font-size:28px;
+    color:white;
+}
+
+.student-card .card-icon{
+    background:#EFE7FF;
+    color:#7C4DFF;
+}
+
+.score-card .card-icon{
+    background:#E8F8EE;
+    color:#2ECC71;
+}
+
+.subject-card .card-icon{
+    background:#EAF4FF;
+    color:#3498DB;
+}
+
+.card h3{
+    font-size:18px;
+    margin-bottom:8px;
+    color:#222;
+}
+
+.card p{
+    color:#666;
+    font-size:14px;
+    line-height:1.5;
+    min-height:40px;
+    margin-bottom:15px;
+}
+
+.card a{
+    display:block;
+    text-decoration:none;
+    color:white;
+    padding:8px;
+    border-radius:10px;
+    font-weight:bold;
+    font-size:15px;
+    margin-top:8px;
+    transition:.3s;
+}
+
+.student-btn{
+    background:#E9DDFF;
+    color:#6A3FE8 !important;
+}
+
+.student-btn:hover{
+    background:#DDD0FF;
+}
+
+.score-btn{
+    background:#DDF7E6;
+    color:#1E9E59 !important;
+}
+
+.score-btn:hover{
+    background:#CFF2DB;
+}
+
+.subject-btn{
+    background:#DDEEFF;
+    color:#2176C7 !important;
+}
+
+.subject-btn:hover{
+    background:#D1E8FF;
+}
+
+/* ---------- フッター ---------- */
+.login-footer{
+    background:#ffffff;
+    border-top:1px solid #edf2f7;
+    text-align:center;
+    padding:20px 14px;       /* 💡 上下の余白にゆとりを持たせました */
+    font-size:12px;
+    color:#777;
+    width: 100%;
+    flex-shrink: 0;        
+    /* 💡 margin-top: auto によって、中身が少ないときは一番下になり、
+       中身が多くなると自動的にコンテンツの下側に押し出される理想の挙動になります */
+    margin-top: auto;      
+    z-index: 10;
+}

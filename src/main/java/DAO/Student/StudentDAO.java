@@ -6,8 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.InitialContext;// ★「javax」から「java」に修正しました
+import javax.sql.DataSource;       // ★新しく追加しました
+
 import Bean.Student;
 import DAO.DAO;
+
 
 public class StudentDAO extends DAO {
 
@@ -183,4 +187,47 @@ public class StudentDAO extends DAO {
         }
         return list;
     }
+    
+    public boolean promoteAllStudents() throws Exception {
+        // 💡 4年制の学校運用ルール（新入生の1年自動設定付き）
+        
+        // ① 先に、現在「4年生」の在学生をすべて卒業（非在学: 'FALSE'）に切り替える
+        String graduationSql = "UPDATE STUDENT SET IS_ATTEND = 'FALSE' WHERE IS_ATTEND = 'TRUE' AND GRADE = 4";
+        
+        // ② 次に、在学中（'TRUE'）の「1年〜3年」の生徒を1年ずつ進級させる
+        String promotionSql = "UPDATE STUDENT SET GRADE = GRADE + 1 WHERE IS_ATTEND = 'TRUE' AND GRADE BETWEEN 1 AND 3";
+
+        // ③ 【新設】在学中（'TRUE'）で、学年が未登録（null または 0）の生徒を一括で「1年生」にする
+        // ※これにより、新しく入ってきた生徒や未設定の生徒が、年度更新で自動的に1年生としてスタートします
+        String freshersSql = "UPDATE STUDENT SET GRADE = 1 WHERE IS_ATTEND = 'TRUE' AND (GRADE IS NULL OR GRADE = 0)";
+
+        InitialContext ic = new InitialContext();
+        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+
+        try (Connection con = ds.getConnection()) {
+            con.setAutoCommit(false); // トランザクション開始
+
+            try (PreparedStatement pstmtGrad = con.prepareStatement(graduationSql);
+                 PreparedStatement pstmtProm = con.prepareStatement(promotionSql);
+                 PreparedStatement pstmtFresh = con.prepareStatement(freshersSql)) { // ★追加
+                
+                // 1. 4年生を卒業にする
+                pstmtGrad.executeUpdate();
+                
+                // 2. 1〜3年生を進級させる
+                pstmtProm.executeUpdate();
+                
+                // 3. 学年未設定の生徒を1年生にする（★追加）
+                pstmtFresh.executeUpdate();
+                
+                con.commit(); // すべて成功したら保存
+                return true;
+            } catch (Exception e) {
+                con.rollback(); // エラー時は完全に巻き戻す
+                throw e;
+            }
+        }
+    }
+
+
 }

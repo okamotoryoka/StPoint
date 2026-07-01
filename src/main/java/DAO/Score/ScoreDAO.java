@@ -367,4 +367,42 @@ public class ScoreDAO {
             return pstmt.executeUpdate() > 0;
         }
     }
+    
+ // 📋 ScoreDAO.java の中に追加するメソッド
+    public List<Map<String, Object>> getStudentsForSeatChange(String classNum, String subjectCd) throws Exception {
+        List<Map<String, Object>> list = new ArrayList<>();
+        
+        // 💡 特定のクラス・科目を対象に、1回目と2回目の点数の「平均点（AVG）」を計算し、成績が高い順（DESC）で取得します
+        String sql = "SELECT st.NO AS student_id, st.NAME AS student_name, " +
+                     "COALESCE(AVG(t.POINT), 0) AS avg_point " +
+                     "FROM STUDENT st " +
+                     "LEFT JOIN TEST t ON st.NO = t.STUDENT_NO AND st.SCHOOL_CD = t.SCHOOL_CD AND t.SUBJECT_CD = ? " +
+                     "WHERE st.CLASS_NUM = ? AND st.IS_ATTEND = 'TRUE' " +
+                     "GROUP BY st.NO, st.NAME " +
+                     "ORDER BY avg_point DESC, st.NO ASC";
+
+        InitialContext ic = new InitialContext();
+        DataSource ds = (DataSource) ic.lookup("java:/comp/env/jdbc/stpoint");
+
+        try (Connection con = ds.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            pstmt.setString(1, subjectCd);
+            pstmt.setString(2, classNum);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("student_id", rs.getString("student_id"));
+                    map.put("student_name", rs.getString("student_name"));
+                    map.put("avg_point", rs.getDouble("avg_point"));
+                    list.add(map);
+                }
+            }
+        }
+        return list;
+    }
+
+    
+    
 }
